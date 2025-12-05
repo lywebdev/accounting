@@ -1,0 +1,74 @@
+# IDE settings
+.idea/
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build artifacts
+[Bb]in/
+[Oo]bj/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.log
+*.vspx
+*.appx
+*.appxupload
+
+# Rider tooling
+*.DotSettings.user
+*.sln.iml
+riderModule.iml
+
+# Roslyn/VS generated files
+Generated\ Files/
+*.g.i.cs
+*.g.cs
+*_i.c
+*_p.c
+*.ilk
+*.meta
+*.obj
+*.iobj
+*.ipdb
+*_wpftmp.csproj
+
+# Packages
+*.nupkg
+*.snupkg
+*.nuspec
+packages/
+
+# Publish output
+*/publish/
+*.Publish.xml
+
+# Diagnostic logs
+*.svclog
+*.scc
+*.tmh
+*.tlog
+
+# Coverage and test artifacts
+TestResult*/
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+coverage*.json
+coverage*.xml
+coverage*.info
+
+# Secret configuration overrides
+appsettings.*.json
+!appsettings.json
+!appsettings.Development.json
+
+# Local tooling caches
+.npm/
+.yarn/
+node_modules/
+/.vscode/
+.DS_Store
+Thumbs.db
