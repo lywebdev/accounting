@@ -4,6 +4,8 @@
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 @inject IStringLocalizer<SharedResources> Localizer
+@inject ILogger<ChartOfAccounts> Logger
+@implements IDisposable
 
 <MudPaper Class="pa-4 mb-4">
     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
@@ -81,6 +83,8 @@ else
 
 @code {
     private readonly List<AccountViewModel> _accounts = new();
+    private readonly CancellationTokenSource _disposeCts = new();
+    private CancellationTokenSource? _loadCts;
     private bool _isLoading;
     private AccountCategory? _filterCategory;
 
@@ -92,15 +96,20 @@ else
     private async Task LoadAccountsAsync()
     {
         _isLoading = true;
+        var token = BeginLoadCts();
         try
         {
             _accounts.Clear();
-            var accounts = await ChartService.GetAsync(_filterCategory);
+            var accounts = await ChartService.GetAsync(_filterCategory, token);
             _accounts.AddRange(accounts.Select(AccountViewModel.FromEntity));
+        }
+        catch (OperationCanceledException)
+        {
         }
         catch (Exception ex)
         {
-        Snackbar.Add(ex.Message, Severity.Error);
+            Logger.LogError(ex, "Failed to load chart of accounts");
+            Snackbar.Add(ex.Message, Severity.Error);
         }
         finally
         {
@@ -161,12 +170,13 @@ else
     {
         try
         {
-            await ChartService.CreateAsync(model.Number, model.Name, model.Category, model.Description);
+            await ChartService.CreateAsync(model.Number, model.Name, model.Category, model.Description, _disposeCts.Token);
             Snackbar.Add(Localizer["Coa_Snackbar_CreateSuccess"].Value, Severity.Success);
             await LoadAccountsAsync();
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to create account {Number}", model.Number);
             Snackbar.Add(ex.Message, Severity.Error);
         }
     }
@@ -175,12 +185,13 @@ else
     {
         try
         {
-            await ChartService.UpdateAsync(accountId, model.Name, model.Category, model.Description);
+            await ChartService.UpdateAsync(accountId, model.Name, model.Category, model.Description, _disposeCts.Token);
             Snackbar.Add(Localizer["Coa_Snackbar_UpdateSuccess"].Value, Severity.Success);
             await LoadAccountsAsync();
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to update account {AccountId}", accountId);
             Snackbar.Add(ex.Message, Severity.Error);
         }
     }
@@ -189,12 +200,13 @@ else
     {
         try
         {
-            await ChartService.DeactivateAsync(account.Id);
+            await ChartService.DeactivateAsync(account.Id, _disposeCts.Token);
             Snackbar.Add(Localizer["Coa_Snackbar_Deactivate"].Value, Severity.Info);
             await LoadAccountsAsync();
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to deactivate account {AccountId}", account.Id);
             Snackbar.Add(ex.Message, Severity.Error);
         }
     }
@@ -203,14 +215,31 @@ else
     {
         try
         {
-            await ChartService.ActivateAsync(account.Id);
+            await ChartService.ActivateAsync(account.Id, _disposeCts.Token);
             Snackbar.Add(Localizer["Coa_Snackbar_Activate"].Value, Severity.Success);
             await LoadAccountsAsync();
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to activate account {AccountId}", account.Id);
             Snackbar.Add(ex.Message, Severity.Error);
         }
+    }
+
+    private CancellationToken BeginLoadCts()
+    {
+        _loadCts?.Cancel();
+        _loadCts?.Dispose();
+        _loadCts = CancellationTokenSource.CreateLinkedTokenSource(_disposeCts.Token);
+        return _loadCts.Token;
+    }
+
+    public void Dispose()
+    {
+        _loadCts?.Cancel();
+        _loadCts?.Dispose();
+        _disposeCts.Cancel();
+        _disposeCts.Dispose();
     }
 
     private sealed record AccountViewModel(Guid Id, string Number, string Name, AccountCategory Category, string? Description, bool IsActive)

@@ -5,6 +5,8 @@
 @inject ISnackbar Snackbar
 @inject IStringLocalizer<SharedResources> Localizer
 @inject IJSRuntime JsRuntime
+@inject ILogger<Reporting> Logger
+@implements IDisposable
 
 <MudPaper Class="surface-card mb-4 pa-4">
     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
@@ -225,10 +227,15 @@
     private bool _isLoadingBalance;
     private bool _isLoadingTrialBalance;
     private bool _isLoadingGeneralLedger;
+    private readonly CancellationTokenSource _disposeCts = new();
+    private CancellationTokenSource? _pnlCts;
+    private CancellationTokenSource? _balanceCts;
+    private CancellationTokenSource? _trialCts;
+    private CancellationTokenSource? _ledgerCts;
 
     protected override async Task OnInitializedAsync()
     {
-        var accounts = await ChartService.GetAsync(null);
+        var accounts = await ChartService.GetAsync(null, _disposeCts.Token);
         _accountOptions = accounts.Select(a => new AccountOption(a.Id, a.Number, a.Name)).ToList();
     }
 
@@ -240,10 +247,19 @@
         }
 
         _isLoadingPnl = true;
+        var token = BeginOperation(ref _pnlCts);
         try
         {
             var filter = new ReportFilter(from, to, Currency: _currency);
-            _profitAndLossResult = await ReportingService.GetProfitAndLossAsync(filter);
+            _profitAndLossResult = await ReportingService.GetProfitAndLossAsync(filter, token);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to load Profit & Loss");
+            Snackbar.Add(ex.Message, Severity.Error);
         }
         finally
         {
@@ -259,10 +275,19 @@
         }
 
         _isLoadingBalance = true;
+        var token = BeginOperation(ref _balanceCts);
         try
         {
             var filter = new ReportFilter(from, to, Currency: _currency);
-            _balanceSheetResult = await ReportingService.GetBalanceSheetAsync(filter);
+            _balanceSheetResult = await ReportingService.GetBalanceSheetAsync(filter, token);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to load balance sheet");
+            Snackbar.Add(ex.Message, Severity.Error);
         }
         finally
         {
@@ -278,10 +303,19 @@
         }
 
         _isLoadingTrialBalance = true;
+        var token = BeginOperation(ref _trialCts);
         try
         {
             var filter = new ReportFilter(from, to, _trialBalanceCategory, Currency: _currency);
-            _trialBalanceResult = await ReportingService.GetTrialBalanceAsync(filter);
+            _trialBalanceResult = await ReportingService.GetTrialBalanceAsync(filter, token);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to load trial balance");
+            Snackbar.Add(ex.Message, Severity.Error);
         }
         finally
         {
@@ -297,10 +331,19 @@
         }
 
         _isLoadingGeneralLedger = true;
+        var token = BeginOperation(ref _ledgerCts);
         try
         {
             var filter = new ReportFilter(from, to, AccountId: _ledgerAccountId, Currency: _currency);
-            _generalLedgerResult = await ReportingService.GetGeneralLedgerAsync(filter);
+            _generalLedgerResult = await ReportingService.GetGeneralLedgerAsync(filter, token);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Failed to load general ledger");
+            Snackbar.Add(ex.Message, Severity.Error);
         }
         finally
         {
@@ -418,4 +461,26 @@
     };
 
     private sealed record AccountOption(Guid Id, string Number, string Name);
+
+    private CancellationToken BeginOperation(ref CancellationTokenSource? source)
+    {
+        source?.Cancel();
+        source?.Dispose();
+        source = CancellationTokenSource.CreateLinkedTokenSource(_disposeCts.Token);
+        return source.Token;
+    }
+
+    public void Dispose()
+    {
+        _pnlCts?.Cancel();
+        _pnlCts?.Dispose();
+        _balanceCts?.Cancel();
+        _balanceCts?.Dispose();
+        _trialCts?.Cancel();
+        _trialCts?.Dispose();
+        _ledgerCts?.Cancel();
+        _ledgerCts?.Dispose();
+        _disposeCts.Cancel();
+        _disposeCts.Dispose();
+    }
 }

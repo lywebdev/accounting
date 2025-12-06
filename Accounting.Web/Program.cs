@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.IO;
 using Accounting.Core;
 using Accounting.Core.Options;
 using Accounting.Infrastructure;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Options;
 using MudBlazor.Services;
+using Serilog.Extensions.Logging.File;
 
 namespace Accounting.Web;
 
@@ -23,6 +25,10 @@ public static class Program
         var runSeeder = args.Any(a => a.Equals("--seed", StringComparison.OrdinalIgnoreCase) || a.Equals("seed", StringComparison.OrdinalIgnoreCase));
 
         var builder = WebApplication.CreateBuilder(args);
+
+        var logsDirectory = Path.Combine(builder.Environment.ContentRootPath, "Logs");
+        Directory.CreateDirectory(logsDirectory);
+        builder.Logging.AddFile(Path.Combine(logsDirectory, "accountingapp-.log"));
 
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();

@@ -7,6 +7,8 @@
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject IStringLocalizer<SharedResources> Localizer
+@inject ILogger<Invoices> Logger
+@implements IDisposable
 
 <MudPaper Class="pa-4 mb-4">
     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
@@ -45,7 +47,7 @@ else if (_invoices.Count == 0)
 }
 else
 {
-    <MudTable Items="_invoices" Dense="true">
+    <MudTable Items="_invoices" Dense="true" RowClassFunc='@((_, __) => "clickable-row")'>
         <HeaderContent>
             <MudTh>@Localizer["Invoices_Table_Number"]</MudTh>
             <MudTh>@Localizer["Invoices_Table_Type"]</MudTh>
@@ -128,6 +130,8 @@ else
 
 @code {
     private readonly List<InvoiceViewModel> _invoices = new();
+    private readonly CancellationTokenSource _disposeCts = new();
+    private CancellationTokenSource? _loadCts;
     private IReadOnlyList<InvoiceDialog.AccountOption> _accounts = Array.Empty<InvoiceDialog.AccountOption>();
     private bool _isLoading;
     private InvoiceType? _filterType;
@@ -136,7 +140,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var accountList = await ChartService.GetAsync(AccountCategory.Revenue);
+        var token = _disposeCts.Token;
+        var accountList = await ChartService.GetAsync(AccountCategory.Revenue, token);
         _accounts = accountList.Select(a => new InvoiceDialog.AccountOption(a.Id, a.Number, a.Name)).ToList();
         await LoadInvoicesAsync();
     }
@@ -144,14 +149,19 @@ else
     private async Task LoadInvoicesAsync()
     {
         _isLoading = true;
+        var token = BeginLoadCts();
         try
         {
             _invoices.Clear();
-            var invoices = await InvoiceService.GetAsync(_filterType, ConvertToDateOnly(_fromDate), ConvertToDateOnly(_toDate));
+            var invoices = await InvoiceService.GetAsync(_filterType, ConvertToDateOnly(_fromDate), ConvertToDateOnly(_toDate), token);
             _invoices.AddRange(invoices.Select(InvoiceViewModel.FromEntity));
+        }
+        catch (OperationCanceledException)
+        {
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to load invoices");
             Snackbar.Add(ex.Message, Severity.Error);
         }
         finally
@@ -199,12 +209,13 @@ else
         try
         {
             var lines = model.Lines.Select(l => new InvoiceLine(l.Description, l.Quantity, new Money(l.UnitPrice, "EUR"), l.VatRate, l.RevenueAccountId!.Value));
-            await InvoiceService.CreateAsync(model.Type, model.Number, model.Counterparty, model.IssueDate, model.DueDate, lines);
+            await InvoiceService.CreateAsync(model.Type, model.Number, model.Counterparty, model.IssueDate, model.DueDate, lines, _disposeCts.Token);
             Snackbar.Add(Localizer["Invoices_Snackbar_Create"].Value, Severity.Success);
             await LoadInvoicesAsync();
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to create invoice {Number}", model.Number);
             Snackbar.Add(ex.Message, Severity.Error);
         }
     }
@@ -213,12 +224,13 @@ else
     {
         try
         {
-            await InvoiceService.PostAsync(id);
+            await InvoiceService.PostAsync(id, _disposeCts.Token);
             Snackbar.Add(Localizer["Invoices_Snackbar_Posted"].Value, Severity.Success);
             await LoadInvoicesAsync();
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to post invoice {InvoiceId}", id);
             Snackbar.Add(ex.Message, Severity.Error);
         }
     }
@@ -233,12 +245,13 @@ else
         try
         {
             var today = DateOnly.FromDateTime(DateTime.Today);
-            await InvoiceService.MarkSentAsync(invoice.Id, today);
+            await InvoiceService.MarkSentAsync(invoice.Id, today, _disposeCts.Token);
             Snackbar.Add(Localizer["Invoices_Snackbar_Sent"].Value, Severity.Success);
             await LoadInvoicesAsync();
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to mark invoice {InvoiceId} as sent", invoice.Id);
             Snackbar.Add(ex.Message, Severity.Error);
         }
     }
@@ -270,12 +283,13 @@ else
     {
         try
         {
-            await InvoiceService.RecordPaymentAsync(invoiceId, paymentDate);
+            await InvoiceService.RecordPaymentAsync(invoiceId, paymentDate, _disposeCts.Token);
             Snackbar.Add(Localizer["Invoices_Snackbar_Paid"].Value, Severity.Success);
             await LoadInvoicesAsync();
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to record payment for invoice {InvoiceId}", invoiceId);
             Snackbar.Add(ex.Message, Severity.Error);
         }
     }
@@ -284,12 +298,13 @@ else
     {
         try
         {
-            await InvoiceService.DeleteAsync(id);
+            await InvoiceService.DeleteAsync(id, _disposeCts.Token);
             Snackbar.Add(Localizer["Invoices_Snackbar_Delete"].Value, Severity.Info);
             await LoadInvoicesAsync();
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to delete invoice {InvoiceId}", id);
             Snackbar.Add(ex.Message, Severity.Error);
         }
     }
@@ -329,4 +344,20 @@ else
 
     private static DateOnly? ConvertToDateOnly(DateTime? dateTime)
         => dateTime.HasValue ? DateOnly.FromDateTime(dateTime.Value) : null;
+
+    private CancellationToken BeginLoadCts()
+    {
+        _loadCts?.Cancel();
+        _loadCts?.Dispose();
+        _loadCts = CancellationTokenSource.CreateLinkedTokenSource(_disposeCts.Token);
+        return _loadCts.Token;
+    }
+
+    public void Dispose()
+    {
+        _loadCts?.Cancel();
+        _loadCts?.Dispose();
+        _disposeCts.Cancel();
+        _disposeCts.Dispose();
+    }
 }

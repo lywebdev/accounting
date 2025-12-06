@@ -5,6 +5,8 @@
 @inject HttpClient Http
 @inject ISnackbar Snackbar
 @inject IStringLocalizer<SharedResources> Localizer
+@inject ILogger<Vat> Logger
+@implements IDisposable
 
 <MudPaper Class="report-note">
     @Localizer["VAT_Note"]
@@ -147,6 +149,7 @@
     private string? _vatNumber;
     private bool? _vatValidationResult;
     private bool _isValidationRunning;
+    private readonly CancellationTokenSource _disposeCts = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -161,7 +164,7 @@
         _isLoading = true;
         try
         {
-            var declaration = await Http.GetFromJsonAsync<TaxDeclarationDto>($"api/tax/declaration?year={_selectedYear}&period={_selectedPeriod}");
+            var declaration = await Http.GetFromJsonAsync<TaxDeclarationDto>($"api/tax/declaration?year={_selectedYear}&period={_selectedPeriod}", _disposeCts.Token);
             if (declaration is not null)
             {
                 _currentDeclaration = VatDeclarationViewModel.FromDto(declaration);
@@ -170,6 +173,7 @@
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to load VAT declaration for {Year} Q{Period}", _selectedYear, _selectedPeriod);
             Snackbar.Add(ex.Message, Severity.Error);
         }
         finally
@@ -188,9 +192,9 @@
         _isLoading = true;
         try
         {
-            var response = await Http.PostAsJsonAsync("api/tax/declaration/submit", new SubmitTaxDeclarationRequest(_selectedYear, _selectedPeriod));
+            var response = await Http.PostAsJsonAsync("api/tax/declaration/submit", new SubmitTaxDeclarationRequest(_selectedYear, _selectedPeriod), _disposeCts.Token);
             response.EnsureSuccessStatusCode();
-            var declaration = await response.Content.ReadFromJsonAsync<TaxDeclarationDto>();
+            var declaration = await response.Content.ReadFromJsonAsync<TaxDeclarationDto>(_disposeCts.Token);
             if (declaration is not null)
             {
                 _currentDeclaration = VatDeclarationViewModel.FromDto(declaration);
@@ -201,6 +205,7 @@
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to submit VAT declaration for {Year} Q{Period}", _selectedYear, _selectedPeriod);
             Snackbar.Add(ex.Message, Severity.Error);
         }
         finally
@@ -211,7 +216,7 @@
 
     private async Task LoadHistoryAsync()
     {
-        var history = await Http.GetFromJsonAsync<List<TaxDeclarationDto>>($"api/tax/declarations/{_selectedYear}") ?? new List<TaxDeclarationDto>();
+        var history = await Http.GetFromJsonAsync<List<TaxDeclarationDto>>($"api/tax/declarations/{_selectedYear}", _disposeCts.Token) ?? new List<TaxDeclarationDto>();
         _history.Clear();
         for (var period = 1; period <= 4; period++)
         {
@@ -230,14 +235,15 @@
         _isValidationRunning = true;
         try
         {
-            var response = await Http.PostAsJsonAsync("api/tax/validate", new VatValidationRequest(_vatNumber));
+            var response = await Http.PostAsJsonAsync("api/tax/validate", new VatValidationRequest(_vatNumber), _disposeCts.Token);
             response.EnsureSuccessStatusCode();
-            var validation = await response.Content.ReadFromJsonAsync<VatValidationResponse>();
+            var validation = await response.Content.ReadFromJsonAsync<VatValidationResponse>(_disposeCts.Token);
             _vatValidationResult = validation?.IsValid;
             Snackbar.Add((_vatValidationResult ?? false) ? Localizer["VAT_Validation_Snackbar_Valid"].Value : Localizer["VAT_Validation_Snackbar_Invalid"].Value, (_vatValidationResult ?? false) ? Severity.Success : Severity.Error);
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to validate VAT number {VatNumber}", _vatNumber);
             Snackbar.Add(ex.Message, Severity.Error);
         }
         finally
@@ -263,5 +269,11 @@
 
         public static VatDeclarationViewModel Empty(int year, int period) =>
             new(Guid.Empty, year, period, 0m, 0m, 0m, TaxDeclarationStatus.Draft, null);
+    }
+
+    public void Dispose()
+    {
+        _disposeCts.Cancel();
+        _disposeCts.Dispose();
     }
 }

@@ -5,6 +5,8 @@
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject IStringLocalizer<SharedResources> Localizer
+@inject ILogger<GeneralJournal> Logger
+@implements IDisposable
 
 <MudPaper Class="pa-4 mb-4">
     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
@@ -80,6 +82,8 @@ else
 
 @code {
     private readonly List<JournalEntryViewModel> _entries = new();
+    private readonly CancellationTokenSource _disposeCts = new();
+    private CancellationTokenSource? _loadCts;
     private IReadOnlyList<JournalEntryDialog.AccountOption> _accounts = Array.Empty<JournalEntryDialog.AccountOption>();
     private bool _isLoading;
     private DateTime? _fromDate = DateTime.Today.AddMonths(-1);
@@ -87,7 +91,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var accountEntities = await ChartService.GetAsync(null);
+        var token = _disposeCts.Token;
+        var accountEntities = await ChartService.GetAsync(null, token);
         _accounts = accountEntities
             .Select(a => new JournalEntryDialog.AccountOption(a.Id, a.Number, a.Name))
             .ToList();
@@ -97,17 +102,22 @@ else
     private async Task LoadEntriesAsync()
     {
         _isLoading = true;
+        var token = BeginLoadCts();
         try
         {
             _entries.Clear();
-            var entries = await JournalService.GetAsync(ConvertToDateOnly(_fromDate), ConvertToDateOnly(_toDate));
+            var entries = await JournalService.GetAsync(ConvertToDateOnly(_fromDate), ConvertToDateOnly(_toDate), token);
             foreach (var entry in entries)
             {
                 _entries.Add(JournalEntryViewModel.FromEntity(entry, _accounts));
             }
         }
+        catch (OperationCanceledException)
+        {
+        }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to load journal entries");
             Snackbar.Add(ex.Message, Severity.Error);
         }
         finally
@@ -151,12 +161,13 @@ else
         try
         {
             var lines = model.Lines.Select(l => new JournalEntryLine(l.AccountId!.Value, l.Debit, l.Credit, l.Description));
-            await JournalService.CreateAsync(model.Reference, model.EntryDate, model.Memo, lines);
+            await JournalService.CreateAsync(model.Reference, model.EntryDate, model.Memo, lines, _disposeCts.Token);
             Snackbar.Add(Localizer["Journal_Snackbar_Create"].Value, Severity.Success);
             await LoadEntriesAsync();
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to create journal entry {Reference}", model.Reference);
             Snackbar.Add(ex.Message, Severity.Error);
         }
     }
@@ -165,14 +176,31 @@ else
     {
         try
         {
-            await JournalService.DeleteAsync(entryId);
+            await JournalService.DeleteAsync(entryId, _disposeCts.Token);
             Snackbar.Add(Localizer["Journal_Snackbar_Delete"].Value, Severity.Info);
             await LoadEntriesAsync();
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to delete journal entry {EntryId}", entryId);
             Snackbar.Add(ex.Message, Severity.Error);
         }
+    }
+
+    private CancellationToken BeginLoadCts()
+    {
+        _loadCts?.Cancel();
+        _loadCts?.Dispose();
+        _loadCts = CancellationTokenSource.CreateLinkedTokenSource(_disposeCts.Token);
+        return _loadCts.Token;
+    }
+
+    public void Dispose()
+    {
+        _loadCts?.Cancel();
+        _loadCts?.Dispose();
+        _disposeCts.Cancel();
+        _disposeCts.Dispose();
     }
 
     private sealed record JournalEntryViewModel(Guid Id, string Reference, DateOnly EntryDate, string? Memo, decimal TotalDebit, decimal TotalCredit, IReadOnlyList<JournalEntryLineViewModel> Lines)

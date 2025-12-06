@@ -7,6 +7,8 @@
 @inject ISnackbar Snackbar
 @inject HttpClient Http
 @inject IStringLocalizer<SharedResources> Localizer
+@inject ILogger<Banking> Logger
+@implements IDisposable
 
 <MudPaper Class="pa-4 mb-4">
     <MudStack Spacing="2">
@@ -118,6 +120,8 @@
 
 @code {
     private readonly List<BankTransactionRow> _transactions = new();
+    private readonly CancellationTokenSource _disposeCts = new();
+    private CancellationTokenSource? _loadCts;
     private BankTransactionRow? _selectedTransaction;
     private InvoiceLookup? _selectedInvoice;
     private IBrowserFile? _importFile;
@@ -135,6 +139,7 @@
 
     private async Task LoadTransactionsAsync()
     {
+        var token = BeginLoadCts();
         try
         {
             _isLoading = true;
@@ -159,7 +164,7 @@
             var endpoint = query.Count > 0
                 ? QueryHelpers.AddQueryString("api/banking/transactions", query)
                 : "api/banking/transactions";
-            var transactions = await Http.GetFromJsonAsync<List<BankTransactionDto>>(endpoint) ?? new List<BankTransactionDto>();
+            var transactions = await Http.GetFromJsonAsync<List<BankTransactionDto>>(endpoint, token) ?? new List<BankTransactionDto>();
             _transactions.Clear();
             _transactions.AddRange(transactions.Select(t => new BankTransactionRow(t.Id, t.BookingDate, t.Counterparty, t.Reference, t.Amount, t.MatchedInvoiceId, t.JournalEntryId)));
             if (!_hasAnnouncedInitialLoad)
@@ -168,8 +173,12 @@
                 _hasAnnouncedInitialLoad = true;
             }
         }
+        catch (OperationCanceledException)
+        {
+        }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to load bank transactions");
             Snackbar.Add(ex.Message, Severity.Error);
         }
         finally
@@ -182,16 +191,17 @@
     {
         try
         {
-            var response = await Http.PostAsync("api/banking/transactions/sync", null);
+            var response = await Http.PostAsync("api/banking/transactions/sync", null, _disposeCts.Token);
             response.EnsureSuccessStatusCode();
             Snackbar.Add(Localizer["Banking_Snackbar_Synced"].Value, Severity.Success);
-            var synced = await response.Content.ReadFromJsonAsync<List<BankTransactionDto>>() ?? new List<BankTransactionDto>();
+            var synced = await response.Content.ReadFromJsonAsync<List<BankTransactionDto>>(_disposeCts.Token) ?? new List<BankTransactionDto>();
             var matchResult = await RequestAutoMatchAsync();
             UpdateSummary(Localizer["Banking_Summary_Source_Sync"].Value, synced.Count, matchResult);
             await LoadTransactionsAsync();
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to sync external transactions");
             Snackbar.Add(ex.Message, Severity.Error);
         }
     }
@@ -221,7 +231,7 @@
 
         try
         {
-            var response = await Http.PostAsync($"api/banking/transactions/{_selectedTransaction.Id}/link/{_selectedInvoice.Id}", content: null);
+            var response = await Http.PostAsync($"api/banking/transactions/{_selectedTransaction.Id}/link/{_selectedInvoice.Id}", content: null, _disposeCts.Token);
             response.EnsureSuccessStatusCode();
             Snackbar.Add(Localizer["Banking_Snackbar_Matched"].Value, Severity.Success);
             _selectedTransaction = null;
@@ -230,6 +240,7 @@
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to match transaction {TransactionId} to invoice {InvoiceId}", _selectedTransaction?.Id, _selectedInvoice?.Id);
             Snackbar.Add(ex.Message, Severity.Error);
         }
     }
@@ -248,17 +259,18 @@
             var streamContent = new StreamContent(stream);
             streamContent.Headers.ContentType = new MediaTypeHeaderValue(_importFile.ContentType ?? "text/csv");
             content.Add(streamContent, "file", _importFile.Name);
-            var response = await Http.PostAsync("api/banking/transactions/import", content);
+            var response = await Http.PostAsync("api/banking/transactions/import", content, _disposeCts.Token);
             response.EnsureSuccessStatusCode();
             Snackbar.Add(Localizer["Banking_Snackbar_Imported"].Value, Severity.Success);
             _importFile = null;
-            var importedTransactions = await response.Content.ReadFromJsonAsync<List<BankTransactionDto>>() ?? new List<BankTransactionDto>();
+            var importedTransactions = await response.Content.ReadFromJsonAsync<List<BankTransactionDto>>(_disposeCts.Token) ?? new List<BankTransactionDto>();
             var matchResult = await RequestAutoMatchAsync();
             UpdateSummary(Localizer["Banking_Summary_Source_Import"].Value, importedTransactions.Count, matchResult);
             await LoadTransactionsAsync();
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to import CSV");
             Snackbar.Add(ex.Message, Severity.Error);
         }
     }
@@ -281,15 +293,16 @@
         }
         catch (Exception ex)
         {
+            Logger.LogError(ex, "Failed to auto-match transactions");
             Snackbar.Add(ex.Message, Severity.Error);
         }
     }
 
     private async Task<AutoMatchResultDto?> RequestAutoMatchAsync()
     {
-        var response = await Http.PostAsync("api/banking/transactions/auto-match", null);
+        var response = await Http.PostAsync("api/banking/transactions/auto-match", null, _disposeCts.Token);
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<AutoMatchResultDto>();
+        return await response.Content.ReadFromJsonAsync<AutoMatchResultDto>(_disposeCts.Token);
     }
 
     private void UpdateSummary(string source, int imported, AutoMatchResultDto? result)
@@ -306,4 +319,20 @@
     private sealed record InvoiceLookup(Guid Id, string Number, string Counterparty, decimal TotalGross);
 
     private sealed record OperationSummary(string Source, int ImportedCount, int MatchedCount, int JournalEntries);
+
+    private CancellationToken BeginLoadCts()
+    {
+        _loadCts?.Cancel();
+        _loadCts?.Dispose();
+        _loadCts = CancellationTokenSource.CreateLinkedTokenSource(_disposeCts.Token);
+        return _loadCts.Token;
+    }
+
+    public void Dispose()
+    {
+        _loadCts?.Cancel();
+        _loadCts?.Dispose();
+        _disposeCts.Cancel();
+        _disposeCts.Dispose();
+    }
 }
