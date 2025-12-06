@@ -1,3 +1,421 @@
-﻿@page "/reporting"
+@page "/reporting"
+@using System.Text
+@inject IReportingService ReportingService
+@inject IChartOfAccountsService ChartService
+@inject ISnackbar Snackbar
+@inject IStringLocalizer<SharedResources> Localizer
+@inject IJSRuntime JsRuntime
 
-<ModulePlaceholder TitleKey="Page_Reporting_Title" />
+<MudPaper Class="surface-card mb-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+        <MudText Typo="Typo.h6">@Localizer["Reporting_Filter_Title"]</MudText>
+    </MudStack>
+    <MudStack Row="true" Spacing="2" Class="mt-2" AlignItems="AlignItems.End">
+        <MudDatePicker @bind-Date="_filterFrom"
+                       Label="@Localizer["Reporting_Filter_From"]"
+                       DateFormat="yyyy-MM-dd"
+                       MaxDate="_filterTo" />
+        <MudDatePicker @bind-Date="_filterTo"
+                       Label="@Localizer["Reporting_Filter_To"]"
+                       DateFormat="yyyy-MM-dd"
+                       MinDate="_filterFrom" />
+        <MudSelect T="string" Label="@Localizer["Reporting_Filter_Currency"]" @bind-Value="_currency" Class="filter-control">
+            @foreach (var currency in _currencies)
+            {
+                <MudSelectItem Value="@currency">@currency</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="AccountCategory?" Label="@Localizer["Reporting_Filter_Category"]" @bind-Value="_trialBalanceCategory" Class="filter-control">
+            <MudSelectItem Value="@( (AccountCategory?)null )">@Localizer["Coa_Filter_All"]</MudSelectItem>
+            @foreach (var category in Enum.GetValues<AccountCategory>())
+            {
+                <MudSelectItem Value="@( (AccountCategory?)category )">@Localizer[$"Account_Category_{category}"]</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="Guid?" Label="@Localizer["Reporting_Filter_Account"]" @bind-Value="_ledgerAccountId" Class="filter-control">
+            <MudSelectItem Value="@( (Guid?)null )">@Localizer["Reporting_Filter_Account_All"]</MudSelectItem>
+            @foreach (var account in _accountOptions)
+            {
+                <MudSelectItem Value="@account.Id">@($"{account.Number} - {account.Name}")</MudSelectItem>
+            }
+        </MudSelect>
+    </MudStack>
+</MudPaper>
+
+<MudTabs Rounded="true">
+    <MudTabPanel Text="@Localizer["Reporting_Tab_PnL"]">
+        <MudPaper Class="report-note">@Localizer["Reporting_PnL_Note"]</MudPaper>
+        <MudStack Row="true" Spacing="1" Class="mb-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadProfitAndLossAsync">@Localizer["Reporting_Filter_Run"]</MudButton>
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Secondary"
+                       Disabled="@(_profitAndLossResult is null || !_profitAndLossResult.Rows.Any())"
+                       OnClick="@(() => ExportProfitAndLossAsync())">
+                @Localizer["Reporting_Filter_Export"]
+            </MudButton>
+            @if (_profitAndLossResult is not null)
+            {
+                <MudText Typo="Typo.caption">@Localizer["Reporting_Metadata_GeneratedAt", FormatTimestamp(_profitAndLossResult.GeneratedAt)]</MudText>
+            }
+        </MudStack>
+        @if (_isLoadingPnl)
+        {
+            <MudProgressLinear Indeterminate="true" Color="Color.Primary" />
+        }
+        else if (!HasData(_profitAndLossResult))
+        {
+            <MudText Typo="Typo.subtitle2">@Localizer["Reporting_NoData"]</MudText>
+        }
+        else
+        {
+            <MudTable Items="_profitAndLossResult?.Rows" Dense="true">
+                <HeaderContent>
+                    <MudTh>@Localizer["Reporting_Table_Caption"]</MudTh>
+                    <MudTh Class="text-end">@Localizer["Reporting_Table_Amount"] (@_currency)</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@GetFinancialCaption(context?.Caption)</MudTd>
+                    <MudTd Class="text-end">@FormatAmount(context?.Amount ?? 0m)</MudTd>
+                </RowTemplate>
+            </MudTable>
+        }
+    </MudTabPanel>
+    <MudTabPanel Text="@Localizer["Reporting_Tab_Balance"]">
+        <MudPaper Class="report-note">@Localizer["Reporting_Balance_Note"]</MudPaper>
+        <MudStack Row="true" Spacing="1" Class="mb-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadBalanceSheetAsync">@Localizer["Reporting_Filter_Run"]</MudButton>
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Secondary"
+                       Disabled="@(_balanceSheetResult is null || !_balanceSheetResult.Rows.Any())"
+                       OnClick="@(() => ExportBalanceSheetAsync())">
+                @Localizer["Reporting_Filter_Export"]
+            </MudButton>
+            @if (_balanceSheetResult is not null)
+            {
+                <MudText Typo="Typo.caption">@Localizer["Reporting_Metadata_GeneratedAt", FormatTimestamp(_balanceSheetResult.GeneratedAt)]</MudText>
+            }
+        </MudStack>
+        @if (_isLoadingBalance)
+        {
+            <MudProgressLinear Indeterminate="true" Color="Color.Primary" />
+        }
+        else if (!HasData(_balanceSheetResult))
+        {
+            <MudText Typo="Typo.subtitle2">@Localizer["Reporting_NoData"]</MudText>
+        }
+        else
+        {
+            <MudTable Items="_balanceSheetResult?.Rows" Dense="true">
+                <HeaderContent>
+                    <MudTh>@Localizer["Reporting_Table_Caption"]</MudTh>
+                    <MudTh Class="text-end">@Localizer["Reporting_Table_Amount"] (@_currency)</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@GetFinancialCaption(context?.Caption)</MudTd>
+                    <MudTd Class="text-end">@FormatAmount(context?.Amount ?? 0m)</MudTd>
+                </RowTemplate>
+            </MudTable>
+        }
+    </MudTabPanel>
+    <MudTabPanel Text="@Localizer["Reporting_Tab_TrialBalance"]">
+        <MudPaper Class="report-note">@Localizer["Reporting_TB_Note"]</MudPaper>
+        <MudStack Row="true" Spacing="1" Class="mb-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadTrialBalanceAsync">@Localizer["Reporting_Filter_Run"]</MudButton>
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Secondary"
+                       Disabled="@(_trialBalanceResult is null || !_trialBalanceResult.Rows.Any())"
+                       OnClick="@(() => ExportTrialBalanceAsync())">
+                @Localizer["Reporting_Filter_Export"]
+            </MudButton>
+            @if (_trialBalanceResult is not null)
+            {
+                <MudText Typo="Typo.caption">@Localizer["Reporting_Metadata_GeneratedAt", FormatTimestamp(_trialBalanceResult.GeneratedAt)]</MudText>
+            }
+        </MudStack>
+        @if (_isLoadingTrialBalance)
+        {
+            <MudProgressLinear Indeterminate="true" Color="Color.Primary" />
+        }
+        else if (!HasData(_trialBalanceResult))
+        {
+            <MudText Typo="Typo.subtitle2">@Localizer["Reporting_NoData"]</MudText>
+        }
+        else
+        {
+            <MudTable Items="_trialBalanceResult?.Rows" Dense="true">
+                <HeaderContent>
+                    <MudTh>@Localizer["Reporting_TB_Number"]</MudTh>
+                    <MudTh>@Localizer["Reporting_TB_Name"]</MudTh>
+                    <MudTh Class="text-end">@Localizer["Reporting_TB_Debit"]</MudTh>
+                    <MudTh Class="text-end">@Localizer["Reporting_TB_Credit"]</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context?.AccountNumber</MudTd>
+                    <MudTd>@context?.AccountName</MudTd>
+                    <MudTd Class="text-end">@FormatAmount(context?.Debit ?? 0m)</MudTd>
+                    <MudTd Class="text-end">@FormatAmount(context?.Credit ?? 0m)</MudTd>
+                </RowTemplate>
+            </MudTable>
+        }
+    </MudTabPanel>
+    <MudTabPanel Text="@Localizer["Reporting_Tab_GeneralLedger"]">
+        <MudPaper Class="report-note">@Localizer["Reporting_GL_Note"]</MudPaper>
+        <MudStack Row="true" Spacing="1" Class="mb-2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadGeneralLedgerAsync">@Localizer["Reporting_Filter_Run"]</MudButton>
+            <MudButton Variant="Variant.Outlined"
+                       Color="Color.Secondary"
+                       Disabled="@(_generalLedgerResult is null || !_generalLedgerResult.Rows.Any())"
+                       OnClick="@(() => ExportGeneralLedgerAsync())">
+                @Localizer["Reporting_Filter_Export"]
+            </MudButton>
+            @if (_generalLedgerResult is not null)
+            {
+                <MudText Typo="Typo.caption">@Localizer["Reporting_Metadata_GeneratedAt", FormatTimestamp(_generalLedgerResult.GeneratedAt)]</MudText>
+            }
+        </MudStack>
+        @if (_isLoadingGeneralLedger)
+        {
+            <MudProgressLinear Indeterminate="true" Color="Color.Primary" />
+        }
+        else if (!HasData(_generalLedgerResult))
+        {
+            <MudText Typo="Typo.subtitle2">@Localizer["Reporting_NoData"]</MudText>
+        }
+        else
+        {
+            <MudTable Items="_generalLedgerResult?.Rows" Dense="true">
+                <HeaderContent>
+                    <MudTh>@Localizer["Reporting_GL_Date"]</MudTh>
+                    <MudTh>@Localizer["Reporting_GL_Reference"]</MudTh>
+                    <MudTh>@Localizer["Reporting_GL_Account"]</MudTh>
+                    <MudTh>@Localizer["Reporting_GL_Description"]</MudTh>
+                    <MudTh Class="text-end">@Localizer["Reporting_GL_Debit"]</MudTh>
+                    <MudTh Class="text-end">@Localizer["Reporting_GL_Credit"]</MudTh>
+                    <MudTh Class="text-end">@Localizer["Reporting_GL_Balance"]</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@context?.Date.ToString("yyyy-MM-dd")</MudTd>
+                    <MudTd>@context?.Reference</MudTd>
+                    <MudTd>@($"{context?.AccountNumber} - {context?.AccountName}")</MudTd>
+                    <MudTd>@context?.Description</MudTd>
+                    <MudTd Class="text-end">@FormatAmount(context?.Debit ?? 0m)</MudTd>
+                    <MudTd Class="text-end">@FormatAmount(context?.Credit ?? 0m)</MudTd>
+                    <MudTd Class="text-end">@FormatAmount(context?.Balance ?? 0m)</MudTd>
+                </RowTemplate>
+            </MudTable>
+        }
+    </MudTabPanel>
+</MudTabs>
+
+@code {
+    private readonly string[] _currencies = ["EUR", "USD", "GBP"];
+    private DateTime? _filterFrom = DateTime.Today.AddMonths(-1);
+    private DateTime? _filterTo = DateTime.Today;
+    private string _currency = "EUR";
+    private AccountCategory? _trialBalanceCategory;
+    private Guid? _ledgerAccountId;
+    private IReadOnlyList<AccountOption> _accountOptions = Array.Empty<AccountOption>();
+
+    private ReportResult<FinancialStatementRow>? _profitAndLossResult;
+    private ReportResult<FinancialStatementRow>? _balanceSheetResult;
+    private ReportResult<TrialBalanceRow>? _trialBalanceResult;
+    private ReportResult<LedgerEntryRow>? _generalLedgerResult;
+
+    private bool _isLoadingPnl;
+    private bool _isLoadingBalance;
+    private bool _isLoadingTrialBalance;
+    private bool _isLoadingGeneralLedger;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var accounts = await ChartService.GetAsync(null);
+        _accountOptions = accounts.Select(a => new AccountOption(a.Id, a.Number, a.Name)).ToList();
+    }
+
+    private async Task LoadProfitAndLossAsync()
+    {
+        if (!TryBuildDates(out var from, out var to))
+        {
+            return;
+        }
+
+        _isLoadingPnl = true;
+        try
+        {
+            var filter = new ReportFilter(from, to, Currency: _currency);
+            _profitAndLossResult = await ReportingService.GetProfitAndLossAsync(filter);
+        }
+        finally
+        {
+            _isLoadingPnl = false;
+        }
+    }
+
+    private async Task LoadBalanceSheetAsync()
+    {
+        if (!TryBuildDates(out var from, out var to))
+        {
+            return;
+        }
+
+        _isLoadingBalance = true;
+        try
+        {
+            var filter = new ReportFilter(from, to, Currency: _currency);
+            _balanceSheetResult = await ReportingService.GetBalanceSheetAsync(filter);
+        }
+        finally
+        {
+            _isLoadingBalance = false;
+        }
+    }
+
+    private async Task LoadTrialBalanceAsync()
+    {
+        if (!TryBuildDates(out var from, out var to))
+        {
+            return;
+        }
+
+        _isLoadingTrialBalance = true;
+        try
+        {
+            var filter = new ReportFilter(from, to, _trialBalanceCategory, Currency: _currency);
+            _trialBalanceResult = await ReportingService.GetTrialBalanceAsync(filter);
+        }
+        finally
+        {
+            _isLoadingTrialBalance = false;
+        }
+    }
+
+    private async Task LoadGeneralLedgerAsync()
+    {
+        if (!TryBuildDates(out var from, out var to))
+        {
+            return;
+        }
+
+        _isLoadingGeneralLedger = true;
+        try
+        {
+            var filter = new ReportFilter(from, to, AccountId: _ledgerAccountId, Currency: _currency);
+            _generalLedgerResult = await ReportingService.GetGeneralLedgerAsync(filter);
+        }
+        finally
+        {
+            _isLoadingGeneralLedger = false;
+        }
+    }
+
+    private async Task ExportProfitAndLossAsync()
+    {
+        if (!HasData(_profitAndLossResult))
+        {
+            return;
+        }
+
+        var rows = _profitAndLossResult!.Rows.Select(r => new[] { GetFinancialCaption(r.Caption), FormatAmount(r.Amount) });
+        await ExportCsvAsync("profit-and-loss", [Localizer["Reporting_Table_Caption"], Localizer["Reporting_Table_Amount"]], rows);
+    }
+
+    private async Task ExportBalanceSheetAsync()
+    {
+        if (!HasData(_balanceSheetResult))
+        {
+            return;
+        }
+
+        var rows = _balanceSheetResult!.Rows.Select(r => new[] { GetFinancialCaption(r.Caption), FormatAmount(r.Amount) });
+        await ExportCsvAsync("balance-sheet", [Localizer["Reporting_Table_Caption"], Localizer["Reporting_Table_Amount"]], rows);
+    }
+
+    private async Task ExportTrialBalanceAsync()
+    {
+        if (!HasData(_trialBalanceResult))
+        {
+            return;
+        }
+
+        var rows = _trialBalanceResult!.Rows.Select(r => new[] { r.AccountNumber, r.AccountName, FormatAmount(r.Debit), FormatAmount(r.Credit) });
+        await ExportCsvAsync("trial-balance", [Localizer["Reporting_TB_Number"], Localizer["Reporting_TB_Name"], Localizer["Reporting_TB_Debit"], Localizer["Reporting_TB_Credit"]], rows);
+    }
+
+    private async Task ExportGeneralLedgerAsync()
+    {
+        if (!HasData(_generalLedgerResult))
+        {
+            return;
+        }
+
+        var rows = _generalLedgerResult!.Rows.Select(r => new[]
+        {
+            r.Date.ToString("yyyy-MM-dd"),
+            r.Reference,
+            $"{r.AccountNumber} - {r.AccountName}",
+            r.Description,
+            FormatAmount(r.Debit),
+            FormatAmount(r.Credit),
+            FormatAmount(r.Balance)
+        });
+        await ExportCsvAsync("general-ledger", [Localizer["Reporting_GL_Date"], Localizer["Reporting_GL_Reference"], Localizer["Reporting_GL_Account"], Localizer["Reporting_GL_Description"], Localizer["Reporting_GL_Debit"], Localizer["Reporting_GL_Credit"], Localizer["Reporting_GL_Balance"]], rows);
+    }
+
+    private async Task ExportCsvAsync(string filePrefix, IReadOnlyList<string> headers, IEnumerable<IReadOnlyList<string>> rows)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine(string.Join(",", headers.Select(EscapeCsv)));
+        foreach (var row in rows)
+        {
+            sb.AppendLine(string.Join(",", row.Select(EscapeCsv)));
+        }
+
+        var fileName = $"{filePrefix}-{DateTimeOffset.UtcNow:yyyyMMddHHmmss}.csv";
+        await JsRuntime.InvokeVoidAsync("downloadFile", fileName, "text/csv", sb.ToString());
+    }
+
+    private static string EscapeCsv(string value)
+    {
+        var safe = value?.Replace("\"", "\"\"") ?? string.Empty;
+        if (safe.Contains(',') || safe.Contains('"') || safe.Contains('\n'))
+        {
+            safe = $"\"{safe}\"";
+        }
+
+        return safe;
+    }
+
+    private bool TryBuildDates(out DateOnly from, out DateOnly to)
+    {
+        if (!_filterFrom.HasValue || !_filterTo.HasValue)
+        {
+            Snackbar.Add(Localizer["Reporting_Filter_InvalidRange"].Value, Severity.Warning);
+            from = default;
+            to = default;
+            return false;
+        }
+
+        from = DateOnly.FromDateTime(_filterFrom.Value);
+        to = DateOnly.FromDateTime(_filterTo.Value);
+        return true;
+    }
+
+    private static bool HasData<T>(ReportResult<T>? result) => result?.Rows?.Any() == true;
+
+    private static string FormatAmount(decimal amount) => amount.ToString("N2");
+
+    private string FormatTimestamp(DateTimeOffset timestamp) => timestamp.ToLocalTime().ToString("g");
+
+    private string GetFinancialCaption(string? caption) => caption switch
+    {
+        "Revenue" => Localizer["Reporting_Row_Revenue"],
+        "Expenses" => Localizer["Reporting_Row_Expenses"],
+        "Net Income" => Localizer["Reporting_Row_NetIncome"],
+        "Assets" => Localizer["Reporting_Row_Assets"],
+        "Liabilities" => Localizer["Reporting_Row_Liabilities"],
+        "Equity" => Localizer["Reporting_Row_Equity"],
+        _ => caption ?? string.Empty
+    };
+
+    private sealed record AccountOption(Guid Id, string Number, string Name);
+}

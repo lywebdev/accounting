@@ -9,15 +9,21 @@
 <MudPaper Class="pa-4 mb-4">
     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
         <MudText Typo="Typo.h5">@Localizer["Journal_Title"]</MudText>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenCreateDialogAsync">
-            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-2" />@Localizer["Journal_AddButton"]
-        </MudButton>
+        <MudTooltip Text="@Localizer["Journal_Tooltip_Add"]">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenCreateDialogAsync">
+                <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-2" />@Localizer["Journal_AddButton"]
+            </MudButton>
+        </MudTooltip>
     </MudStack>
 
     <MudStack Row="true" Class="mt-4" Spacing="2">
         <MudDatePicker Date="_fromDate" DateChanged="OnFromDateChanged" Label="@Localizer["Journal_Filter_From"]" />
         <MudDatePicker Date="_toDate" DateChanged="OnToDateChanged" Label="@Localizer["Journal_Filter_To"]" />
     </MudStack>
+</MudPaper>
+
+<MudPaper Class="report-note">
+    @Localizer["Journal_Note"]
 </MudPaper>
 
 @if (_isLoading)
@@ -30,7 +36,7 @@ else if (_entries.Count == 0)
 }
 else
 {
-    <MudTable Items="_entries" Dense="true">
+    <MudTable Items="_entries" Dense="true" RowClassFunc='@((_, __) => "clickable-row")'>
         <HeaderContent>
             <MudTh>@Localizer["Journal_Table_Date"]</MudTh>
             <MudTh>@Localizer["Journal_Table_Reference"]</MudTh>
@@ -46,7 +52,9 @@ else
             <MudTd>@entry.TotalDebit</MudTd>
             <MudTd>@entry.TotalCredit</MudTd>
             <MudTd>
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeleteEntryAsync(entry.Id)" />
+                <MudTooltip Text="@Localizer["Journal_Tooltip_Delete"]">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeleteEntryAsync(entry.Id)" />
+                </MudTooltip>
             </MudTd>
         </RowTemplate>
         <ChildRowContent Context="entry">

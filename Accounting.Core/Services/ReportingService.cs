@@ -78,16 +78,41 @@ public class ReportingService(
 
     public async Task<ReportResult<LedgerEntryRow>> GetGeneralLedgerAsync(ReportFilter filter, CancellationToken cancellationToken = default)
     {
+        var accounts = await accountRepository.GetAsync(null, cancellationToken);
+        var accountLookup = accounts.ToDictionary(a => a.Id, a => a);
         var journalEntries = await journalEntryRepository.GetAsync(filter.From, filter.To, cancellationToken);
         var rows = new List<LedgerEntryRow>();
-        decimal runningBalance = 0m;
+        var balances = new Dictionary<Guid, decimal>();
 
         foreach (var entry in journalEntries.OrderBy(j => j.EntryDate))
         {
             foreach (var line in entry.Lines)
             {
-                runningBalance += line.Debit - line.Credit;
-                rows.Add(new LedgerEntryRow(entry.EntryDate, entry.Reference, line.Description, line.Debit, line.Credit, runningBalance));
+                if (filter.AccountId.HasValue && line.AccountId != filter.AccountId.Value)
+                {
+                    continue;
+                }
+
+                if (!accountLookup.TryGetValue(line.AccountId, out var account))
+                {
+                    continue;
+                }
+
+                var currentBalance = balances.TryGetValue(line.AccountId, out var balance)
+                    ? balance
+                    : 0m;
+                currentBalance += line.Debit - line.Credit;
+                balances[line.AccountId] = currentBalance;
+
+                rows.Add(new LedgerEntryRow(
+                    entry.EntryDate,
+                    entry.Reference,
+                    account.Number,
+                    account.Name,
+                    line.Description,
+                    line.Debit,
+                    line.Credit,
+                    currentBalance));
             }
         }
 

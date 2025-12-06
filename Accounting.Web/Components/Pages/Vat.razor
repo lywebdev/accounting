@@ -6,6 +6,10 @@
 @inject ISnackbar Snackbar
 @inject IStringLocalizer<SharedResources> Localizer
 
+<MudPaper Class="report-note">
+    @Localizer["VAT_Note"]
+</MudPaper>
+
 <MudTabs Rounded="true">
     <MudTabPanel Text="@Localizer["VAT_Tab_Declaration"]">
         <MudPaper Class="pa-4 mb-4">
@@ -22,14 +26,18 @@
                     </MudSelect>
                 </MudItem>
                 <MudItem xs="12" sm="6" md="3">
-                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="LoadDeclarationAsync" Disabled="@_isLoading">
-                        <MudIcon Icon="@Icons.Material.Filled.Calculate" Class="mr-2" />@Localizer["VAT_Action_Calculate"]
-                    </MudButton>
+                    <MudTooltip Text="@Localizer["VAT_Tooltip_Calculate"]">
+                        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="LoadDeclarationAsync" Disabled="@_isLoading">
+                            <MudIcon Icon="@Icons.Material.Filled.Calculate" Class="mr-2" />@Localizer["VAT_Action_Calculate"]
+                        </MudButton>
+                    </MudTooltip>
                 </MudItem>
                 <MudItem xs="12" sm="6" md="3">
-                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="SubmitDeclarationAsync" Disabled="@(_currentDeclaration is null || _currentDeclaration.Status == TaxDeclarationStatus.Accepted || _isLoading)">
-                        <MudIcon Icon="@Icons.Material.Filled.Send" Class="mr-2" />@Localizer["VAT_Action_Submit"]
-                    </MudButton>
+                    <MudTooltip Text="@Localizer["VAT_Tooltip_Submit"]">
+                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="SubmitDeclarationAsync" Disabled="@(_currentDeclaration is null || _currentDeclaration.Status == TaxDeclarationStatus.Accepted || _isLoading)">
+                            <MudIcon Icon="@Icons.Material.Filled.Send" Class="mr-2" />@Localizer["VAT_Action_Submit"]
+                        </MudButton>
+                    </MudTooltip>
                 </MudItem>
             </MudGrid>
         </MudPaper>
@@ -109,11 +117,16 @@
     <MudTabPanel Text="@Localizer["VAT_Tab_Validation"]">
         <MudPaper Class="pa-4">
             <MudText Typo="Typo.h6" Class="mb-2">@Localizer["VAT_Validation_Title"]</MudText>
+            <MudAlert Severity="Severity.Info" Dense="true" Variant="Variant.Text" Class="mb-3">
+                @Localizer["VAT_Validation_Note"]
+            </MudAlert>
             <MudStack Spacing="2">
                 <MudTextField @bind-Value="_vatNumber" Label="@Localizer["VAT_Validation_Label"]" Immediate="true" />
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(_isValidationRunning || string.IsNullOrWhiteSpace(_vatNumber))" OnClick="ValidateVatAsync">
-                    <MudIcon Icon="@Icons.Material.Filled.Verified" Class="mr-2" />@Localizer["VAT_Validation_Button"]
-                </MudButton>
+                <MudTooltip Text="@Localizer["VAT_Validation_Tooltip"]">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(_isValidationRunning || string.IsNullOrWhiteSpace(_vatNumber))" OnClick="ValidateVatAsync">
+                        <MudIcon Icon="@Icons.Material.Filled.Verified" Class="mr-2" />@Localizer["VAT_Validation_Button"]
+                    </MudButton>
+                </MudTooltip>
                 @if (_vatValidationResult.HasValue)
                 {
                     <MudAlert Severity="@(_vatValidationResult.Value ? Severity.Success : Severity.Error)" Variant="Variant.Text">

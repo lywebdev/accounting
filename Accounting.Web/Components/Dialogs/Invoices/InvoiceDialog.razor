@@ -4,6 +4,9 @@
 
 <MudDialog>
     <DialogContent>
+        <MudAlert Severity="Severity.Info" Dense="true" Variant="Variant.Text" Class="mb-3">
+            @Localizer["Invoice_Dialog_Note"]
+        </MudAlert>
         <MudForm @ref="_form">
             <MudSelect T="InvoiceType" @bind-Value="Model.Type" Label="@Localizer["Invoice_Field_Type"]" Required="true">
                 @foreach (InvoiceType type in Enum.GetValues(typeof(InvoiceType)))

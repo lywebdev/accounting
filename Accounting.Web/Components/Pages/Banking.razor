@@ -13,16 +13,24 @@
         <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Spacing="2">
             <MudText Typo="Typo.h5">@Localizer["Banking_Title"]</MudText>
             <MudStack Row="true" Spacing="2">
-                <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="SyncExternalAsync">
-                    <MudIcon Icon="@Icons.Material.Filled.CloudDownload" Class="mr-2" />@Localizer["Banking_Sync"]
-                </MudButton>
-                <MudFileUpload T="IBrowserFile" @bind-Files="_importFile" Accept=".csv" />
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="_importFile is null" OnClick="ImportCsvAsync">
-                    <MudIcon Icon="@Icons.Material.Filled.Upload" Class="mr-2" />@Localizer["Banking_ImportCsv"]
-                </MudButton>
-                <MudButton Variant="Variant.Outlined" Color="Color.Info" OnClick="TriggerAutoMatchAsync" Disabled="@_isLoading">
-                    <MudIcon Icon="@Icons.Material.Filled.AutoAwesome" Class="mr-2" />@Localizer["Banking_Action_AutoMatch"]
-                </MudButton>
+                <MudTooltip Text="@Localizer["Banking_Tooltip_Sync"]">
+                    <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="SyncExternalAsync">
+                        <MudIcon Icon="@Icons.Material.Filled.CloudDownload" Class="mr-2" />@Localizer["Banking_Sync"]
+                    </MudButton>
+                </MudTooltip>
+                <MudTooltip Text="@Localizer["Banking_Tooltip_FileUpload"]">
+                    <MudFileUpload T="IBrowserFile" @bind-Files="_importFile" Accept=".csv" />
+                </MudTooltip>
+                <MudTooltip Text="@Localizer["Banking_Tooltip_Import"]">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="_importFile is null" OnClick="ImportCsvAsync">
+                        <MudIcon Icon="@Icons.Material.Filled.Upload" Class="mr-2" />@Localizer["Banking_ImportCsv"]
+                    </MudButton>
+                </MudTooltip>
+                <MudTooltip Text="@Localizer["Banking_Tooltip_AutoMatch"]">
+                    <MudButton Variant="Variant.Outlined" Color="Color.Info" OnClick="TriggerAutoMatchAsync" Disabled="@_isLoading">
+                        <MudIcon Icon="@Icons.Material.Filled.AutoAwesome" Class="mr-2" />@Localizer["Banking_Action_AutoMatch"]
+                    </MudButton>
+                </MudTooltip>
             </MudStack>
         </MudStack>
         <MudStack Row="true" AlignItems="AlignItems.End" Spacing="2">
@@ -33,11 +41,17 @@
                 <MudSelectItem Value="@((bool?)true)">@Localizer["Banking_Filter_Status_Matched"]</MudSelectItem>
                 <MudSelectItem Value="@((bool?)false)">@Localizer["Banking_Filter_Status_Unmatched"]</MudSelectItem>
             </MudSelect>
-            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="LoadTransactionsAsync">
-                <MudIcon Icon="@Icons.Material.Filled.FilterList" Class="mr-2" />@Localizer["Banking_Filter_Apply"]
-            </MudButton>
+            <MudTooltip Text="@Localizer["Banking_Tooltip_Filter"]">
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="LoadTransactionsAsync">
+                    <MudIcon Icon="@Icons.Material.Filled.FilterList" Class="mr-2" />@Localizer["Banking_Filter_Apply"]
+                </MudButton>
+            </MudTooltip>
         </MudStack>
     </MudStack>
+</MudPaper>
+
+<MudPaper Class="report-note">
+    @Localizer["Banking_Note"]
 </MudPaper>
 
 @if (_lastOperationSummary is not null)
@@ -50,7 +64,7 @@
     </MudAlert>
 }
 
-<MudTable T="BankTransactionRow" Items="_transactions" Dense="true" Hover="true" Loading="@_isLoading" OnRowClick="HandleRowClick">
+<MudTable T="BankTransactionRow" Items="_transactions" Dense="true" Hover="true" Loading="@_isLoading" OnRowClick="HandleRowClick" RowClassFunc='@((_, __) => "clickable-row")'>
     <LoadingContent>
         <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
     </LoadingContent>
@@ -86,6 +100,9 @@
 {
     <MudPaper Class="pa-4 mt-4">
         <MudText Typo="Typo.subtitle1">@Localizer["Banking_Action_Match"] - @_selectedTransaction.Counterparty (@($"{_selectedTransaction.Amount:0.00} EUR"))</MudText>
+        <MudAlert Severity="Severity.Info" Dense="true" Variant="Variant.Text" Class="mb-3">
+            @Localizer["Banking_Match_Note"]
+        </MudAlert>
         <MudAutocomplete T="InvoiceLookup"
                          ToStringFunc="@(invoice => $"{invoice.Number} - {invoice.Counterparty} ({invoice.TotalGross:0.00})")"
                          SearchFunc="SearchInvoicesAsync"

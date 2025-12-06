@@ -109,8 +109,128 @@
   <data name="Page_VAT_Title" xml:space="preserve">
     <value>НДС / Налоги</value>
   </data>
+  <data name="VAT_Note" xml:space="preserve">
+    <value>Консоль по НДС имитирует налоговый орган: рассчитывайте квартальные декларации, отправляйте их и получайте статусы Accepted/Rejected, а также проверяйте налоговые номера перед работой с клиентами.</value>
+  </data>
   <data name="Page_Reporting_Title" xml:space="preserve">
     <value>Отчётность</value>
+  </data>
+  <data name="Reporting_Filter_Title" xml:space="preserve">
+    <value>Панель фильтров</value>
+  </data>
+  <data name="Reporting_Filter_From" xml:space="preserve">
+    <value>С даты</value>
+  </data>
+  <data name="Reporting_Filter_To" xml:space="preserve">
+    <value>По дату</value>
+  </data>
+  <data name="Reporting_Filter_Currency" xml:space="preserve">
+    <value>Валюта</value>
+  </data>
+  <data name="Reporting_Filter_Category" xml:space="preserve">
+    <value>Категория счетов</value>
+  </data>
+  <data name="Reporting_Filter_Account" xml:space="preserve">
+    <value>Сконцентрироваться на счёте (GL)</value>
+  </data>
+  <data name="Reporting_Filter_Account_All" xml:space="preserve">
+    <value>Все счета</value>
+  </data>
+  <data name="Reporting_Filter_Run" xml:space="preserve">
+    <value>Сформировать отчёт</value>
+  </data>
+  <data name="Reporting_Filter_Export" xml:space="preserve">
+    <value>Экспорт CSV</value>
+  </data>
+  <data name="Reporting_Filter_InvalidRange" xml:space="preserve">
+    <value>Пожалуйста, выберите корректный период.</value>
+  </data>
+  <data name="Reporting_Tab_PnL" xml:space="preserve">
+    <value>Отчёт о прибылях и убытках</value>
+  </data>
+  <data name="Reporting_Tab_Balance" xml:space="preserve">
+    <value>Баланс</value>
+  </data>
+  <data name="Reporting_Tab_TrialBalance" xml:space="preserve">
+    <value>Оборотно-сальдовая ведомость</value>
+  </data>
+  <data name="Reporting_Tab_GeneralLedger" xml:space="preserve">
+    <value>Главная книга</value>
+  </data>
+  <data name="Reporting_PnL_Note" xml:space="preserve">
+    <value>Отчёт о прибылях и убытках сравнивает выручку и расходы за период, чтобы быстро понять, заработала ли компания.</value>
+  </data>
+  <data name="Reporting_Balance_Note" xml:space="preserve">
+    <value>Баланс отвечает на вопрос «Что у нас есть и что мы должны?» на конец выбранного периода.</value>
+  </data>
+  <data name="Reporting_TB_Note" xml:space="preserve">
+    <value>Оборотно-сальдовая ведомость показывает дебет и кредит по каждому счёту — быстрый контроль перед закрытием.</value>
+  </data>
+  <data name="Reporting_GL_Note" xml:space="preserve">
+    <value>Главная книга раскрывает все проводки отдельного счёта и помогает понять, как формировался остаток.</value>
+  </data>
+  <data name="Reporting_Table_Caption" xml:space="preserve">
+    <value>Показатель</value>
+  </data>
+  <data name="Reporting_Table_Amount" xml:space="preserve">
+    <value>Сумма</value>
+  </data>
+  <data name="Reporting_Row_Revenue" xml:space="preserve">
+    <value>Выручка</value>
+  </data>
+  <data name="Reporting_Row_Expenses" xml:space="preserve">
+    <value>Расходы</value>
+  </data>
+  <data name="Reporting_Row_NetIncome" xml:space="preserve">
+    <value>Чистая прибыль</value>
+  </data>
+  <data name="Reporting_Row_Assets" xml:space="preserve">
+    <value>Активы</value>
+  </data>
+  <data name="Reporting_Row_Liabilities" xml:space="preserve">
+    <value>Обязательства</value>
+  </data>
+  <data name="Reporting_Row_Equity" xml:space="preserve">
+    <value>Капитал</value>
+  </data>
+  <data name="Reporting_TB_Number" xml:space="preserve">
+    <value>Номер счёта</value>
+  </data>
+  <data name="Reporting_TB_Name" xml:space="preserve">
+    <value>Название счёта</value>
+  </data>
+  <data name="Reporting_TB_Debit" xml:space="preserve">
+    <value>Дебет</value>
+  </data>
+  <data name="Reporting_TB_Credit" xml:space="preserve">
+    <value>Кредит</value>
+  </data>
+  <data name="Reporting_GL_Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="Reporting_GL_Reference" xml:space="preserve">
+    <value>Референс</value>
+  </data>
+  <data name="Reporting_GL_Account" xml:space="preserve">
+    <value>Счёт</value>
+  </data>
+  <data name="Reporting_GL_Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="Reporting_GL_Debit" xml:space="preserve">
+    <value>Дебет</value>
+  </data>
+  <data name="Reporting_GL_Credit" xml:space="preserve">
+    <value>Кредит</value>
+  </data>
+  <data name="Reporting_GL_Balance" xml:space="preserve">
+    <value>Текущий остаток</value>
+  </data>
+  <data name="Reporting_Metadata_GeneratedAt" xml:space="preserve">
+    <value>Сформировано {0}</value>
+  </data>
+  <data name="Reporting_NoData" xml:space="preserve">
+    <value>По заданным критериям пока нет данных.</value>
   </data>
   <data name="Page_UnderConstruction" xml:space="preserve">
     <value>Каркас модуля готов; функциональный интерфейс появится в следующей итерации.</value>
@@ -121,11 +241,20 @@
   <data name="Home_Description" xml:space="preserve">
     <value>Все основные модули подключены согласно шаблону чистой архитектуры. Выберите раздел в меню навигации для продолжения.</value>
   </data>
+  <data name="Home_Note" xml:space="preserve">
+    <value>Если вы только знакомитесь с бухгалтерией, начните с плана счетов, затем создайте пару проводок, счетов, банковских операций и налоговых деклараций, чтобы увидеть связь между ними.</value>
+  </data>
   <data name="Coa_Title" xml:space="preserve">
     <value>План счетов</value>
   </data>
   <data name="Coa_AddButton" xml:space="preserve">
     <value>Добавить счёт</value>
+  </data>
+  <data name="Coa_Tooltip_Add" xml:space="preserve">
+    <value>Создать новый счёт</value>
+  </data>
+  <data name="Coa_Note" xml:space="preserve">
+    <value>План счетов — это основа бухгалтерии. Здесь задаются активы, обязательства, капитал, доходы и расходы; чтобы сохранить историю, деактивируйте счёт вместо удаления.</value>
   </data>
   <data name="Coa_Filter_Label" xml:space="preserve">
     <value>Фильтр по категории</value>
@@ -147,6 +276,15 @@
   </data>
   <data name="Coa_Table_Actions" xml:space="preserve">
     <value>Действия</value>
+  </data>
+  <data name="Coa_Tooltip_Edit" xml:space="preserve">
+    <value>Редактировать счёт</value>
+  </data>
+  <data name="Coa_Tooltip_Deactivate" xml:space="preserve">
+    <value>Деактивировать счёт</value>
+  </data>
+  <data name="Coa_Tooltip_Activate" xml:space="preserve">
+    <value>Активировать счёт</value>
   </data>
   <data name="Coa_Status_Active" xml:space="preserve">
     <value>Активен</value>
@@ -177,6 +315,9 @@
   </data>
   <data name="Coa_Dialog_Cancel" xml:space="preserve">
     <value>Отмена</value>
+  </data>
+  <data name="Coa_Dialog_Note" xml:space="preserve">
+    <value>Используйте принятую в компании нумерацию. После того как счёт попал в проводки, его номер лучше не менять.</value>
   </data>
   <data name="Coa_Field_Number" xml:space="preserve">
     <value>Номер счёта</value>
@@ -223,6 +364,12 @@
   <data name="Journal_AddButton" xml:space="preserve">
     <value>Новая проводка</value>
   </data>
+  <data name="Journal_Tooltip_Add" xml:space="preserve">
+    <value>Создать ручную проводку</value>
+  </data>
+  <data name="Journal_Note" xml:space="preserve">
+    <value>Общий журнал фиксирует ручные дебетовые и кредитовые проводки. Каждая запись должна быть сбалансирована перед проведением, поэтому используйте его для корректировок и редких событий.</value>
+  </data>
   <data name="Journal_Filter_From" xml:space="preserve">
     <value>С даты</value>
   </data>
@@ -246,6 +393,9 @@
   </data>
   <data name="Journal_Table_Credit" xml:space="preserve">
     <value>Кредит всего</value>
+  </data>
+  <data name="Journal_Tooltip_Delete" xml:space="preserve">
+    <value>Удалить запись</value>
   </data>
   <data name="Journal_Lines_Title" xml:space="preserve">
     <value>Строки проводки</value>
@@ -295,6 +445,9 @@
   <data name="Journal_Dialog_Cancel" xml:space="preserve">
     <value>Отмена</value>
   </data>
+  <data name="Journal_Dialog_Note" xml:space="preserve">
+    <value>В каждой проводке должно быть минимум две строки. Дебет обязан равняться кредиту — ориентируйтесь на индикатор баланса.</value>
+  </data>
   <data name="Journal_Snackbar_Create" xml:space="preserve">
     <value>Проводка создана.</value>
   </data>
@@ -307,6 +460,12 @@
   <data name="Invoices_AddButton" xml:space="preserve">
     <value>Новый счёт</value>
   </data>
+  <data name="Invoices_Tooltip_Add" xml:space="preserve">
+    <value>Создать счёт-фактуру</value>
+  </data>
+  <data name="Invoices_Note" xml:space="preserve">
+    <value>Раздел «Счета-фактуры» закрывает потоки продаж и закупок. Он рассчитывает НДС, следит за сроками оплаты и переводит статусы (Черновик -&gt; Отправлен -&gt; Оплачен) перед отражением в учёте.</value>
+  </data>
   <data name="Invoices_Filter_Type" xml:space="preserve">
     <value>Тип</value>
   </data>
@@ -318,6 +477,30 @@
   </data>
   <data name="Invoices_Filter_To" xml:space="preserve">
     <value>По дату</value>
+  </data>
+  <data name="Invoices_Table_DueDate" xml:space="preserve">
+    <value>Срок оплаты</value>
+  </data>
+  <data name="Invoices_Workflow_Draft" xml:space="preserve">
+    <value>Черновик</value>
+  </data>
+  <data name="Invoices_Workflow_Sent" xml:space="preserve">
+    <value>Отправлено</value>
+  </data>
+  <data name="Invoices_Workflow_Paid" xml:space="preserve">
+    <value>Оплачено</value>
+  </data>
+  <data name="Invoices_Workflow_Overdue" xml:space="preserve">
+    <value>Просрочено</value>
+  </data>
+  <data name="Invoices_Action_Send" xml:space="preserve">
+    <value>Отметить как отправленный</value>
+  </data>
+  <data name="Invoices_Action_RecordPayment" xml:space="preserve">
+    <value>Зарегистрировать оплату</value>
+  </data>
+  <data name="Invoices_Action_Delete" xml:space="preserve">
+    <value>Удалить счёт</value>
   </data>
   <data name="Invoices_NoRecords" xml:space="preserve">
     <value>Счета по заданным фильтрам отсутствуют.</value>
@@ -394,11 +577,35 @@
   <data name="Invoice_Dialog_Cancel" xml:space="preserve">
     <value>Отмена</value>
   </data>
+  <data name="Invoice_Dialog_Note" xml:space="preserve">
+    <value>Заполните заголовок и хотя бы одну строку. Доходный или расходный счёт определяет проводку, НДС считается по строкам.</value>
+  </data>
+  <data name="Invoice_PaymentDialog_Title" xml:space="preserve">
+    <value>Регистрация оплаты для счёта {0}</value>
+  </data>
+  <data name="Invoice_PaymentDialog_Date" xml:space="preserve">
+    <value>Дата оплаты</value>
+  </data>
+  <data name="Invoice_PaymentDialog_Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="Invoice_PaymentDialog_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Invoice_PaymentDialog_Note" xml:space="preserve">
+    <value>Укажите фактическую дату оплаты, чтобы касса, доходы и НДС отражали реальное состояние.</value>
+  </data>
   <data name="Invoices_Snackbar_Create" xml:space="preserve">
     <value>Счёт-фактура создана.</value>
   </data>
   <data name="Invoices_Snackbar_Posted" xml:space="preserve">
     <value>Счёт-фактура проведена.</value>
+  </data>
+  <data name="Invoices_Snackbar_Sent" xml:space="preserve">
+    <value>Счёт отмечен как отправленный.</value>
+  </data>
+  <data name="Invoices_Snackbar_Paid" xml:space="preserve">
+    <value>Оплата зарегистрирована.</value>
   </data>
   <data name="Invoices_Snackbar_Delete" xml:space="preserve">
     <value>Счёт-фактура удалена.</value>
@@ -412,11 +619,23 @@
   <data name="Banking_Title" xml:space="preserve">
     <value>Банкинг</value>
   </data>
+  <data name="Banking_Note" xml:space="preserve">
+    <value>Банковский модуль загружает выписки из CSV или имитации API, сопоставляет платежи со счетами и при необходимости создаёт проводки автоматически. Просматривайте несопоставленные операции, чтобы дебиторы и кредиторы были синхронны.</value>
+  </data>
   <data name="Banking_ImportCsv" xml:space="preserve">
     <value>Импорт CSV</value>
   </data>
+  <data name="Banking_Tooltip_FileUpload" xml:space="preserve">
+    <value>Выберите CSV-файл на диске</value>
+  </data>
+  <data name="Banking_Tooltip_Import" xml:space="preserve">
+    <value>Отправить выбранный файл</value>
+  </data>
   <data name="Banking_Sync" xml:space="preserve">
     <value>Синхронизировать ленту</value>
+  </data>
+  <data name="Banking_Tooltip_Sync" xml:space="preserve">
+    <value>Подтянуть тестовые транзакции через API</value>
   </data>
   <data name="Banking_Table_Date" xml:space="preserve">
     <value>Дата</value>
@@ -454,6 +673,9 @@
   <data name="Banking_Filter_Apply" xml:space="preserve">
     <value>Применить</value>
   </data>
+  <data name="Banking_Tooltip_Filter" xml:space="preserve">
+    <value>Обновить таблицу с заданными фильтрами</value>
+  </data>
   <data name="Banking_Status_Matched" xml:space="preserve">
     <value>Сопоставлено</value>
   </data>
@@ -465,6 +687,9 @@
   </data>
   <data name="Banking_Match_SelectInvoice" xml:space="preserve">
     <value>Выберите счёт</value>
+  </data>
+  <data name="Banking_Match_Note" xml:space="preserve">
+    <value>Здесь показываются только открытые счета. Если нужного документа нет, отмените сопоставление, измените фильтры или заведите счёт заранее.</value>
   </data>
   <data name="Banking_Match_Cancel" xml:space="preserve">
     <value>Отмена</value>
@@ -495,6 +720,9 @@
   </data>
   <data name="Banking_Action_AutoMatch" xml:space="preserve">
     <value>Автоподбор</value>
+  </data>
+  <data name="Banking_Tooltip_AutoMatch" xml:space="preserve">
+    <value>Автоматически сопоставить платежи и сформировать проводки</value>
   </data>
   <data name="Banking_Status_Posted" xml:space="preserve">
     <value>Отражено в учёте</value>
@@ -544,8 +772,14 @@
   <data name="VAT_Action_Calculate" xml:space="preserve">
     <value>Рассчитать</value>
   </data>
+  <data name="VAT_Tooltip_Calculate" xml:space="preserve">
+    <value>Пересчитать показатели за выбранный квартал</value>
+  </data>
   <data name="VAT_Action_Submit" xml:space="preserve">
     <value>Отправить</value>
+  </data>
+  <data name="VAT_Tooltip_Submit" xml:space="preserve">
+    <value>Передать декларацию в тестовую налоговую службу</value>
   </data>
   <data name="VAT_Label_Payable" xml:space="preserve">
     <value>НДС к уплате</value>
@@ -589,11 +823,17 @@
   <data name="VAT_Validation_Title" xml:space="preserve">
     <value>Проверка НДС-номера в песочнице налоговой службы</value>
   </data>
+  <data name="VAT_Validation_Note" xml:space="preserve">
+    <value>Проверка имитирует реестр ЕС. Если возвращается ошибка, попробуйте убрать пробелы и посторонние символы.</value>
+  </data>
   <data name="VAT_Validation_Label" xml:space="preserve">
     <value>Номер НДС</value>
   </data>
   <data name="VAT_Validation_Button" xml:space="preserve">
     <value>Проверить</value>
+  </data>
+  <data name="VAT_Validation_Tooltip" xml:space="preserve">
+    <value>Проверить номер в песочнице налоговой</value>
   </data>
   <data name="VAT_Validation_Result_Valid" xml:space="preserve">
     <value>Номер НДС действителен.</value>

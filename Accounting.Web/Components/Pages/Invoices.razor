@@ -11,9 +11,11 @@
 <MudPaper Class="pa-4 mb-4">
     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
         <MudText Typo="Typo.h5">@Localizer["Invoices_Title"]</MudText>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenCreateDialogAsync">
-            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-2" />@Localizer["Invoices_AddButton"]
-        </MudButton>
+        <MudTooltip Text="@Localizer["Invoices_Tooltip_Add"]">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenCreateDialogAsync">
+                <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-2" />@Localizer["Invoices_AddButton"]
+            </MudButton>
+        </MudTooltip>
     </MudStack>
 
     <MudStack Row="true" Class="mt-4" Spacing="2">
@@ -27,6 +29,10 @@
         <MudDatePicker Date="_fromDate" DateChanged="value => OnDateChanged(value, true)" Label="@Localizer["Invoices_Filter_From"]" />
         <MudDatePicker Date="_toDate" DateChanged="value => OnDateChanged(value, false)" Label="@Localizer["Invoices_Filter_To"]" />
     </MudStack>
+</MudPaper>
+
+<MudPaper Class="report-note">
+    @Localizer["Invoices_Note"]
 </MudPaper>
 
 @if (_isLoading)
@@ -45,6 +51,7 @@ else
             <MudTh>@Localizer["Invoices_Table_Type"]</MudTh>
             <MudTh>@Localizer["Invoices_Table_Counterparty"]</MudTh>
             <MudTh>@Localizer["Invoices_Table_IssueDate"]</MudTh>
+            <MudTh>@Localizer["Invoices_Table_DueDate"]</MudTh>
             <MudTh>@Localizer["Invoices_Table_Total"]</MudTh>
             <MudTh>@Localizer["Invoices_Table_Status"]</MudTh>
             <MudTh></MudTh>
@@ -54,18 +61,46 @@ else
             <MudTd>@Localizer[$"Invoice_Type_{invoice.Type}"]</MudTd>
             <MudTd>@invoice.Counterparty</MudTd>
             <MudTd>@invoice.IssueDate.ToString("yyyy-MM-dd")</MudTd>
+            <MudTd>@invoice.DueDate.ToString("yyyy-MM-dd")</MudTd>
             <MudTd>@invoice.TotalGross</MudTd>
             <MudTd>
-                <MudChip T="bool" Value="invoice.IsPosted" Color="invoice.IsPosted ? Color.Success : Color.Warning">
-                    @(invoice.IsPosted ? Localizer["Invoices_Status_Posted"] : Localizer["Invoices_Status_Draft"])
-                </MudChip>
+                <MudStack>
+                    <MudChip T="string" Color="@GetWorkflowColor(invoice.WorkflowStatus)">
+                        @Localizer[$"Invoices_Workflow_{invoice.WorkflowStatus}"]
+                    </MudChip>
+                    <MudChip T="bool" Value="invoice.IsPosted" Color="invoice.IsPosted ? Color.Success : Color.Warning" Variant="Variant.Outlined" Size="Size.Small">
+                        @(invoice.IsPosted ? Localizer["Invoices_Status_Posted"] : Localizer["Invoices_Status_Draft"])
+                    </MudChip>
+                </MudStack>
             </MudTd>
             <MudTd>
-                @if (!invoice.IsPosted)
-                {
-                    <MudIconButton Icon="@Icons.Material.Filled.Check" Color="Color.Success" OnClick="() => PostInvoiceAsync(invoice.Id)" />
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeleteInvoiceAsync(invoice.Id)" />
-                }
+                <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+                    <MudTooltip Text="@Localizer["Invoices_Action_Send"]">
+                        <MudIconButton Icon="@Icons.Material.Filled.Send"
+                                       Color="Color.Info"
+                                       Disabled="!invoice.CanMarkAsSent"
+                                       OnClick="() => MarkAsSentAsync(invoice)" />
+                    </MudTooltip>
+                    <MudTooltip Text="@Localizer["Invoices_Action_RecordPayment"]">
+                        <MudIconButton Icon="@Icons.Material.Filled.AttachMoney"
+                                       Color="Color.Success"
+                                       Disabled="!invoice.CanRegisterPayment"
+                                       OnClick="() => OpenRecordPaymentDialogAsync(invoice)" />
+                    </MudTooltip>
+                    @if (!invoice.IsPosted)
+                    {
+                        <MudTooltip Text="@Localizer["Invoices_Status_Posted"]">
+                            <MudIconButton Icon="@Icons.Material.Filled.Check"
+                                           Color="Color.Success"
+                                           OnClick="() => PostInvoiceAsync(invoice.Id)" />
+                        </MudTooltip>
+                        <MudTooltip Text="@Localizer["Invoices_Action_Delete"]">
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                           Color="Color.Error"
+                                           OnClick="() => DeleteInvoiceAsync(invoice.Id)" />
+                        </MudTooltip>
+                    }
+                </MudStack>
             </MudTd>
         </RowTemplate>
         <ChildRowContent Context="invoice">
@@ -188,6 +223,63 @@ else
         }
     }
 
+    private async Task MarkAsSentAsync(InvoiceViewModel invoice)
+    {
+        if (!invoice.CanMarkAsSent)
+        {
+            return;
+        }
+
+        try
+        {
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            await InvoiceService.MarkSentAsync(invoice.Id, today);
+            Snackbar.Add(Localizer["Invoices_Snackbar_Sent"].Value, Severity.Success);
+            await LoadInvoicesAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task OpenRecordPaymentDialogAsync(InvoiceViewModel invoice)
+    {
+        if (!invoice.CanRegisterPayment)
+        {
+            return;
+        }
+
+        var parameters = new DialogParameters
+        {
+            { nameof(RecordPaymentDialog.InitialDate), DateOnly.FromDateTime(DateTime.Today) }
+        };
+
+        var dialog = await DialogService.ShowAsync<RecordPaymentDialog>(
+            Localizer["Invoice_PaymentDialog_Title", invoice.Number],
+            parameters);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false, Data: DateOnly paymentDate })
+        {
+            await RecordPaymentAsync(invoice.Id, paymentDate);
+        }
+    }
+
+    private async Task RecordPaymentAsync(Guid invoiceId, DateOnly paymentDate)
+    {
+        try
+        {
+            await InvoiceService.RecordPaymentAsync(invoiceId, paymentDate);
+            Snackbar.Add(Localizer["Invoices_Snackbar_Paid"].Value, Severity.Success);
+            await LoadInvoicesAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
     private async Task DeleteInvoiceAsync(Guid id)
     {
         try
@@ -202,13 +294,34 @@ else
         }
     }
 
-    private sealed record InvoiceViewModel(Guid Id, InvoiceType Type, string Number, string Counterparty, DateOnly IssueDate, bool IsPosted, decimal TotalGross, IReadOnlyList<InvoiceLineViewModel> Lines)
+    private Color GetWorkflowColor(InvoiceWorkflowStatus status) => status switch
+    {
+        InvoiceWorkflowStatus.Draft => Color.Info,
+        InvoiceWorkflowStatus.Sent => Color.Secondary,
+        InvoiceWorkflowStatus.Paid => Color.Success,
+        InvoiceWorkflowStatus.Overdue => Color.Error,
+        _ => Color.Default
+    };
+
+    private sealed record InvoiceViewModel(Guid Id, InvoiceType Type, string Number, string Counterparty, DateOnly IssueDate, DateOnly DueDate, InvoiceWorkflowStatus WorkflowStatus, bool IsPosted, bool CanMarkAsSent, bool CanRegisterPayment, decimal TotalGross, IReadOnlyList<InvoiceLineViewModel> Lines)
     {
         public static InvoiceViewModel FromEntity(Invoice invoice)
         {
             var currency = "EUR";
             var lines = invoice.Lines.Select(l => new InvoiceLineViewModel(l.Description, l.Quantity, l.UnitPrice.Amount, l.VatRate, l.Total.Amount)).ToList();
-            return new InvoiceViewModel(invoice.Id, invoice.Type, invoice.Number, invoice.Counterparty, invoice.IssueDate, invoice.IsPosted, invoice.TotalGross(currency).Amount, lines);
+            return new InvoiceViewModel(
+                invoice.Id,
+                invoice.Type,
+                invoice.Number,
+                invoice.Counterparty,
+                invoice.IssueDate,
+                invoice.DueDate,
+                invoice.WorkflowStatus,
+                invoice.IsPosted,
+                invoice.CanMarkAsSent,
+                invoice.CanRegisterPayment,
+                invoice.TotalGross(currency).Amount,
+                lines);
         }
     }
 

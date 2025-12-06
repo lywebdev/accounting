@@ -8,10 +8,12 @@
 <MudPaper Class="pa-4 mb-4">
     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
         <MudText Typo="Typo.h5">@Localizer["Coa_Title"]</MudText>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenCreateDialogAsync">
-            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-2" />
-            @Localizer["Coa_AddButton"]
-        </MudButton>
+        <MudTooltip Text="@Localizer["Coa_Tooltip_Add"]">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenCreateDialogAsync">
+                <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-2" />
+                @Localizer["Coa_AddButton"]
+            </MudButton>
+        </MudTooltip>
     </MudStack>
 
     <MudStack Row="true" Class="mt-4" AlignItems="AlignItems.Center" Spacing="2">
@@ -23,6 +25,10 @@
             }
         </MudSelect>
     </MudStack>
+</MudPaper>
+
+<MudPaper Class="report-note">
+    @Localizer["Coa_Note"]
 </MudPaper>
 
 @if (_isLoading)
@@ -53,14 +59,20 @@ else
                 </MudChip>
             </MudTd>
             <MudTd DataLabel="@Localizer["Coa_Table_Actions"]">
-                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="() => EditAccountAsync(context)" />
+                <MudTooltip Text="@Localizer["Coa_Tooltip_Edit"]">
+                    <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="() => EditAccountAsync(context)" />
+                </MudTooltip>
                 @if (context.IsActive)
                 {
-                    <MudIconButton Icon="@Icons.Material.Filled.Block" Color="Color.Error" OnClick="() => DeactivateAccountAsync(context)" />
+                    <MudTooltip Text="@Localizer["Coa_Tooltip_Deactivate"]">
+                        <MudIconButton Icon="@Icons.Material.Filled.Block" Color="Color.Error" OnClick="() => DeactivateAccountAsync(context)" />
+                    </MudTooltip>
                 }
                 else
                 {
-                    <MudIconButton Icon="@Icons.Material.Filled.Refresh" Color="Color.Success" OnClick="() => ActivateAccountAsync(context)" />
+                    <MudTooltip Text="@Localizer["Coa_Tooltip_Activate"]">
+                        <MudIconButton Icon="@Icons.Material.Filled.Refresh" Color="Color.Success" OnClick="() => ActivateAccountAsync(context)" />
+                    </MudTooltip>
                 }
             </MudTd>
         </RowTemplate>

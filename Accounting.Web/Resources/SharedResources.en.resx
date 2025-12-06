@@ -109,8 +109,128 @@
   <data name="Page_VAT_Title" xml:space="preserve">
     <value>VAT / Tax</value>
   </data>
+  <data name="VAT_Note" xml:space="preserve">
+    <value>The VAT console simulates a tax authority: calculate quarterly declarations, submit them to get Accepted/Rejected responses, and validate VAT numbers before onboarding customers.</value>
+  </data>
   <data name="Page_Reporting_Title" xml:space="preserve">
     <value>Reporting</value>
+  </data>
+  <data name="Reporting_Filter_Title" xml:space="preserve">
+    <value>Reporting toolbox</value>
+  </data>
+  <data name="Reporting_Filter_From" xml:space="preserve">
+    <value>From date</value>
+  </data>
+  <data name="Reporting_Filter_To" xml:space="preserve">
+    <value>To date</value>
+  </data>
+  <data name="Reporting_Filter_Currency" xml:space="preserve">
+    <value>Currency</value>
+  </data>
+  <data name="Reporting_Filter_Category" xml:space="preserve">
+    <value>Filter accounts by category</value>
+  </data>
+  <data name="Reporting_Filter_Account" xml:space="preserve">
+    <value>Focus account (general ledger)</value>
+  </data>
+  <data name="Reporting_Filter_Account_All" xml:space="preserve">
+    <value>All accounts</value>
+  </data>
+  <data name="Reporting_Filter_Run" xml:space="preserve">
+    <value>Run report</value>
+  </data>
+  <data name="Reporting_Filter_Export" xml:space="preserve">
+    <value>Export CSV</value>
+  </data>
+  <data name="Reporting_Filter_InvalidRange" xml:space="preserve">
+    <value>Please select a valid date range.</value>
+  </data>
+  <data name="Reporting_Tab_PnL" xml:space="preserve">
+    <value>Profit &amp; Loss</value>
+  </data>
+  <data name="Reporting_Tab_Balance" xml:space="preserve">
+    <value>Balance Sheet</value>
+  </data>
+  <data name="Reporting_Tab_TrialBalance" xml:space="preserve">
+    <value>Trial Balance</value>
+  </data>
+  <data name="Reporting_Tab_GeneralLedger" xml:space="preserve">
+    <value>General Ledger</value>
+  </data>
+  <data name="Reporting_PnL_Note" xml:space="preserve">
+    <value>P&amp;L summarizes all revenue and expenses within the period so you can quickly see whether the business earned money or burned cash.</value>
+  </data>
+  <data name="Reporting_Balance_Note" xml:space="preserve">
+    <value>The balance sheet answers “What do we own and owe?” by listing assets, liabilities and equity at the period end.</value>
+  </data>
+  <data name="Reporting_TB_Note" xml:space="preserve">
+    <value>The trial balance shows each account’s debit and credit total; it is the accountant’s quick health check before closing the books.</value>
+  </data>
+  <data name="Reporting_GL_Note" xml:space="preserve">
+    <value>Use the general ledger to inspect every journal entry line for a specific account and understand how the running balance evolved.</value>
+  </data>
+  <data name="Reporting_Table_Caption" xml:space="preserve">
+    <value>Caption</value>
+  </data>
+  <data name="Reporting_Table_Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="Reporting_Row_Revenue" xml:space="preserve">
+    <value>Revenue</value>
+  </data>
+  <data name="Reporting_Row_Expenses" xml:space="preserve">
+    <value>Expenses</value>
+  </data>
+  <data name="Reporting_Row_NetIncome" xml:space="preserve">
+    <value>Net income</value>
+  </data>
+  <data name="Reporting_Row_Assets" xml:space="preserve">
+    <value>Assets</value>
+  </data>
+  <data name="Reporting_Row_Liabilities" xml:space="preserve">
+    <value>Liabilities</value>
+  </data>
+  <data name="Reporting_Row_Equity" xml:space="preserve">
+    <value>Equity</value>
+  </data>
+  <data name="Reporting_TB_Number" xml:space="preserve">
+    <value>Account #</value>
+  </data>
+  <data name="Reporting_TB_Name" xml:space="preserve">
+    <value>Account name</value>
+  </data>
+  <data name="Reporting_TB_Debit" xml:space="preserve">
+    <value>Debit</value>
+  </data>
+  <data name="Reporting_TB_Credit" xml:space="preserve">
+    <value>Credit</value>
+  </data>
+  <data name="Reporting_GL_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Reporting_GL_Reference" xml:space="preserve">
+    <value>Reference</value>
+  </data>
+  <data name="Reporting_GL_Account" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="Reporting_GL_Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="Reporting_GL_Debit" xml:space="preserve">
+    <value>Debit</value>
+  </data>
+  <data name="Reporting_GL_Credit" xml:space="preserve">
+    <value>Credit</value>
+  </data>
+  <data name="Reporting_GL_Balance" xml:space="preserve">
+    <value>Running balance</value>
+  </data>
+  <data name="Reporting_Metadata_GeneratedAt" xml:space="preserve">
+    <value>Generated at {0}</value>
+  </data>
+  <data name="Reporting_NoData" xml:space="preserve">
+    <value>No data for the selected criteria yet.</value>
   </data>
   <data name="Page_UnderConstruction" xml:space="preserve">
     <value>Module scaffolding is ready; functional UI will be implemented in the next iteration.</value>
@@ -121,11 +241,20 @@
   <data name="Home_Description" xml:space="preserve">
     <value>All primary modules are wired according to the clean architecture blueprint. Select an area from the navigation menu to continue.</value>
   </data>
+  <data name="Home_Note" xml:space="preserve">
+    <value>New to finance? Start by reviewing the chart of accounts, then capture sample journal entries, invoices, banking activity and tax to see how the ledgers connect.</value>
+  </data>
   <data name="Coa_Title" xml:space="preserve">
     <value>Chart of Accounts</value>
   </data>
   <data name="Coa_AddButton" xml:space="preserve">
     <value>Add account</value>
+  </data>
+  <data name="Coa_Tooltip_Add" xml:space="preserve">
+    <value>Create a new ledger account</value>
+  </data>
+  <data name="Coa_Note" xml:space="preserve">
+    <value>The chart of accounts is the backbone of the ledger. Organize assets, liabilities, equity, revenue and expense buckets here and deactivate records instead of deleting them to preserve history.</value>
   </data>
   <data name="Coa_Filter_Label" xml:space="preserve">
     <value>Filter by category</value>
@@ -147,6 +276,15 @@
   </data>
   <data name="Coa_Table_Actions" xml:space="preserve">
     <value>Actions</value>
+  </data>
+  <data name="Coa_Tooltip_Edit" xml:space="preserve">
+    <value>Edit account</value>
+  </data>
+  <data name="Coa_Tooltip_Deactivate" xml:space="preserve">
+    <value>Deactivate account</value>
+  </data>
+  <data name="Coa_Tooltip_Activate" xml:space="preserve">
+    <value>Activate account</value>
   </data>
   <data name="Coa_Status_Active" xml:space="preserve">
     <value>Active</value>
@@ -177,6 +315,9 @@
   </data>
   <data name="Coa_Dialog_Cancel" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="Coa_Dialog_Note" xml:space="preserve">
+    <value>Use the numbering convention your finance team expects; once an account is used in transactions its number should stay immutable.</value>
   </data>
   <data name="Coa_Field_Number" xml:space="preserve">
     <value>Account number</value>
@@ -223,6 +364,12 @@
   <data name="Journal_AddButton" xml:space="preserve">
     <value>New entry</value>
   </data>
+  <data name="Journal_Tooltip_Add" xml:space="preserve">
+    <value>Record a manual journal entry</value>
+  </data>
+  <data name="Journal_Note" xml:space="preserve">
+    <value>The general journal captures manual debits and credits. Every entry must balance before it can be posted, so use it for adjustments, corrections and one-off events.</value>
+  </data>
   <data name="Journal_Filter_From" xml:space="preserve">
     <value>From date</value>
   </data>
@@ -246,6 +393,9 @@
   </data>
   <data name="Journal_Table_Credit" xml:space="preserve">
     <value>Total credit</value>
+  </data>
+  <data name="Journal_Tooltip_Delete" xml:space="preserve">
+    <value>Delete entry</value>
   </data>
   <data name="Journal_Lines_Title" xml:space="preserve">
     <value>Journal lines</value>
@@ -295,6 +445,9 @@
   <data name="Journal_Dialog_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="Journal_Dialog_Note" xml:space="preserve">
+    <value>Add at least two lines: one debit, one credit. The balance chip must turn green before the entry can be posted.</value>
+  </data>
   <data name="Journal_Snackbar_Create" xml:space="preserve">
     <value>Journal entry created.</value>
   </data>
@@ -307,6 +460,12 @@
   <data name="Invoices_AddButton" xml:space="preserve">
     <value>New invoice</value>
   </data>
+  <data name="Invoices_Tooltip_Add" xml:space="preserve">
+    <value>Create a new invoice</value>
+  </data>
+  <data name="Invoices_Note" xml:space="preserve">
+    <value>Use invoices to cover both sales and purchase flows. The module calculates VAT, tracks due dates, and updates workflow states (Draft → Sent → Paid) before posting to the ledger.</value>
+  </data>
   <data name="Invoices_Filter_Type" xml:space="preserve">
     <value>Type</value>
   </data>
@@ -318,6 +477,30 @@
   </data>
   <data name="Invoices_Filter_To" xml:space="preserve">
     <value>To date</value>
+  </data>
+  <data name="Invoices_Table_DueDate" xml:space="preserve">
+    <value>Due date</value>
+  </data>
+  <data name="Invoices_Workflow_Draft" xml:space="preserve">
+    <value>Draft</value>
+  </data>
+  <data name="Invoices_Workflow_Sent" xml:space="preserve">
+    <value>Sent</value>
+  </data>
+  <data name="Invoices_Workflow_Paid" xml:space="preserve">
+    <value>Paid</value>
+  </data>
+  <data name="Invoices_Workflow_Overdue" xml:space="preserve">
+    <value>Overdue</value>
+  </data>
+  <data name="Invoices_Action_Send" xml:space="preserve">
+    <value>Mark as sent</value>
+  </data>
+  <data name="Invoices_Action_RecordPayment" xml:space="preserve">
+    <value>Record payment</value>
+  </data>
+  <data name="Invoices_Action_Delete" xml:space="preserve">
+    <value>Delete invoice</value>
   </data>
   <data name="Invoices_NoRecords" xml:space="preserve">
     <value>No invoices for the selected filters.</value>
@@ -394,11 +577,35 @@
   <data name="Invoice_Dialog_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="Invoice_Dialog_Note" xml:space="preserve">
+    <value>Add at least one line with a revenue or expense account; VAT is calculated per line and the totals drive posting.</value>
+  </data>
+  <data name="Invoice_PaymentDialog_Title" xml:space="preserve">
+    <value>Record payment for invoice {0}</value>
+  </data>
+  <data name="Invoice_PaymentDialog_Date" xml:space="preserve">
+    <value>Payment date</value>
+  </data>
+  <data name="Invoice_PaymentDialog_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Invoice_PaymentDialog_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Invoice_PaymentDialog_Note" xml:space="preserve">
+    <value>Pick the actual settlement date so cash, revenue recognition and VAT reporting stay aligned with reality.</value>
+  </data>
   <data name="Invoices_Snackbar_Create" xml:space="preserve">
     <value>Invoice created.</value>
   </data>
   <data name="Invoices_Snackbar_Posted" xml:space="preserve">
     <value>Invoice posted.</value>
+  </data>
+  <data name="Invoices_Snackbar_Sent" xml:space="preserve">
+    <value>Invoice marked as sent.</value>
+  </data>
+  <data name="Invoices_Snackbar_Paid" xml:space="preserve">
+    <value>Payment recorded.</value>
   </data>
   <data name="Invoices_Snackbar_Delete" xml:space="preserve">
     <value>Invoice deleted.</value>
@@ -412,11 +619,23 @@
   <data name="Banking_Title" xml:space="preserve">
     <value>Banking</value>
   </data>
+  <data name="Banking_Note" xml:space="preserve">
+    <value>Banking ingests CSV files or the simulated API feed, matches payments to invoices, and can auto-create journal entries. Review unmatched items to keep AR/AP in sync with the ledger.</value>
+  </data>
   <data name="Banking_ImportCsv" xml:space="preserve">
     <value>Import CSV</value>
   </data>
+  <data name="Banking_Tooltip_FileUpload" xml:space="preserve">
+    <value>Select a CSV file from disk</value>
+  </data>
+  <data name="Banking_Tooltip_Import" xml:space="preserve">
+    <value>Upload the selected file</value>
+  </data>
   <data name="Banking_Sync" xml:space="preserve">
     <value>Sync feed</value>
+  </data>
+  <data name="Banking_Tooltip_Sync" xml:space="preserve">
+    <value>Fetch simulated transactions from the API</value>
   </data>
   <data name="Banking_Table_Date" xml:space="preserve">
     <value>Date</value>
@@ -454,6 +673,9 @@
   <data name="Banking_Filter_Apply" xml:space="preserve">
     <value>Apply</value>
   </data>
+  <data name="Banking_Tooltip_Filter" xml:space="preserve">
+    <value>Refresh transactions using current filters</value>
+  </data>
   <data name="Banking_Status_Matched" xml:space="preserve">
     <value>Matched</value>
   </data>
@@ -465,6 +687,9 @@
   </data>
   <data name="Banking_Match_SelectInvoice" xml:space="preserve">
     <value>Select invoice</value>
+  </data>
+  <data name="Banking_Match_Note" xml:space="preserve">
+    <value>Only open invoices appear here. If nothing matches, cancel, adjust filters or register the invoice before linking.</value>
   </data>
   <data name="Banking_Match_Cancel" xml:space="preserve">
     <value>Cancel</value>
@@ -495,6 +720,9 @@
   </data>
   <data name="Banking_Action_AutoMatch" xml:space="preserve">
     <value>Auto-match</value>
+  </data>
+  <data name="Banking_Tooltip_AutoMatch" xml:space="preserve">
+    <value>Match payments automatically and post journal entries</value>
   </data>
   <data name="Banking_Status_Posted" xml:space="preserve">
     <value>Journaled</value>
@@ -544,8 +772,14 @@
   <data name="VAT_Action_Calculate" xml:space="preserve">
     <value>Calculate</value>
   </data>
+  <data name="VAT_Tooltip_Calculate" xml:space="preserve">
+    <value>Recompute declaration values for the selected quarter</value>
+  </data>
   <data name="VAT_Action_Submit" xml:space="preserve">
     <value>Submit</value>
+  </data>
+  <data name="VAT_Tooltip_Submit" xml:space="preserve">
+    <value>Send the declaration to the sandbox authority</value>
   </data>
   <data name="VAT_Label_Payable" xml:space="preserve">
     <value>VAT payable</value>
@@ -589,11 +823,17 @@
   <data name="VAT_Validation_Title" xml:space="preserve">
     <value>Validate VAT number with the tax authority sandbox</value>
   </data>
+  <data name="VAT_Validation_Note" xml:space="preserve">
+    <value>The check emulates the EU registry. Remove spaces or formatting characters if you get an invalid response.</value>
+  </data>
   <data name="VAT_Validation_Label" xml:space="preserve">
     <value>VAT number</value>
   </data>
   <data name="VAT_Validation_Button" xml:space="preserve">
     <value>Validate</value>
+  </data>
+  <data name="VAT_Validation_Tooltip" xml:space="preserve">
+    <value>Check the VAT number with the sandbox</value>
   </data>
   <data name="VAT_Validation_Result_Valid" xml:space="preserve">
     <value>VAT number is valid.</value>

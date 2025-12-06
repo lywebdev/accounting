@@ -4,6 +4,9 @@
 
 <MudDialog>
     <DialogContent>
+        <MudAlert Severity="Severity.Info" Dense="true" Variant="Variant.Text" Class="mb-3">
+            @Localizer["Journal_Dialog_Note"]
+        </MudAlert>
         <MudForm @ref="_form">
             <MudTextField @bind-Value="Model.Reference"
                           Label="@Localizer["Journal_Field_Reference"]"

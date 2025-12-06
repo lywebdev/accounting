@@ -109,8 +109,128 @@
   <data name="Page_VAT_Title" xml:space="preserve">
     <value>BTW / Belasting</value>
   </data>
+  <data name="VAT_Note" xml:space="preserve">
+    <value>De btw-console simuleert de belastingdienst: bereken kwartaalaangiften, dien ze digitaal in voor een Accepted/Rejected status en valideer btw-nummers voordat klanten worden aangemaakt.</value>
+  </data>
   <data name="Page_Reporting_Title" xml:space="preserve">
     <value>Rapportages</value>
+  </data>
+  <data name="Reporting_Filter_Title" xml:space="preserve">
+    <value>Rapportfilters</value>
+  </data>
+  <data name="Reporting_Filter_From" xml:space="preserve">
+    <value>Vanaf datum</value>
+  </data>
+  <data name="Reporting_Filter_To" xml:space="preserve">
+    <value>Tot datum</value>
+  </data>
+  <data name="Reporting_Filter_Currency" xml:space="preserve">
+    <value>Valuta</value>
+  </data>
+  <data name="Reporting_Filter_Category" xml:space="preserve">
+    <value>Filter op categorie</value>
+  </data>
+  <data name="Reporting_Filter_Account" xml:space="preserve">
+    <value>Focusrekening (grootboek)</value>
+  </data>
+  <data name="Reporting_Filter_Account_All" xml:space="preserve">
+    <value>Alle rekeningen</value>
+  </data>
+  <data name="Reporting_Filter_Run" xml:space="preserve">
+    <value>Rapport starten</value>
+  </data>
+  <data name="Reporting_Filter_Export" xml:space="preserve">
+    <value>Exporteren naar CSV</value>
+  </data>
+  <data name="Reporting_Filter_InvalidRange" xml:space="preserve">
+    <value>Selecteer een geldige periode.</value>
+  </data>
+  <data name="Reporting_Tab_PnL" xml:space="preserve">
+    <value>Resultatenrekening</value>
+  </data>
+  <data name="Reporting_Tab_Balance" xml:space="preserve">
+    <value>Balans</value>
+  </data>
+  <data name="Reporting_Tab_TrialBalance" xml:space="preserve">
+    <value>Proefbalans</value>
+  </data>
+  <data name="Reporting_Tab_GeneralLedger" xml:space="preserve">
+    <value>Grootboek</value>
+  </data>
+  <data name="Reporting_PnL_Note" xml:space="preserve">
+    <value>De resultatenrekening vergelijkt omzet met kosten in de gekozen periode zodat je direct ziet of het bedrijf winst maakt.</value>
+  </data>
+  <data name="Reporting_Balance_Note" xml:space="preserve">
+    <value>De balans geeft antwoord op de vraag “Wat bezitten we en wat zijn we verschuldigd?” op de einddatum van de periode.</value>
+  </data>
+  <data name="Reporting_TB_Note" xml:space="preserve">
+    <value>De proefbalans toont voor elke rekening het totaal aan debet en credit; ideaal voor een snelle controle voor afsluiting.</value>
+  </data>
+  <data name="Reporting_GL_Note" xml:space="preserve">
+    <value>Het grootboek laat alle boekingsregels van een rekening zien en hoe het lopende saldo tot stand komt.</value>
+  </data>
+  <data name="Reporting_Table_Caption" xml:space="preserve">
+    <value>Rubriek</value>
+  </data>
+  <data name="Reporting_Table_Amount" xml:space="preserve">
+    <value>Bedrag</value>
+  </data>
+  <data name="Reporting_Row_Revenue" xml:space="preserve">
+    <value>Omzet</value>
+  </data>
+  <data name="Reporting_Row_Expenses" xml:space="preserve">
+    <value>Kosten</value>
+  </data>
+  <data name="Reporting_Row_NetIncome" xml:space="preserve">
+    <value>Nettoresultaat</value>
+  </data>
+  <data name="Reporting_Row_Assets" xml:space="preserve">
+    <value>Activa</value>
+  </data>
+  <data name="Reporting_Row_Liabilities" xml:space="preserve">
+    <value>Passiva</value>
+  </data>
+  <data name="Reporting_Row_Equity" xml:space="preserve">
+    <value>Eigen vermogen</value>
+  </data>
+  <data name="Reporting_TB_Number" xml:space="preserve">
+    <value>Rekeningnr.</value>
+  </data>
+  <data name="Reporting_TB_Name" xml:space="preserve">
+    <value>Rekeningnaam</value>
+  </data>
+  <data name="Reporting_TB_Debit" xml:space="preserve">
+    <value>Debet</value>
+  </data>
+  <data name="Reporting_TB_Credit" xml:space="preserve">
+    <value>Krediet</value>
+  </data>
+  <data name="Reporting_GL_Date" xml:space="preserve">
+    <value>Datum</value>
+  </data>
+  <data name="Reporting_GL_Reference" xml:space="preserve">
+    <value>Referentie</value>
+  </data>
+  <data name="Reporting_GL_Account" xml:space="preserve">
+    <value>Rekening</value>
+  </data>
+  <data name="Reporting_GL_Description" xml:space="preserve">
+    <value>Omschrijving</value>
+  </data>
+  <data name="Reporting_GL_Debit" xml:space="preserve">
+    <value>Debet</value>
+  </data>
+  <data name="Reporting_GL_Credit" xml:space="preserve">
+    <value>Krediet</value>
+  </data>
+  <data name="Reporting_GL_Balance" xml:space="preserve">
+    <value>Saldo</value>
+  </data>
+  <data name="Reporting_Metadata_GeneratedAt" xml:space="preserve">
+    <value>Gegenereerd op {0}</value>
+  </data>
+  <data name="Reporting_NoData" xml:space="preserve">
+    <value>Nog geen gegevens voor deze selectie.</value>
   </data>
   <data name="Page_UnderConstruction" xml:space="preserve">
     <value>Het moduleframe is gereed; de functionaliteit volgt in de volgende iteratie.</value>
@@ -121,11 +241,20 @@
   <data name="Home_Description" xml:space="preserve">
     <value>Alle kernmodules zijn gekoppeld volgens het clean-architecture-blauwdruk. Kies een onderdeel in het menu om verder te gaan.</value>
   </data>
+  <data name="Home_Note" xml:space="preserve">
+    <value>Nieuw in finance? Begin met het grootboekschema, boek daarna enkele memoriaal-, factuur-, bank- en btw-scenario's om te zien hoe alles samenhangt.</value>
+  </data>
   <data name="Coa_Title" xml:space="preserve">
     <value>Grootboekrekeningen</value>
   </data>
   <data name="Coa_AddButton" xml:space="preserve">
     <value>Rekening toevoegen</value>
+  </data>
+  <data name="Coa_Tooltip_Add" xml:space="preserve">
+    <value>Nieuwe grootboekrekening aanmaken</value>
+  </data>
+  <data name="Coa_Note" xml:space="preserve">
+    <value>Het grootboekschema is de ruggengraat van de administratie. Beheer hier activa, passiva, eigen vermogen, omzet en kosten en schakel rekeningen uit in plaats van ze te verwijderen zodat de historie behouden blijft.</value>
   </data>
   <data name="Coa_Filter_Label" xml:space="preserve">
     <value>Filter op categorie</value>
@@ -147,6 +276,15 @@
   </data>
   <data name="Coa_Table_Actions" xml:space="preserve">
     <value>Acties</value>
+  </data>
+  <data name="Coa_Tooltip_Edit" xml:space="preserve">
+    <value>Rekening bewerken</value>
+  </data>
+  <data name="Coa_Tooltip_Deactivate" xml:space="preserve">
+    <value>Rekening deactiveren</value>
+  </data>
+  <data name="Coa_Tooltip_Activate" xml:space="preserve">
+    <value>Rekening activeren</value>
   </data>
   <data name="Coa_Status_Active" xml:space="preserve">
     <value>Actief</value>
@@ -177,6 +315,9 @@
   </data>
   <data name="Coa_Dialog_Cancel" xml:space="preserve">
     <value>Annuleren</value>
+  </data>
+  <data name="Coa_Dialog_Note" xml:space="preserve">
+    <value>Volg het nummeringsschema van uw organisatie; zodra een rekening is gebruikt in boekingen hoort het nummer niet meer te wijzigen.</value>
   </data>
   <data name="Coa_Field_Number" xml:space="preserve">
     <value>Rekeningnummer</value>
@@ -223,6 +364,12 @@
   <data name="Journal_AddButton" xml:space="preserve">
     <value>Nieuwe boeking</value>
   </data>
+  <data name="Journal_Tooltip_Add" xml:space="preserve">
+    <value>Memoriaalboeking vastleggen</value>
+  </data>
+  <data name="Journal_Note" xml:space="preserve">
+    <value>Het memoriaal registreert handmatige debet- en creditposten. Elke boeking moet in evenwicht zijn voordat zij kan worden geboekt; gebruik het voor correcties, afsluitingen en uitzonderingen.</value>
+  </data>
   <data name="Journal_Filter_From" xml:space="preserve">
     <value>Vanaf datum</value>
   </data>
@@ -246,6 +393,9 @@
   </data>
   <data name="Journal_Table_Credit" xml:space="preserve">
     <value>Totaal credit</value>
+  </data>
+  <data name="Journal_Tooltip_Delete" xml:space="preserve">
+    <value>Boeking verwijderen</value>
   </data>
   <data name="Journal_Lines_Title" xml:space="preserve">
     <value>Boekingsregels</value>
@@ -295,6 +445,9 @@
   <data name="Journal_Dialog_Cancel" xml:space="preserve">
     <value>Annuleren</value>
   </data>
+  <data name="Journal_Dialog_Note" xml:space="preserve">
+    <value>Voeg minimaal twee regels toe: één debet en één credit. De balans-chip moet groen worden voordat u kunt boeken.</value>
+  </data>
   <data name="Journal_Snackbar_Create" xml:space="preserve">
     <value>Boeking aangemaakt.</value>
   </data>
@@ -307,6 +460,12 @@
   <data name="Invoices_AddButton" xml:space="preserve">
     <value>Nieuwe factuur</value>
   </data>
+  <data name="Invoices_Tooltip_Add" xml:space="preserve">
+    <value>Factuur aanmaken</value>
+  </data>
+  <data name="Invoices_Note" xml:space="preserve">
+    <value>Gebruik Facturen voor zowel verkoop- als inkoopstromen. De module berekent btw, bewaakt vervaldata en volgt de workflow (Concept -&gt; Verzonden -&gt; Betaald) voordat er op het grootboek wordt geboekt.</value>
+  </data>
   <data name="Invoices_Filter_Type" xml:space="preserve">
     <value>Type</value>
   </data>
@@ -318,6 +477,30 @@
   </data>
   <data name="Invoices_Filter_To" xml:space="preserve">
     <value>Tot datum</value>
+  </data>
+  <data name="Invoices_Table_DueDate" xml:space="preserve">
+    <value>Vervaldatum</value>
+  </data>
+  <data name="Invoices_Workflow_Draft" xml:space="preserve">
+    <value>Concept</value>
+  </data>
+  <data name="Invoices_Workflow_Sent" xml:space="preserve">
+    <value>Verzonden</value>
+  </data>
+  <data name="Invoices_Workflow_Paid" xml:space="preserve">
+    <value>Betaald</value>
+  </data>
+  <data name="Invoices_Workflow_Overdue" xml:space="preserve">
+    <value>Achterstallig</value>
+  </data>
+  <data name="Invoices_Action_Send" xml:space="preserve">
+    <value>Markeer als verzonden</value>
+  </data>
+  <data name="Invoices_Action_RecordPayment" xml:space="preserve">
+    <value>Betaling registreren</value>
+  </data>
+  <data name="Invoices_Action_Delete" xml:space="preserve">
+    <value>Factuur verwijderen</value>
   </data>
   <data name="Invoices_NoRecords" xml:space="preserve">
     <value>Geen facturen voor de huidige filter.</value>
@@ -394,11 +577,35 @@
   <data name="Invoice_Dialog_Cancel" xml:space="preserve">
     <value>Annuleren</value>
   </data>
+  <data name="Invoice_Dialog_Note" xml:space="preserve">
+    <value>Vul de kopgegevens en minimaal één regel in. De gekozen omzet- of kostenrekening bepaalt de automatische boeking; btw wordt per regel berekend.</value>
+  </data>
+  <data name="Invoice_PaymentDialog_Title" xml:space="preserve">
+    <value>Betaling registreren voor factuur {0}</value>
+  </data>
+  <data name="Invoice_PaymentDialog_Date" xml:space="preserve">
+    <value>Betaaldatum</value>
+  </data>
+  <data name="Invoice_PaymentDialog_Save" xml:space="preserve">
+    <value>Opslaan</value>
+  </data>
+  <data name="Invoice_PaymentDialog_Cancel" xml:space="preserve">
+    <value>Annuleren</value>
+  </data>
+  <data name="Invoice_PaymentDialog_Note" xml:space="preserve">
+    <value>Kies de daadwerkelijke betaaldatum zodat kasstromen, omzet en btw-rapportages synchroon blijven.</value>
+  </data>
   <data name="Invoices_Snackbar_Create" xml:space="preserve">
     <value>Factuur aangemaakt.</value>
   </data>
   <data name="Invoices_Snackbar_Posted" xml:space="preserve">
     <value>Factuur geboekt.</value>
+  </data>
+  <data name="Invoices_Snackbar_Sent" xml:space="preserve">
+    <value>Factuur gemarkeerd als verzonden.</value>
+  </data>
+  <data name="Invoices_Snackbar_Paid" xml:space="preserve">
+    <value>Betaling geregistreerd.</value>
   </data>
   <data name="Invoices_Snackbar_Delete" xml:space="preserve">
     <value>Factuur verwijderd.</value>
@@ -412,11 +619,23 @@
   <data name="Banking_Title" xml:space="preserve">
     <value>Bankieren</value>
   </data>
+  <data name="Banking_Note" xml:space="preserve">
+    <value>De bankomgeving importeert CSV-bestanden of de gesimuleerde API-feed, koppelt betalingen aan facturen en kan automatisch journaalposten maken. Controleer openstaande mutaties om debiteuren en crediteuren synchroon te houden.</value>
+  </data>
   <data name="Banking_ImportCsv" xml:space="preserve">
     <value>CSV importeren</value>
   </data>
+  <data name="Banking_Tooltip_FileUpload" xml:space="preserve">
+    <value>Selecteer een CSV-bestand</value>
+  </data>
+  <data name="Banking_Tooltip_Import" xml:space="preserve">
+    <value>Upload het geselecteerde bestand</value>
+  </data>
   <data name="Banking_Sync" xml:space="preserve">
     <value>Feed synchroniseren</value>
+  </data>
+  <data name="Banking_Tooltip_Sync" xml:space="preserve">
+    <value>Haal gesimuleerde transacties via de API op</value>
   </data>
   <data name="Banking_Table_Date" xml:space="preserve">
     <value>Datum</value>
@@ -454,6 +673,9 @@
   <data name="Banking_Filter_Apply" xml:space="preserve">
     <value>Toepassen</value>
   </data>
+  <data name="Banking_Tooltip_Filter" xml:space="preserve">
+    <value>Ververs de lijst met de huidige filters</value>
+  </data>
   <data name="Banking_Status_Matched" xml:space="preserve">
     <value>Gekoppeld</value>
   </data>
@@ -465,6 +687,9 @@
   </data>
   <data name="Banking_Match_SelectInvoice" xml:space="preserve">
     <value>Selecteer factuur</value>
+  </data>
+  <data name="Banking_Match_Note" xml:space="preserve">
+    <value>Alleen openstaande facturen worden getoond. Geen match? Annuleer, pas filters aan of maak eerst een factuur.</value>
   </data>
   <data name="Banking_Match_Cancel" xml:space="preserve">
     <value>Annuleren</value>
@@ -520,8 +745,14 @@
   <data name="VAT_Action_Calculate" xml:space="preserve">
     <value>Berekenen</value>
   </data>
+  <data name="VAT_Tooltip_Calculate" xml:space="preserve">
+    <value>Herbereken de aangifte voor het geselecteerde kwartaal</value>
+  </data>
   <data name="VAT_Action_Submit" xml:space="preserve">
     <value>Verzenden</value>
+  </data>
+  <data name="VAT_Tooltip_Submit" xml:space="preserve">
+    <value>Dien de aangifte in bij de simulatie van de belastingdienst</value>
   </data>
   <data name="VAT_Label_Payable" xml:space="preserve">
     <value>Te betalen btw</value>
@@ -565,11 +796,17 @@
   <data name="VAT_Validation_Title" xml:space="preserve">
     <value>Valideer btw-nummer via de belastingdienst-sandbox</value>
   </data>
+  <data name="VAT_Validation_Note" xml:space="preserve">
+    <value>De controle imiteert het EU-register. Verwijder spaties of speciale tekens als een nummer ongeldig lijkt.</value>
+  </data>
   <data name="VAT_Validation_Label" xml:space="preserve">
     <value>BTW-nummer</value>
   </data>
   <data name="VAT_Validation_Button" xml:space="preserve">
     <value>Valideren</value>
+  </data>
+  <data name="VAT_Validation_Tooltip" xml:space="preserve">
+    <value>Controleer het btw-nummer via de sandbox</value>
   </data>
   <data name="VAT_Validation_Result_Valid" xml:space="preserve">
     <value>BTW-nummer is geldig.</value>
@@ -588,6 +825,9 @@
   </data>
   <data name="Banking_Action_AutoMatch" xml:space="preserve">
     <value>Automatisch koppelen</value>
+  </data>
+  <data name="Banking_Tooltip_AutoMatch" xml:space="preserve">
+    <value>Koppel betalingen automatisch en maak journaalposten</value>
   </data>
   <data name="Banking_Status_Posted" xml:space="preserve">
     <value>Geboekt</value>

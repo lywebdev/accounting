@@ -1,0 +1,49 @@
+@using Microsoft.AspNetCore.Components.Forms
+@inject IStringLocalizer<SharedResources> Localizer
+
+<MudDialog>
+    <DialogContent>
+        <MudAlert Severity="Severity.Info" Dense="true" Variant="Variant.Text" Class="mb-3">
+            @Localizer["Invoice_PaymentDialog_Note"]
+        </MudAlert>
+        <MudForm @ref="_form">
+            <MudDatePicker @bind-Date="_paymentDate"
+                           Label="@Localizer["Invoice_PaymentDialog_Date"]"
+                           Required="true"
+                           DateFormat="yyyy-MM-dd" />
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Text" Color="Color.Default" OnClick="Cancel">@Localizer["Invoice_PaymentDialog_Cancel"]</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveAsync">@Localizer["Invoice_PaymentDialog_Save"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance DialogInstance { get; set; } = default!;
+
+    [Parameter]
+    public DateOnly InitialDate { get; set; } = DateOnly.FromDateTime(DateTime.Today);
+
+    private MudForm _form = default!;
+    private DateTime? _paymentDate;
+
+    protected override void OnInitialized()
+    {
+        _paymentDate = InitialDate.ToDateTime(TimeOnly.MinValue);
+    }
+
+    private async Task SaveAsync()
+    {
+        await _form.Validate();
+        if (!_form.IsValid || !_paymentDate.HasValue)
+        {
+            return;
+        }
+
+        var paymentDate = DateOnly.FromDateTime(_paymentDate.Value);
+        DialogInstance.Close(DialogResult.Ok(paymentDate));
+    }
+
+    private void Cancel() => DialogInstance.Cancel();
+}

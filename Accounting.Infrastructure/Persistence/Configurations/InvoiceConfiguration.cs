@@ -1,4 +1,5 @@
-﻿using Accounting.Core.Entities;
+using Accounting.Core.Entities;
+using Accounting.Core.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,6 +14,9 @@ public class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
         builder.Property(i => i.Number).HasMaxLength(32).IsRequired();
         builder.Property(i => i.Counterparty).HasMaxLength(128).IsRequired();
         builder.Property(i => i.Type).HasConversion<int>();
+        builder.Property(i => i.WorkflowStatus).HasConversion<int>().HasDefaultValue(InvoiceWorkflowStatus.Draft);
+        builder.Property(i => i.SentAt);
+        builder.Property(i => i.PaidAt);
 
         builder.HasMany(i => i.Lines)
             .WithOne()

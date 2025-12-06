@@ -10,12 +10,15 @@ public class InvoiceRepository(AccountingDbContext dbContext) : IInvoiceReposito
 {
     public async Task<Invoice?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => await dbContext.Invoices
+            .AsNoTracking()
             .Include(i => i.Lines)
             .FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
 
     public async Task<IReadOnlyList<Invoice>> GetAsync(InvoiceType? type, DateOnly? from, DateOnly? to, CancellationToken cancellationToken = default)
     {
-        var query = dbContext.Invoices.AsQueryable();
+        var query = dbContext.Invoices
+            .AsNoTracking()
+            .AsQueryable();
         if (type.HasValue)
         {
             query = query.Where(i => i.Type == type);
@@ -44,7 +47,14 @@ public class InvoiceRepository(AccountingDbContext dbContext) : IInvoiceReposito
 
     public async Task UpdateAsync(Invoice invoice, CancellationToken cancellationToken = default)
     {
-        dbContext.Invoices.Update(invoice);
+        var tracked = dbContext.Invoices.Local.FirstOrDefault(i => i.Id == invoice.Id);
+        if (tracked is not null)
+        {
+            dbContext.Entry(tracked).State = EntityState.Detached;
+        }
+
+        dbContext.Attach(invoice);
+        dbContext.Entry(invoice).State = EntityState.Modified;
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 

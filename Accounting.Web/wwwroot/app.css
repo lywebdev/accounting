@@ -73,3 +73,16 @@ h1:focus {
     min-width: 140px;
 }
 
+.mud-table-row.clickable-row {
+    cursor: pointer;
+}
+
+.report-note {
+    background-color: #f8fafc;
+    border-left: 4px solid #4f46e5;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
