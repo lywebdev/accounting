@@ -1,0 +1,12 @@
+﻿@inject IStringLocalizer<SharedResources> Localizer
+
+<MudPaper Class="pa-5">
+    <MudText Typo="Typo.h5">@Localizer[TitleKey]</MudText>
+    <MudDivider Class="my-2" />
+    <MudText Typo="Typo.body1">@Localizer["Page_UnderConstruction"]</MudText>
+</MudPaper>
+
+@code {
+    [Parameter]
+    public string TitleKey { get; set; } = string.Empty;
+}

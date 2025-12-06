@@ -1,0 +1,254 @@
+@page "/vat"
+@using System.Linq
+@using Accounting.Core.Enums
+@using Accounting.Web.Api.Tax
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+@inject IStringLocalizer<SharedResources> Localizer
+
+<MudTabs Rounded="true">
+    <MudTabPanel Text="@Localizer["VAT_Tab_Declaration"]">
+        <MudPaper Class="pa-4 mb-4">
+            <MudGrid Spacing="2">
+                <MudItem xs="12" sm="6" md="3">
+                    <MudNumericField T="int" Label="@Localizer["VAT_Field_Year"]" @bind-Value="_selectedYear" Min="2000" Max="2100" Immediate="true" />
+                </MudItem>
+                <MudItem xs="12" sm="6" md="3">
+                    <MudSelect T="int" Label="@Localizer["VAT_Field_Period"]" @bind-Value="_selectedPeriod" Dense="true">
+                        <MudSelectItem Value="1">@Localizer["VAT_Period_Q1"]</MudSelectItem>
+                        <MudSelectItem Value="2">@Localizer["VAT_Period_Q2"]</MudSelectItem>
+                        <MudSelectItem Value="3">@Localizer["VAT_Period_Q3"]</MudSelectItem>
+                        <MudSelectItem Value="4">@Localizer["VAT_Period_Q4"]</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+                <MudItem xs="12" sm="6" md="3">
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="LoadDeclarationAsync" Disabled="@_isLoading">
+                        <MudIcon Icon="@Icons.Material.Filled.Calculate" Class="mr-2" />@Localizer["VAT_Action_Calculate"]
+                    </MudButton>
+                </MudItem>
+                <MudItem xs="12" sm="6" md="3">
+                    <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="SubmitDeclarationAsync" Disabled="@(_currentDeclaration is null || _currentDeclaration.Status == TaxDeclarationStatus.Accepted || _isLoading)">
+                        <MudIcon Icon="@Icons.Material.Filled.Send" Class="mr-2" />@Localizer["VAT_Action_Submit"]
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+
+        @if (_isLoading)
+        {
+            <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="mb-4" />
+        }
+
+        @if (_currentDeclaration is not null)
+        {
+            <MudGrid Spacing="2" Class="mb-4">
+                <MudItem xs="12" sm="4">
+                    <MudPaper Class="pa-4">
+                        <MudText Typo="Typo.subtitle2">@Localizer["VAT_Label_Payable"]</MudText>
+                        <MudText Typo="Typo.h5">@_currentDeclaration.VatPayable.ToString("0.00") €</MudText>
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="12" sm="4">
+                    <MudPaper Class="pa-4">
+                        <MudText Typo="Typo.subtitle2">@Localizer["VAT_Label_Receivable"]</MudText>
+                        <MudText Typo="Typo.h5">@_currentDeclaration.VatReceivable.ToString("0.00") €</MudText>
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="12" sm="4">
+                    <MudPaper Class="pa-4">
+                        <MudText Typo="Typo.subtitle2">@Localizer["VAT_Label_Net"]</MudText>
+                        <MudText Typo="Typo.h5">@_currentDeclaration.NetAmount.ToString("0.00") €</MudText>
+                    </MudPaper>
+                </MudItem>
+            </MudGrid>
+
+            <MudPaper Class="pa-4 mb-4">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                    <MudText Typo="Typo.subtitle1">@Localizer["VAT_Label_Status"]</MudText>
+                    <MudChip T="string" Color="@GetStatusColor(_currentDeclaration.Status)" Variant="Variant.Filled">
+                        @Localizer[$"VAT_Status_{_currentDeclaration.Status}"]
+                    </MudChip>
+                </MudStack>
+            </MudPaper>
+        }
+        else
+        {
+            <MudPaper Class="pa-4 mb-4">
+                <MudText Typo="Typo.subtitle1">@Localizer["VAT_Empty_State"]</MudText>
+            </MudPaper>
+        }
+
+        <MudPaper Class="pa-4">
+            <MudText Typo="Typo.h6" Class="mb-2">@Localizer["VAT_History_Title"] (@_selectedYear)</MudText>
+            <MudTable Items="_history" Dense="true" Hover="true">
+                <HeaderContent>
+                    <MudTh>@Localizer["VAT_History_Table_Period"]</MudTh>
+                    <MudTh>@Localizer["VAT_Label_Payable"]</MudTh>
+                    <MudTh>@Localizer["VAT_Label_Receivable"]</MudTh>
+                    <MudTh>@Localizer["VAT_Label_Net"]</MudTh>
+                    <MudTh>@Localizer["VAT_Label_Status"]</MudTh>
+                    <MudTh>@Localizer["VAT_History_Table_Submitted"]</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd>@GetPeriodLabel(@context.Period)</MudTd>
+                    <MudTd>@context.VatPayable.ToString("0.00") €</MudTd>
+                    <MudTd>@context.VatReceivable.ToString("0.00") €</MudTd>
+                    <MudTd>@context.NetAmount.ToString("0.00") €</MudTd>
+                    <MudTd>
+                        <MudChip T="string" Color="@GetStatusColor(context.Status)" Size="Size.Small">
+                            @Localizer[$"VAT_Status_{context.Status}"]
+                        </MudChip>
+                    </MudTd>
+                    <MudTd>
+                        @(context.SubmittedAt?.ToString("yyyy-MM-dd HH:mm") ?? Localizer["VAT_NotSubmitted"])
+                    </MudTd>
+                </RowTemplate>
+            </MudTable>
+        </MudPaper>
+    </MudTabPanel>
+    <MudTabPanel Text="@Localizer["VAT_Tab_Validation"]">
+        <MudPaper Class="pa-4">
+            <MudText Typo="Typo.h6" Class="mb-2">@Localizer["VAT_Validation_Title"]</MudText>
+            <MudStack Spacing="2">
+                <MudTextField @bind-Value="_vatNumber" Label="@Localizer["VAT_Validation_Label"]" Immediate="true" />
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(_isValidationRunning || string.IsNullOrWhiteSpace(_vatNumber))" OnClick="ValidateVatAsync">
+                    <MudIcon Icon="@Icons.Material.Filled.Verified" Class="mr-2" />@Localizer["VAT_Validation_Button"]
+                </MudButton>
+                @if (_vatValidationResult.HasValue)
+                {
+                    <MudAlert Severity="@(_vatValidationResult.Value ? Severity.Success : Severity.Error)" Variant="Variant.Text">
+                        @(_vatValidationResult.Value ? Localizer["VAT_Validation_Result_Valid"] : Localizer["VAT_Validation_Result_Invalid"])
+                    </MudAlert>
+                }
+            </MudStack>
+        </MudPaper>
+    </MudTabPanel>
+</MudTabs>
+
+@code {
+    private readonly List<VatDeclarationViewModel> _history = new();
+    private VatDeclarationViewModel? _currentDeclaration;
+    private int _selectedYear;
+    private int _selectedPeriod;
+    private bool _isLoading;
+    private string? _vatNumber;
+    private bool? _vatValidationResult;
+    private bool _isValidationRunning;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var now = DateTime.UtcNow;
+        _selectedYear = now.Year;
+        _selectedPeriod = ((now.Month - 1) / 3) + 1;
+        await LoadDeclarationAsync();
+    }
+
+    private async Task LoadDeclarationAsync()
+    {
+        _isLoading = true;
+        try
+        {
+            var declaration = await Http.GetFromJsonAsync<TaxDeclarationDto>($"api/tax/declaration?year={_selectedYear}&period={_selectedPeriod}");
+            if (declaration is not null)
+            {
+                _currentDeclaration = VatDeclarationViewModel.FromDto(declaration);
+            }
+            await LoadHistoryAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task SubmitDeclarationAsync()
+    {
+        if (_currentDeclaration is null)
+        {
+            return;
+        }
+
+        _isLoading = true;
+        try
+        {
+            var response = await Http.PostAsJsonAsync("api/tax/declaration/submit", new SubmitTaxDeclarationRequest(_selectedYear, _selectedPeriod));
+            response.EnsureSuccessStatusCode();
+            var declaration = await response.Content.ReadFromJsonAsync<TaxDeclarationDto>();
+            if (declaration is not null)
+            {
+                _currentDeclaration = VatDeclarationViewModel.FromDto(declaration);
+            }
+
+            Snackbar.Add(Localizer["VAT_Snackbar_Submitted", Localizer[$"VAT_Status_{_currentDeclaration?.Status ?? TaxDeclarationStatus.Draft}"]].Value, Severity.Success);
+            await LoadHistoryAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task LoadHistoryAsync()
+    {
+        var history = await Http.GetFromJsonAsync<List<TaxDeclarationDto>>($"api/tax/declarations/{_selectedYear}") ?? new List<TaxDeclarationDto>();
+        _history.Clear();
+        for (var period = 1; period <= 4; period++)
+        {
+            var match = history.FirstOrDefault(h => h.Period == period);
+            _history.Add(match is not null ? VatDeclarationViewModel.FromDto(match) : VatDeclarationViewModel.Empty(_selectedYear, period));
+        }
+    }
+
+    private async Task ValidateVatAsync()
+    {
+        if (string.IsNullOrWhiteSpace(_vatNumber))
+        {
+            return;
+        }
+
+        _isValidationRunning = true;
+        try
+        {
+            var response = await Http.PostAsJsonAsync("api/tax/validate", new VatValidationRequest(_vatNumber));
+            response.EnsureSuccessStatusCode();
+            var validation = await response.Content.ReadFromJsonAsync<VatValidationResponse>();
+            _vatValidationResult = validation?.IsValid;
+            Snackbar.Add((_vatValidationResult ?? false) ? Localizer["VAT_Validation_Snackbar_Valid"].Value : Localizer["VAT_Validation_Snackbar_Invalid"].Value, (_vatValidationResult ?? false) ? Severity.Success : Severity.Error);
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+        finally
+        {
+            _isValidationRunning = false;
+        }
+    }
+
+    private string GetPeriodLabel(int period) => Localizer[$"VAT_Period_Q{period}"].Value;
+
+    private Color GetStatusColor(TaxDeclarationStatus status) => status switch
+    {
+        TaxDeclarationStatus.Accepted => Color.Success,
+        TaxDeclarationStatus.Submitted => Color.Info,
+        TaxDeclarationStatus.Rejected => Color.Error,
+        _ => Color.Secondary
+    };
+
+    private sealed record VatDeclarationViewModel(Guid Id, int Year, int Period, decimal VatPayable, decimal VatReceivable, decimal NetAmount, TaxDeclarationStatus Status, DateTimeOffset? SubmittedAt)
+    {
+        public static VatDeclarationViewModel FromDto(TaxDeclarationDto dto) =>
+            new(dto.Id, dto.Year, dto.Period, dto.VatPayable, dto.VatReceivable, dto.NetAmount, dto.Status, dto.SubmittedAt);
+
+        public static VatDeclarationViewModel Empty(int year, int period) =>
+            new(Guid.Empty, year, period, 0m, 0m, 0m, TaxDeclarationStatus.Draft, null);
+    }
+}

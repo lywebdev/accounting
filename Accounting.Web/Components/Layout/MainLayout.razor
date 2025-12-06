@@ -1,0 +1,31 @@
+﻿@using Accounting.Web.Components.Shared
+@inherits LayoutComponentBase
+@inject IStringLocalizer<SharedResources> Localizer
+
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<MudPopoverProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="0" Color="Color.Primary">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="ToggleDrawer" />
+        <MudText Typo="Typo.h6">@Localizer["AppTitle"]</MudText>
+        <MudSpacer />
+        <LanguageSwitcher />
+    </MudAppBar>
+    <MudDrawer @bind-Open="_isDrawerOpen" Variant="DrawerVariant.Responsive" Elevation="1" Color="Color.Surface">
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.False" Class="pa-4">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private bool _isDrawerOpen = true;
+
+    private void ToggleDrawer() => _isDrawerOpen = !_isDrawerOpen;
+}

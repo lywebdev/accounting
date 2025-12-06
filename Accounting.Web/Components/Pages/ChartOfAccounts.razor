@@ -1,0 +1,209 @@
+@page "/chart-of-accounts"
+@using Accounting.Core.Entities
+@inject IChartOfAccountsService ChartService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inject IStringLocalizer<SharedResources> Localizer
+
+<MudPaper Class="pa-4 mb-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+        <MudText Typo="Typo.h5">@Localizer["Coa_Title"]</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenCreateDialogAsync">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-2" />
+            @Localizer["Coa_AddButton"]
+        </MudButton>
+    </MudStack>
+
+    <MudStack Row="true" Class="mt-4" AlignItems="AlignItems.Center" Spacing="2">
+        <MudSelect T="AccountCategory?" Label="@Localizer["Coa_Filter_Label"]" Value="_filterCategory" ValueChanged="OnFilterChanged" Immediate="true">
+            <MudSelectItem Value="@( (AccountCategory?)null )">@Localizer["Coa_Filter_All"]</MudSelectItem>
+            @foreach (var category in Enum.GetValues<AccountCategory>())
+            {
+                <MudSelectItem Value="@( (AccountCategory?)category )">@Localizer[$"Account_Category_{category}"]</MudSelectItem>
+            }
+        </MudSelect>
+    </MudStack>
+</MudPaper>
+
+@if (_isLoading)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true" Size="Size.Large" />
+}
+else if (_accounts.Count == 0)
+{
+    <MudText Typo="Typo.subtitle1">@Localizer["Coa_NoRecords"]</MudText>
+}
+else
+{
+    <MudTable Items="_accounts" Hover="true" Dense="true">
+        <HeaderContent>
+            <MudTh>@Localizer["Coa_Table_Number"]</MudTh>
+            <MudTh>@Localizer["Coa_Table_Name"]</MudTh>
+            <MudTh>@Localizer["Coa_Table_Category"]</MudTh>
+            <MudTh>@Localizer["Coa_Table_Status"]</MudTh>
+            <MudTh>@Localizer["Coa_Table_Actions"]</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="@Localizer["Coa_Table_Number"]">@context.Number</MudTd>
+            <MudTd DataLabel="@Localizer["Coa_Table_Name"]">@context.Name</MudTd>
+            <MudTd DataLabel="@Localizer["Coa_Table_Category"]">@Localizer[$"Account_Category_{context.Category}"]</MudTd>
+            <MudTd DataLabel="@Localizer["Coa_Table_Status"]">
+                <MudChip T="bool" Value="context.IsActive" Color="context.IsActive ? Color.Success : Color.Error" Variant="Variant.Filled" Size="Size.Small">
+                    @(context.IsActive ? Localizer["Coa_Status_Active"].Value : Localizer["Coa_Status_Inactive"].Value)
+                </MudChip>
+            </MudTd>
+            <MudTd DataLabel="@Localizer["Coa_Table_Actions"]">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="() => EditAccountAsync(context)" />
+                @if (context.IsActive)
+                {
+                    <MudIconButton Icon="@Icons.Material.Filled.Block" Color="Color.Error" OnClick="() => DeactivateAccountAsync(context)" />
+                }
+                else
+                {
+                    <MudIconButton Icon="@Icons.Material.Filled.Refresh" Color="Color.Success" OnClick="() => ActivateAccountAsync(context)" />
+                }
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+}
+
+@code {
+    private readonly List<AccountViewModel> _accounts = new();
+    private bool _isLoading;
+    private AccountCategory? _filterCategory;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAccountsAsync();
+    }
+
+    private async Task LoadAccountsAsync()
+    {
+        _isLoading = true;
+        try
+        {
+            _accounts.Clear();
+            var accounts = await ChartService.GetAsync(_filterCategory);
+            _accounts.AddRange(accounts.Select(AccountViewModel.FromEntity));
+        }
+        catch (Exception ex)
+        {
+        Snackbar.Add(ex.Message, Severity.Error);
+        }
+        finally
+        {
+            _isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnFilterChanged(AccountCategory? category)
+    {
+        _filterCategory = category;
+        await LoadAccountsAsync();
+    }
+
+    private async Task OpenCreateDialogAsync()
+    {
+        var parameters = new DialogParameters
+        {
+            { nameof(ManageAccountDialog.Model), new ManageAccountDialog.AccountEditModel() },
+            { nameof(ManageAccountDialog.DisableNumber), false }
+        };
+
+        var dialog = await DialogService.ShowAsync<ManageAccountDialog>(Localizer["Coa_Dialog_CreateTitle"], parameters);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false, Data: ManageAccountDialog.AccountEditModel model })
+        {
+            await CreateAccountAsync(model);
+        }
+    }
+
+    private async Task EditAccountAsync(AccountViewModel account)
+    {
+        var model = new ManageAccountDialog.AccountEditModel
+        {
+            Number = account.Number,
+            Name = account.Name,
+            Category = account.Category,
+            Description = account.Description
+        };
+
+        var parameters = new DialogParameters
+        {
+            { nameof(ManageAccountDialog.Model), model },
+            { nameof(ManageAccountDialog.DisableNumber), true }
+        };
+
+        var dialog = await DialogService.ShowAsync<ManageAccountDialog>(Localizer["Coa_Dialog_EditTitle"], parameters);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false, Data: ManageAccountDialog.AccountEditModel form })
+        {
+            await UpdateAccountAsync(account.Id, form);
+        }
+    }
+
+    private async Task CreateAccountAsync(ManageAccountDialog.AccountEditModel model)
+    {
+        try
+        {
+            await ChartService.CreateAsync(model.Number, model.Name, model.Category, model.Description);
+            Snackbar.Add(Localizer["Coa_Snackbar_CreateSuccess"].Value, Severity.Success);
+            await LoadAccountsAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task UpdateAccountAsync(Guid accountId, ManageAccountDialog.AccountEditModel model)
+    {
+        try
+        {
+            await ChartService.UpdateAsync(accountId, model.Name, model.Category, model.Description);
+            Snackbar.Add(Localizer["Coa_Snackbar_UpdateSuccess"].Value, Severity.Success);
+            await LoadAccountsAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task DeactivateAccountAsync(AccountViewModel account)
+    {
+        try
+        {
+            await ChartService.DeactivateAsync(account.Id);
+            Snackbar.Add(Localizer["Coa_Snackbar_Deactivate"].Value, Severity.Info);
+            await LoadAccountsAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task ActivateAccountAsync(AccountViewModel account)
+    {
+        try
+        {
+            await ChartService.ActivateAsync(account.Id);
+            Snackbar.Add(Localizer["Coa_Snackbar_Activate"].Value, Severity.Success);
+            await LoadAccountsAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private sealed record AccountViewModel(Guid Id, string Number, string Name, AccountCategory Category, string? Description, bool IsActive)
+    {
+        public static AccountViewModel FromEntity(Account account) =>
+            new(account.Id, account.Number, account.Name, account.Category, account.Description, account.IsActive);
+    }
+}

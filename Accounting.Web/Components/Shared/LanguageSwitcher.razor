@@ -1,0 +1,27 @@
+﻿@using System.Globalization
+@inject NavigationManager NavigationManager
+@inject IStringLocalizer<SharedResources> Localizer
+
+<MudSelect T="string" Value="_selectedCulture" ValueChanged="OnCultureChanged" Dense="true" Label="@LanguageLabel" Class="language-switcher" AnchorOrigin="Origin.BottomRight">
+    <MudSelectItem Value='@("en")'>@EnglishLabel</MudSelectItem>
+    <MudSelectItem Value='@("nl")'>@DutchLabel</MudSelectItem>
+</MudSelect>
+
+@code {
+    private string _selectedCulture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    private string LanguageLabel => Localizer["Language_Label"];
+    private string EnglishLabel => Localizer["Language_English"];
+    private string DutchLabel => Localizer["Language_Dutch"];
+
+    private void OnCultureChanged(string culture)
+    {
+        if (string.IsNullOrWhiteSpace(culture))
+        {
+            return;
+        }
+
+        var uri = new Uri(NavigationManager.Uri);
+        var baseUri = uri.GetLeftPart(UriPartial.Path);
+        NavigationManager.NavigateTo($"{baseUri}?culture={culture}&ui-culture={culture}", forceLoad: true);
+    }
+}

@@ -1,0 +1,219 @@
+@page "/invoices"
+@using Accounting.Core.Entities
+@using Accounting.Core.Enums
+@using Accounting.Core.ValueObjects
+@inject IInvoiceService InvoiceService
+@inject IChartOfAccountsService ChartService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject IStringLocalizer<SharedResources> Localizer
+
+<MudPaper Class="pa-4 mb-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+        <MudText Typo="Typo.h5">@Localizer["Invoices_Title"]</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenCreateDialogAsync">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-2" />@Localizer["Invoices_AddButton"]
+        </MudButton>
+    </MudStack>
+
+    <MudStack Row="true" Class="mt-4" Spacing="2">
+        <MudSelect T="InvoiceType?" Value="_filterType" ValueChanged="OnFilterChanged" Label="@Localizer["Invoices_Filter_Type"]">
+            <MudSelectItem Value="@( (InvoiceType?)null )">@Localizer["Invoices_Filter_AllTypes"]</MudSelectItem>
+            @foreach (InvoiceType type in Enum.GetValues(typeof(InvoiceType)))
+            {
+                <MudSelectItem Value="@( (InvoiceType?)type )">@Localizer[$"Invoice_Type_{type}"]</MudSelectItem>
+            }
+        </MudSelect>
+        <MudDatePicker Date="_fromDate" DateChanged="value => OnDateChanged(value, true)" Label="@Localizer["Invoices_Filter_From"]" />
+        <MudDatePicker Date="_toDate" DateChanged="value => OnDateChanged(value, false)" Label="@Localizer["Invoices_Filter_To"]" />
+    </MudStack>
+</MudPaper>
+
+@if (_isLoading)
+{
+    <MudProgressCircular Indeterminate="true" Color="Color.Primary" />
+}
+else if (_invoices.Count == 0)
+{
+    <MudText Typo="Typo.subtitle1">@Localizer["Invoices_NoRecords"]</MudText>
+}
+else
+{
+    <MudTable Items="_invoices" Dense="true">
+        <HeaderContent>
+            <MudTh>@Localizer["Invoices_Table_Number"]</MudTh>
+            <MudTh>@Localizer["Invoices_Table_Type"]</MudTh>
+            <MudTh>@Localizer["Invoices_Table_Counterparty"]</MudTh>
+            <MudTh>@Localizer["Invoices_Table_IssueDate"]</MudTh>
+            <MudTh>@Localizer["Invoices_Table_Total"]</MudTh>
+            <MudTh>@Localizer["Invoices_Table_Status"]</MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate Context="invoice">
+            <MudTd>@invoice.Number</MudTd>
+            <MudTd>@Localizer[$"Invoice_Type_{invoice.Type}"]</MudTd>
+            <MudTd>@invoice.Counterparty</MudTd>
+            <MudTd>@invoice.IssueDate.ToString("yyyy-MM-dd")</MudTd>
+            <MudTd>@invoice.TotalGross</MudTd>
+            <MudTd>
+                <MudChip T="bool" Value="invoice.IsPosted" Color="invoice.IsPosted ? Color.Success : Color.Warning">
+                    @(invoice.IsPosted ? Localizer["Invoices_Status_Posted"] : Localizer["Invoices_Status_Draft"])
+                </MudChip>
+            </MudTd>
+            <MudTd>
+                @if (!invoice.IsPosted)
+                {
+                    <MudIconButton Icon="@Icons.Material.Filled.Check" Color="Color.Success" OnClick="() => PostInvoiceAsync(invoice.Id)" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeleteInvoiceAsync(invoice.Id)" />
+                }
+            </MudTd>
+        </RowTemplate>
+        <ChildRowContent Context="invoice">
+            <MudPaper Class="pa-3">
+                <MudTable Items="@invoice.Lines" Dense="true">
+                    <HeaderContent>
+                        <MudTh>@Localizer["Invoice_Lines_Description"]</MudTh>
+                        <MudTh>@Localizer["Invoice_Lines_Quantity"]</MudTh>
+                        <MudTh>@Localizer["Invoice_Lines_UnitPrice"]</MudTh>
+                        <MudTh>@Localizer["Invoice_Lines_Vat"]</MudTh>
+                        <MudTh>@Localizer["Invoice_Lines_Total"]</MudTh>
+                    </HeaderContent>
+                    <RowTemplate Context="line">
+                        <MudTd>@line.Description</MudTd>
+                        <MudTd>@line.Quantity</MudTd>
+                        <MudTd>@line.UnitPrice</MudTd>
+                        <MudTd>@line.VatRate %</MudTd>
+                        <MudTd>@line.LineTotal</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudPaper>
+        </ChildRowContent>
+    </MudTable>
+}
+
+@code {
+    private readonly List<InvoiceViewModel> _invoices = new();
+    private IReadOnlyList<InvoiceDialog.AccountOption> _accounts = Array.Empty<InvoiceDialog.AccountOption>();
+    private bool _isLoading;
+    private InvoiceType? _filterType;
+    private DateTime? _fromDate = DateTime.Today.AddMonths(-1);
+    private DateTime? _toDate = DateTime.Today;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var accountList = await ChartService.GetAsync(AccountCategory.Revenue);
+        _accounts = accountList.Select(a => new InvoiceDialog.AccountOption(a.Id, a.Number, a.Name)).ToList();
+        await LoadInvoicesAsync();
+    }
+
+    private async Task LoadInvoicesAsync()
+    {
+        _isLoading = true;
+        try
+        {
+            _invoices.Clear();
+            var invoices = await InvoiceService.GetAsync(_filterType, ConvertToDateOnly(_fromDate), ConvertToDateOnly(_toDate));
+            _invoices.AddRange(invoices.Select(InvoiceViewModel.FromEntity));
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+        finally
+        {
+            _isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnFilterChanged(InvoiceType? type)
+    {
+        _filterType = type;
+        await LoadInvoicesAsync();
+    }
+
+    private async Task OnDateChanged(DateTime? value, bool isFrom)
+    {
+        if (isFrom)
+            _fromDate = value;
+        else
+            _toDate = value;
+
+        await LoadInvoicesAsync();
+    }
+
+    private async Task OpenCreateDialogAsync()
+    {
+        var parameters = new DialogParameters
+        {
+            { nameof(InvoiceDialog.Model), new InvoiceDialog.InvoiceEditModel() },
+            { nameof(InvoiceDialog.Accounts), _accounts }
+        };
+
+        var dialog = await DialogService.ShowAsync<InvoiceDialog>(Localizer["Invoice_Dialog_Title"], parameters);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false, Data: InvoiceDialog.InvoiceEditModel model })
+        {
+            await CreateInvoiceAsync(model);
+        }
+    }
+
+    private async Task CreateInvoiceAsync(InvoiceDialog.InvoiceEditModel model)
+    {
+        try
+        {
+            var lines = model.Lines.Select(l => new InvoiceLine(l.Description, l.Quantity, new Money(l.UnitPrice, "EUR"), l.VatRate, l.RevenueAccountId!.Value));
+            await InvoiceService.CreateAsync(model.Type, model.Number, model.Counterparty, model.IssueDate, model.DueDate, lines);
+            Snackbar.Add(Localizer["Invoices_Snackbar_Create"].Value, Severity.Success);
+            await LoadInvoicesAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task PostInvoiceAsync(Guid id)
+    {
+        try
+        {
+            await InvoiceService.PostAsync(id);
+            Snackbar.Add(Localizer["Invoices_Snackbar_Posted"].Value, Severity.Success);
+            await LoadInvoicesAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task DeleteInvoiceAsync(Guid id)
+    {
+        try
+        {
+            await InvoiceService.DeleteAsync(id);
+            Snackbar.Add(Localizer["Invoices_Snackbar_Delete"].Value, Severity.Info);
+            await LoadInvoicesAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private sealed record InvoiceViewModel(Guid Id, InvoiceType Type, string Number, string Counterparty, DateOnly IssueDate, bool IsPosted, decimal TotalGross, IReadOnlyList<InvoiceLineViewModel> Lines)
+    {
+        public static InvoiceViewModel FromEntity(Invoice invoice)
+        {
+            var currency = "EUR";
+            var lines = invoice.Lines.Select(l => new InvoiceLineViewModel(l.Description, l.Quantity, l.UnitPrice.Amount, l.VatRate, l.Total.Amount)).ToList();
+            return new InvoiceViewModel(invoice.Id, invoice.Type, invoice.Number, invoice.Counterparty, invoice.IssueDate, invoice.IsPosted, invoice.TotalGross(currency).Amount, lines);
+        }
+    }
+
+    private sealed record InvoiceLineViewModel(string Description, decimal Quantity, decimal UnitPrice, decimal VatRate, decimal LineTotal);
+
+    private static DateOnly? ConvertToDateOnly(DateTime? dateTime)
+        => dateTime.HasValue ? DateOnly.FromDateTime(dateTime.Value) : null;
+}

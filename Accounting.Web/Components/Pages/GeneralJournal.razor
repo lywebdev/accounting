@@ -1,0 +1,190 @@
+@page "/general-journal"
+@using Accounting.Core.Entities
+@inject IJournalService JournalService
+@inject IChartOfAccountsService ChartService
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject IStringLocalizer<SharedResources> Localizer
+
+<MudPaper Class="pa-4 mb-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+        <MudText Typo="Typo.h5">@Localizer["Journal_Title"]</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenCreateDialogAsync">
+            <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-2" />@Localizer["Journal_AddButton"]
+        </MudButton>
+    </MudStack>
+
+    <MudStack Row="true" Class="mt-4" Spacing="2">
+        <MudDatePicker Date="_fromDate" DateChanged="OnFromDateChanged" Label="@Localizer["Journal_Filter_From"]" />
+        <MudDatePicker Date="_toDate" DateChanged="OnToDateChanged" Label="@Localizer["Journal_Filter_To"]" />
+    </MudStack>
+</MudPaper>
+
+@if (_isLoading)
+{
+    <MudProgressCircular Indeterminate="true" Color="Color.Primary" Size="Size.Large" />
+}
+else if (_entries.Count == 0)
+{
+    <MudText Typo="Typo.subtitle1">@Localizer["Journal_NoRecords"]</MudText>
+}
+else
+{
+    <MudTable Items="_entries" Dense="true">
+        <HeaderContent>
+            <MudTh>@Localizer["Journal_Table_Date"]</MudTh>
+            <MudTh>@Localizer["Journal_Table_Reference"]</MudTh>
+            <MudTh>@Localizer["Journal_Table_Memo"]</MudTh>
+            <MudTh>@Localizer["Journal_Table_Debit"]</MudTh>
+            <MudTh>@Localizer["Journal_Table_Credit"]</MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate Context="entry">
+            <MudTd>@entry.EntryDate.ToString("yyyy-MM-dd")</MudTd>
+            <MudTd>@entry.Reference</MudTd>
+            <MudTd>@entry.Memo</MudTd>
+            <MudTd>@entry.TotalDebit</MudTd>
+            <MudTd>@entry.TotalCredit</MudTd>
+            <MudTd>
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeleteEntryAsync(entry.Id)" />
+            </MudTd>
+        </RowTemplate>
+        <ChildRowContent Context="entry">
+            <MudPaper Class="pa-3">
+                <MudTable Items="@entry.Lines" Dense="true">
+                    <HeaderContent>
+                        <MudTh>@Localizer["Journal_Lines_Account"]</MudTh>
+                        <MudTh>@Localizer["Journal_Lines_Debit"]</MudTh>
+                        <MudTh>@Localizer["Journal_Lines_Credit"]</MudTh>
+                        <MudTh>@Localizer["Journal_Lines_Description"]</MudTh>
+                    </HeaderContent>
+                    <RowTemplate Context="line">
+                        <MudTd>@line.AccountLabel</MudTd>
+                        <MudTd>@line.Debit</MudTd>
+                        <MudTd>@line.Credit</MudTd>
+                        <MudTd>@line.Description</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudPaper>
+        </ChildRowContent>
+    </MudTable>
+}
+
+@code {
+    private readonly List<JournalEntryViewModel> _entries = new();
+    private IReadOnlyList<JournalEntryDialog.AccountOption> _accounts = Array.Empty<JournalEntryDialog.AccountOption>();
+    private bool _isLoading;
+    private DateTime? _fromDate = DateTime.Today.AddMonths(-1);
+    private DateTime? _toDate = DateTime.Today;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var accountEntities = await ChartService.GetAsync(null);
+        _accounts = accountEntities
+            .Select(a => new JournalEntryDialog.AccountOption(a.Id, a.Number, a.Name))
+            .ToList();
+        await LoadEntriesAsync();
+    }
+
+    private async Task LoadEntriesAsync()
+    {
+        _isLoading = true;
+        try
+        {
+            _entries.Clear();
+            var entries = await JournalService.GetAsync(ConvertToDateOnly(_fromDate), ConvertToDateOnly(_toDate));
+            foreach (var entry in entries)
+            {
+                _entries.Add(JournalEntryViewModel.FromEntity(entry, _accounts));
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+        finally
+        {
+            _isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnFromDateChanged(DateTime? value)
+    {
+        _fromDate = value;
+        await LoadEntriesAsync();
+    }
+
+    private async Task OnToDateChanged(DateTime? value)
+    {
+        _toDate = value;
+        await LoadEntriesAsync();
+    }
+
+    private async Task OpenCreateDialogAsync()
+    {
+        var parameters = new DialogParameters
+        {
+            { nameof(JournalEntryDialog.Model), new JournalEntryDialog.JournalEntryEditModel() },
+            { nameof(JournalEntryDialog.Accounts), _accounts }
+        };
+
+        var dialog = await DialogService.ShowAsync<JournalEntryDialog>(Localizer["Journal_Dialog_Title"], parameters);
+        var result = await dialog.Result;
+
+        if (result is { Canceled: false, Data: JournalEntryDialog.JournalEntryEditModel model })
+        {
+            await CreateEntryAsync(model);
+        }
+    }
+
+    private async Task CreateEntryAsync(JournalEntryDialog.JournalEntryEditModel model)
+    {
+        try
+        {
+            var lines = model.Lines.Select(l => new JournalEntryLine(l.AccountId!.Value, l.Debit, l.Credit, l.Description));
+            await JournalService.CreateAsync(model.Reference, model.EntryDate, model.Memo, lines);
+            Snackbar.Add(Localizer["Journal_Snackbar_Create"].Value, Severity.Success);
+            await LoadEntriesAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task DeleteEntryAsync(Guid entryId)
+    {
+        try
+        {
+            await JournalService.DeleteAsync(entryId);
+            Snackbar.Add(Localizer["Journal_Snackbar_Delete"].Value, Severity.Info);
+            await LoadEntriesAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private sealed record JournalEntryViewModel(Guid Id, string Reference, DateOnly EntryDate, string? Memo, decimal TotalDebit, decimal TotalCredit, IReadOnlyList<JournalEntryLineViewModel> Lines)
+    {
+        public static JournalEntryViewModel FromEntity(JournalEntry entry, IReadOnlyCollection<JournalEntryDialog.AccountOption> accounts)
+        {
+            var lines = entry.Lines.Select(line =>
+            {
+                var accountLabel = accounts.FirstOrDefault(a => a.Id == line.AccountId) is { } account
+                    ? $"{account.Number} - {account.Name}"
+                    : line.AccountId.ToString();
+                return new JournalEntryLineViewModel(accountLabel, line.Debit, line.Credit, line.Description);
+            }).ToList();
+
+            return new JournalEntryViewModel(entry.Id, entry.Reference, entry.EntryDate, entry.Memo, entry.TotalDebit, entry.TotalCredit, lines);
+        }
+    }
+
+    private sealed record JournalEntryLineViewModel(string AccountLabel, decimal Debit, decimal Credit, string Description);
+
+    private static DateOnly? ConvertToDateOnly(DateTime? input)
+        => input.HasValue ? DateOnly.FromDateTime(input.Value) : null;
+}

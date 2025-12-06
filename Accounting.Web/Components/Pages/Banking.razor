@@ -1,0 +1,292 @@
+@page "/banking"
+@using Microsoft.AspNetCore.Components.Forms
+@using Accounting.Web.Api.Banking
+@using Microsoft.AspNetCore.WebUtilities
+@using System.Net.Http.Headers
+@inject IInvoiceService InvoiceService
+@inject ISnackbar Snackbar
+@inject HttpClient Http
+@inject IStringLocalizer<SharedResources> Localizer
+
+<MudPaper Class="pa-4 mb-4">
+    <MudStack Spacing="2">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween" Spacing="2">
+            <MudText Typo="Typo.h5">@Localizer["Banking_Title"]</MudText>
+            <MudStack Row="true" Spacing="2">
+                <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="SyncExternalAsync">
+                    <MudIcon Icon="@Icons.Material.Filled.CloudDownload" Class="mr-2" />@Localizer["Banking_Sync"]
+                </MudButton>
+                <MudFileUpload T="IBrowserFile" @bind-Files="_importFile" Accept=".csv" />
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="_importFile is null" OnClick="ImportCsvAsync">
+                    <MudIcon Icon="@Icons.Material.Filled.Upload" Class="mr-2" />@Localizer["Banking_ImportCsv"]
+                </MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Info" OnClick="TriggerAutoMatchAsync" Disabled="@_isLoading">
+                    <MudIcon Icon="@Icons.Material.Filled.AutoAwesome" Class="mr-2" />@Localizer["Banking_Action_AutoMatch"]
+                </MudButton>
+            </MudStack>
+        </MudStack>
+        <MudStack Row="true" AlignItems="AlignItems.End" Spacing="2">
+            <MudDatePicker @bind-Date="_filterFrom" Label="@Localizer["Banking_Filter_From"]" DateFormat="yyyy-MM-dd" />
+            <MudDatePicker @bind-Date="_filterTo" Label="@Localizer["Banking_Filter_To"]" DateFormat="yyyy-MM-dd" />
+            <MudSelect T="bool?" Label="@Localizer["Banking_Filter_Status"]" @bind-Value="_filterMatched" Dense="true">
+                <MudSelectItem Value="@((bool?)null)">@Localizer["Banking_Filter_Status_All"]</MudSelectItem>
+                <MudSelectItem Value="true">@Localizer["Banking_Filter_Status_Matched"]</MudSelectItem>
+                <MudSelectItem Value="false">@Localizer["Banking_Filter_Status_Unmatched"]</MudSelectItem>
+            </MudSelect>
+            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="LoadTransactionsAsync">
+                <MudIcon Icon="@Icons.Material.Filled.FilterList" Class="mr-2" />@Localizer["Banking_Filter_Apply"]
+            </MudButton>
+        </MudStack>
+    </MudStack>
+</MudPaper>
+
+@if (_lastOperationSummary is not null)
+{
+    <MudAlert Severity="Severity.Info" Elevation="0" Dense="true" Class="mb-4">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+            <span>@Localizer["Banking_Summary_Message", _lastOperationSummary.Source, _lastOperationSummary.ImportedCount, _lastOperationSummary.MatchedCount, _lastOperationSummary.JournalEntries]</span>
+            <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small" OnClick="() => _lastOperationSummary = null" />
+        </MudStack>
+    </MudAlert>
+}
+
+<MudTable T="BankTransactionRow" Items="_transactions" Dense="true" Hover="true" Loading="@_isLoading" OnRowClick="HandleRowClick">
+    <LoadingContent>
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    </LoadingContent>
+    <HeaderContent>
+        <MudTh>@Localizer["Banking_Table_Date"]</MudTh>
+        <MudTh>@Localizer["Banking_Table_Counterparty"]</MudTh>
+        <MudTh>@Localizer["Banking_Table_Reference"]</MudTh>
+        <MudTh>@Localizer["Banking_Table_Amount"]</MudTh>
+        <MudTh>@Localizer["Banking_Table_Status"]</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="@Localizer["Banking_Table_Date"]">@context.BookingDate.ToString("yyyy-MM-dd")</MudTd>
+        <MudTd DataLabel="@Localizer["Banking_Table_Counterparty"]">@context.Counterparty</MudTd>
+        <MudTd DataLabel="@Localizer["Banking_Table_Reference"]">@context.Reference</MudTd>
+        <MudTd DataLabel="@Localizer["Banking_Table_Amount"]">@($"{context.Amount:0.00} EUR")</MudTd>
+        <MudTd DataLabel="@Localizer["Banking_Table_Status"]">
+            @{
+                var statusLabel = context.MatchedInvoiceId.HasValue
+                    ? (context.JournalEntryId.HasValue ? Localizer["Banking_Status_Posted"] : Localizer["Banking_Status_Matched"])
+                    : Localizer["Banking_Status_Unmatched"];
+                var statusColor = context.MatchedInvoiceId.HasValue
+                    ? (context.JournalEntryId.HasValue ? Color.Info : Color.Success)
+                    : Color.Warning;
+            }
+            <MudChip T="string" Color="@statusColor">
+                @statusLabel
+            </MudChip>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+@if (_selectedTransaction is not null)
+{
+    <MudPaper Class="pa-4 mt-4">
+        <MudText Typo="Typo.subtitle1">@Localizer["Banking_Action_Match"] - @_selectedTransaction.Counterparty (@($"{_selectedTransaction.Amount:0.00} EUR"))</MudText>
+        <MudAutocomplete T="InvoiceLookup"
+                         ToStringFunc="@(invoice => $"{invoice.Number} - {invoice.Counterparty} ({invoice.TotalGross:0.00})")"
+                         SearchFunc="SearchInvoicesAsync"
+                         Dense="true"
+                         Placeholder="@Localizer["Banking_Match_SelectInvoice"]"
+                         @bind-Value="_selectedInvoice" />
+        <MudStack Row="true" Justify="Justify.FlexEnd" Class="mt-2" Spacing="2">
+            <MudButton Variant="Variant.Text" OnClick="() => _selectedTransaction = null">@Localizer["Banking_Match_Cancel"]</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="_selectedInvoice is null" OnClick="MatchSelectedInvoiceAsync">@Localizer["Banking_Match_Save"]</MudButton>
+        </MudStack>
+    </MudPaper>
+}
+
+@code {
+    private readonly List<BankTransactionRow> _transactions = new();
+    private BankTransactionRow? _selectedTransaction;
+    private InvoiceLookup? _selectedInvoice;
+    private IBrowserFile? _importFile;
+    private bool _isLoading;
+    private DateTime? _filterFrom;
+    private DateTime? _filterTo;
+    private bool? _filterMatched;
+    private bool _hasAnnouncedInitialLoad;
+    private OperationSummary? _lastOperationSummary;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTransactionsAsync();
+    }
+
+    private async Task LoadTransactionsAsync()
+    {
+        try
+        {
+            _isLoading = true;
+            var query = new Dictionary<string, string?>();
+            DateOnly? from = _filterFrom.HasValue ? DateOnly.FromDateTime(_filterFrom.Value.Date) : null;
+            if (from.HasValue)
+            {
+                query["from"] = from.Value.ToString("yyyy-MM-dd");
+            }
+
+            DateOnly? to = _filterTo.HasValue ? DateOnly.FromDateTime(_filterTo.Value.Date) : null;
+            if (to.HasValue)
+            {
+                query["to"] = to.Value.ToString("yyyy-MM-dd");
+            }
+
+            if (_filterMatched.HasValue)
+            {
+                query["matched"] = _filterMatched.Value ? "true" : "false";
+            }
+
+            var endpoint = query.Count > 0
+                ? QueryHelpers.AddQueryString("api/banking/transactions", query)
+                : "api/banking/transactions";
+            var transactions = await Http.GetFromJsonAsync<List<BankTransactionDto>>(endpoint) ?? new List<BankTransactionDto>();
+            _transactions.Clear();
+            _transactions.AddRange(transactions.Select(t => new BankTransactionRow(t.Id, t.BookingDate, t.Counterparty, t.Reference, t.Amount, t.MatchedInvoiceId, t.JournalEntryId)));
+            if (!_hasAnnouncedInitialLoad)
+            {
+                Snackbar.Add(Localizer["Banking_Snackbar_Loaded"].Value, Severity.Info);
+                _hasAnnouncedInitialLoad = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async Task SyncExternalAsync()
+    {
+        try
+        {
+            var response = await Http.PostAsync("api/banking/transactions/sync", null);
+            response.EnsureSuccessStatusCode();
+            Snackbar.Add(Localizer["Banking_Snackbar_Synced"].Value, Severity.Success);
+            var synced = await response.Content.ReadFromJsonAsync<List<BankTransactionDto>>() ?? new List<BankTransactionDto>();
+            var matchResult = await RequestAutoMatchAsync();
+            UpdateSummary(Localizer["Banking_Summary_Source_Sync"].Value, synced.Count, matchResult);
+            await LoadTransactionsAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private Task HandleRowClick(TableRowClickEventArgs<BankTransactionRow> args)
+    {
+        _selectedTransaction = args.Item;
+        _selectedInvoice = null;
+        return Task.CompletedTask;
+    }
+
+    private async Task<IEnumerable<InvoiceLookup>> SearchInvoicesAsync(string value, CancellationToken cancellationToken)
+    {
+        var invoices = await InvoiceService.GetAsync(null, null, null, cancellationToken);
+        return invoices
+            .Where(i => !i.IsPosted)
+            .Where(i => string.IsNullOrWhiteSpace(value) || i.Number.Contains(value, StringComparison.OrdinalIgnoreCase))
+            .Select(i => new InvoiceLookup(i.Id, i.Number, i.Counterparty, i.TotalGross("EUR").Amount));
+    }
+
+    private async Task MatchSelectedInvoiceAsync()
+    {
+        if (_selectedTransaction is null || _selectedInvoice is null)
+        {
+            return;
+        }
+
+        try
+        {
+            var response = await Http.PostAsync($"api/banking/transactions/{_selectedTransaction.Id}/link/{_selectedInvoice.Id}", content: null);
+            response.EnsureSuccessStatusCode();
+            Snackbar.Add(Localizer["Banking_Snackbar_Matched"].Value, Severity.Success);
+            _selectedTransaction = null;
+            _selectedInvoice = null;
+            await LoadTransactionsAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task ImportCsvAsync()
+    {
+        if (_importFile is null)
+        {
+            return;
+        }
+
+        try
+        {
+            var content = new MultipartFormDataContent();
+            var stream = _importFile.OpenReadStream(5 * 1024 * 1024);
+            var streamContent = new StreamContent(stream);
+            streamContent.Headers.ContentType = new MediaTypeHeaderValue(_importFile.ContentType ?? "text/csv");
+            content.Add(streamContent, "file", _importFile.Name);
+            var response = await Http.PostAsync("api/banking/transactions/import", content);
+            response.EnsureSuccessStatusCode();
+            Snackbar.Add(Localizer["Banking_Snackbar_Imported"].Value, Severity.Success);
+            _importFile = null;
+            var importedTransactions = await response.Content.ReadFromJsonAsync<List<BankTransactionDto>>() ?? new List<BankTransactionDto>();
+            var matchResult = await RequestAutoMatchAsync();
+            UpdateSummary(Localizer["Banking_Summary_Source_Import"].Value, importedTransactions.Count, matchResult);
+            await LoadTransactionsAsync();
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task TriggerAutoMatchAsync()
+    {
+        try
+        {
+            var result = await RequestAutoMatchAsync();
+            UpdateSummary(Localizer["Banking_Summary_Source_Auto"].Value, 0, result);
+            if (result is { Matched: > 0 } || result is { JournalEntriesCreated: > 0 })
+            {
+                Snackbar.Add(Localizer["Banking_AutoMatch_Success", result!.Matched].Value, Severity.Success);
+                await LoadTransactionsAsync();
+            }
+            else
+            {
+                Snackbar.Add(Localizer["Banking_AutoMatch_None"].Value, Severity.Info);
+            }
+        }
+        catch (Exception ex)
+        {
+            Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private async Task<AutoMatchResultDto?> RequestAutoMatchAsync()
+    {
+        var response = await Http.PostAsync("api/banking/transactions/auto-match", null);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<AutoMatchResultDto>();
+    }
+
+    private void UpdateSummary(string source, int imported, AutoMatchResultDto? result)
+    {
+        _lastOperationSummary = new OperationSummary(
+            source,
+            imported,
+            result?.Matched ?? 0,
+            result?.JournalEntriesCreated ?? 0);
+    }
+
+    private sealed record BankTransactionRow(Guid Id, DateOnly BookingDate, string Counterparty, string Reference, decimal Amount, Guid? MatchedInvoiceId, Guid? JournalEntryId);
+
+    private sealed record InvoiceLookup(Guid Id, string Number, string Counterparty, decimal TotalGross);
+
+    private sealed record OperationSummary(string Source, int ImportedCount, int MatchedCount, int JournalEntries);
+}

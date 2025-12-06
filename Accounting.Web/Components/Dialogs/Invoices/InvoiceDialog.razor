@@ -1,0 +1,136 @@
+@using System.ComponentModel.DataAnnotations
+@using Accounting.Core.Enums
+@inject IStringLocalizer<SharedResources> Localizer
+
+<MudDialog>
+    <DialogContent>
+        <MudForm @ref="_form">
+            <MudSelect T="InvoiceType" @bind-Value="Model.Type" Label="@Localizer["Invoice_Field_Type"]" Required="true">
+                @foreach (InvoiceType type in Enum.GetValues(typeof(InvoiceType)))
+                {
+                    <MudSelectItem Value="@type">@Localizer[$"Invoice_Type_{type}"]</MudSelectItem>
+                }
+            </MudSelect>
+            <MudTextField @bind-Value="Model.Number" Label="@Localizer["Invoice_Field_Number"]" Required="true" MaxLength="32" Class="mt-3" />
+            <MudTextField @bind-Value="Model.Counterparty" Label="@Localizer["Invoice_Field_Counterparty"]" Required="true" MaxLength="128" Class="mt-3" />
+            <MudDatePicker Date="Model.IssueDateBinding" DateChanged="value => Model.IssueDateBinding = value ?? DateTime.Today" Label="@Localizer["Invoice_Field_IssueDate"]" Class="mt-3" />
+            <MudDatePicker Date="Model.DueDateBinding" DateChanged="value => Model.DueDateBinding = value ?? DateTime.Today" Label="@Localizer["Invoice_Field_DueDate"]" Class="mt-3" />
+
+            <MudPaper Class="pa-3 mt-4">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                    <MudText Typo="Typo.subtitle2">@Localizer["Invoice_Lines_Title"]</MudText>
+                    <MudButton Variant="Variant.Outlined" OnClick="AddLine">@Localizer["Invoice_Lines_Add"]</MudButton>
+                </MudStack>
+                <MudTable Items="Model.Lines" Dense="true" Class="mt-2">
+                    <HeaderContent>
+                        <MudTh>@Localizer["Invoice_Lines_Description"]</MudTh>
+                        <MudTh>@Localizer["Invoice_Lines_Account"]</MudTh>
+                        <MudTh>@Localizer["Invoice_Lines_Quantity"]</MudTh>
+                        <MudTh>@Localizer["Invoice_Lines_UnitPrice"]</MudTh>
+                        <MudTh>@Localizer["Invoice_Lines_Vat"]</MudTh>
+                        <MudTh></MudTh>
+                    </HeaderContent>
+                    <RowTemplate Context="line">
+                        <MudTd>
+                            <MudTextField @bind-Value="line.Description" MaxLength="256" />
+                        </MudTd>
+                        <MudTd>
+                            <MudSelect T="Guid?" Value="line.RevenueAccountId" ValueChanged="value => line.RevenueAccountId = value" Required="true">
+                                @foreach (var account in Accounts)
+                                {
+                                    <MudSelectItem Value="@account.Id">@($"{account.Number} - {account.Name}")</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudTd>
+                        <MudTd>
+                            <MudNumericField @bind-Value="line.Quantity" Min="0" Max="999999" />
+                        </MudTd>
+                        <MudTd>
+                            <MudNumericField @bind-Value="line.UnitPrice" Min="0" Max="999999" />
+                        </MudTd>
+                        <MudTd>
+                            <MudNumericField @bind-Value="line.VatRate" Min="0" Max="100" />
+                        </MudTd>
+                        <MudTd>
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => RemoveLine(line)" />
+                        </MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudPaper>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Text" OnClick="Cancel">@Localizer["Invoice_Dialog_Cancel"]</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveAsync">@Localizer["Invoice_Dialog_Save"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IDialogReference DialogReference { get; set; } = default!;
+
+    [Parameter]
+    public InvoiceEditModel Model { get; set; } = new();
+
+    [Parameter]
+    public IReadOnlyList<AccountOption> Accounts { get; set; } = Array.Empty<AccountOption>();
+
+    private MudForm _form = default!;
+
+    private void AddLine() => Model.Lines.Add(new InvoiceLineEditModel());
+
+    private void RemoveLine(InvoiceLineEditModel line)
+    {
+        if (Model.Lines.Count > 1)
+        {
+            Model.Lines.Remove(line);
+        }
+    }
+
+    private async Task SaveAsync()
+    {
+        await _form.Validate();
+        if (!_form.IsValid || Model.Lines.Any(l => !l.HasValue))
+        {
+            return;
+        }
+
+        DialogReference.Close(DialogResult.Ok(Model));
+    }
+
+    private void Cancel() => DialogReference.Close(DialogResult.Cancel());
+
+    public sealed record AccountOption(Guid Id, string Number, string Name);
+
+    public class InvoiceEditModel
+    {
+        public InvoiceType Type { get; set; } = InvoiceType.Sales;
+        [Required] public string Number { get; set; } = string.Empty;
+        [Required] public string Counterparty { get; set; } = string.Empty;
+        public DateOnly IssueDate { get; set; } = DateOnly.FromDateTime(DateTime.Today);
+        public DateOnly DueDate { get; set; } = DateOnly.FromDateTime(DateTime.Today.AddDays(30));
+        public List<InvoiceLineEditModel> Lines { get; set; } = new() { new() };
+
+        public DateTime IssueDateBinding
+        {
+            get => IssueDate.ToDateTime(TimeOnly.MinValue);
+            set => IssueDate = DateOnly.FromDateTime(value);
+        }
+
+        public DateTime DueDateBinding
+        {
+            get => DueDate.ToDateTime(TimeOnly.MinValue);
+            set => DueDate = DateOnly.FromDateTime(value);
+        }
+    }
+
+    public class InvoiceLineEditModel
+    {
+        public Guid? RevenueAccountId { get; set; }
+        public decimal Quantity { get; set; } = 1;
+        public decimal UnitPrice { get; set; }
+        public decimal VatRate { get; set; } = 21;
+        public string Description { get; set; } = string.Empty;
+
+        public bool HasValue => RevenueAccountId.HasValue && Quantity > 0 && UnitPrice >= 0;
+    }
+}

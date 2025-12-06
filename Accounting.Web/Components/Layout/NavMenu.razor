@@ -1,0 +1,22 @@
+﻿@inject IStringLocalizer<SharedResources> Localizer
+
+<MudNavMenu Dense="true">
+    <MudNavLink Href="/chart-of-accounts" Icon="@Icons.Material.Filled.AccountBalance">
+        @Localizer["Navigation_ChartOfAccounts"]
+    </MudNavLink>
+    <MudNavLink Href="/general-journal" Icon="@Icons.Material.Filled.MenuBook">
+        @Localizer["Navigation_GeneralJournal"]
+    </MudNavLink>
+    <MudNavLink Href="/invoices" Icon="@Icons.Material.Filled.ReceiptLong">
+        @Localizer["Navigation_Invoices"]
+    </MudNavLink>
+    <MudNavLink Href="/banking" Icon="@Icons.Material.Filled.AccountBalanceWallet">
+        @Localizer["Navigation_Banking"]
+    </MudNavLink>
+    <MudNavLink Href="/vat" Icon="@Icons.Material.Filled.Gavel">
+        @Localizer["Navigation_VAT"]
+    </MudNavLink>
+    <MudNavLink Href="/reporting" Icon="@Icons.Material.Filled.Insights">
+        @Localizer["Navigation_Reporting"]
+    </MudNavLink>
+</MudNavMenu>

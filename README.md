@@ -1,2 +1,25 @@
 # accounting
 A full-featured accounting system built with C# (.NET 8) and MudBlazor, showcasing production-grade architecture, reporting, imports/exports, and integrations.
+
+## Getting started
+
+### Quick demo (SQLite by default)
+1. Restore tooling if `dotnet-ef` is missing:
+   ```powershell
+   dotnet tool update --global dotnet-ef --version 8.0.10
+   ```
+2. Apply the initial migration (creates `Accounting.Web/app_data/accounting.db`):
+   ```powershell
+   dotnet ef database update --project Accounting.Infrastructure/Accounting.Infrastructure.csproj --startup-project Accounting.Web/Accounting.Web.csproj
+   ```
+3. Run the web host:
+   ```powershell
+   dotnet run --project Accounting.Web/Accounting.Web.csproj
+   ```
+
+### Switching to SQL Server / Azure SQL
+- Set `Database:Provider` to `SqlServer` (environment variable or `appsettings.Production.json`).
+- Provide a valid `ConnectionStrings:SqlServer`.
+- Re-run `dotnet ef database update ...` against the target database.
+
+This dual profile keeps the repo easy to clone/run (SQLite file) while staying production ready (SQL Server/Azure SQL).

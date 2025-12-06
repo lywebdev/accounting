@@ -1,0 +1,9 @@
+﻿@page "/"
+@inject IStringLocalizer<SharedResources> Localizer
+
+<PageTitle>@Localizer["AppTitle"]</PageTitle>
+
+<MudPaper Class="pa-5">
+    <MudText Typo="Typo.h4" GutterBottom="true">@Localizer["Home_Welcome"]</MudText>
+    <MudText Typo="Typo.body1">@Localizer["Home_Description"]</MudText>
+</MudPaper>

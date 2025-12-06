@@ -1,0 +1,158 @@
+@using System.ComponentModel.DataAnnotations
+@using Accounting.Core.Enums
+@inject IStringLocalizer<SharedResources> Localizer
+
+<MudDialog>
+    <DialogContent>
+        <MudForm @ref="_form">
+            <MudTextField @bind-Value="Model.Reference"
+                          Label="@Localizer["Journal_Field_Reference"]"
+                          Required="true"
+                          MaxLength="64" />
+            <MudDatePicker Date="Model.EntryDateBinding"
+                           DateChanged="value => Model.EntryDateBinding = value ?? DateTime.Today"
+                           Label="@Localizer["Journal_Field_Date"]"
+                           Required="true"
+                           Class="mt-4" />
+            <MudTextField @bind-Value="Model.Memo"
+                          Label="@Localizer["Journal_Field_Memo"]"
+                          Lines="2"
+                          MaxLength="256"
+                          Class="mt-4" />
+
+            <MudPaper Class="pa-3 mt-4">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                    <MudText Typo="Typo.subtitle1">@Localizer["Journal_Lines_Title"]</MudText>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="AddLine">
+                        <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-2" />@Localizer["Journal_Lines_Add"]
+                    </MudButton>
+                </MudStack>
+
+                <MudTable Items="Model.Lines" Dense="true" Class="mt-2">
+                    <HeaderContent>
+                        <MudTh>@Localizer["Journal_Lines_Account"]</MudTh>
+                        <MudTh>@Localizer["Journal_Lines_Debit"]</MudTh>
+                        <MudTh>@Localizer["Journal_Lines_Credit"]</MudTh>
+                        <MudTh>@Localizer["Journal_Lines_Description"]</MudTh>
+                        <MudTh></MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd>
+                            <MudSelect T="Guid?" Value="@context.AccountId" ValueChanged="value => context.AccountId = value" Required="true">
+                                @foreach (var account in Accounts)
+                                {
+                                    <MudSelectItem Value="@account.Id">@($"{account.Number} - {account.Name}")</MudSelectItem>
+                                }
+                            </MudSelect>
+                        </MudTd>
+                        <MudTd>
+                            <MudNumericField @bind-Value="context.Debit" Min="0" Max="99999999" />
+                        </MudTd>
+                        <MudTd>
+                            <MudNumericField @bind-Value="context.Credit" Min="0" Max="99999999" />
+                        </MudTd>
+                        <MudTd>
+                            <MudTextField @bind-Value="context.Description" MaxLength="128" />
+                        </MudTd>
+                        <MudTd>
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => RemoveLine(context)" />
+                        </MudTd>
+                    </RowTemplate>
+                </MudTable>
+                <MudStack Row="true" Justify="Justify.FlexEnd" Class="mt-2" Spacing="2">
+                    <MudText Typo="Typo.body2">@Localizer["Journal_Lines_TotalDebit"]: @Model.TotalDebit</MudText>
+                    <MudText Typo="Typo.body2">@Localizer["Journal_Lines_TotalCredit"]: @Model.TotalCredit</MudText>
+                    <MudChip T="bool" Value="Model.IsBalanced" Color="Model.IsBalanced ? Color.Success : Color.Error" Variant="Variant.Outlined">
+                        @Localizer[Model.IsBalanced ? "Journal_Lines_Balanced" : "Journal_Lines_NotBalanced"]
+                    </MudChip>
+                </MudStack>
+            </MudPaper>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Text" Color="Color.Default" OnClick="Cancel">@Localizer["Journal_Dialog_Cancel"]</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveAsync">@Localizer["Journal_Dialog_Save"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IDialogReference DialogReference { get; set; } = default!;
+
+    [Parameter]
+    public JournalEntryEditModel Model { get; set; } = new();
+
+    [Parameter]
+    public IReadOnlyList<AccountOption> Accounts { get; set; } = Array.Empty<AccountOption>();
+
+    private MudForm _form = default!;
+
+    private void AddLine()
+    {
+        Model.Lines.Add(new JournalEntryLineModel());
+    }
+
+    private void RemoveLine(JournalEntryLineModel line)
+    {
+        if (Model.Lines.Count <= 2)
+        {
+            return;
+        }
+
+        Model.Lines.Remove(line);
+    }
+
+    private async Task SaveAsync()
+    {
+        await _form.Validate();
+        if (!_form.IsValid || !Model.IsBalanced || Model.Lines.Any(l => !l.HasValue))
+        {
+            return;
+        }
+
+        DialogReference.Close(DialogResult.Ok(Model));
+    }
+
+    private void Cancel() => DialogReference.Close(DialogResult.Cancel());
+
+    public sealed class AccountOption(Guid id, string number, string name)
+    {
+        public Guid Id { get; } = id;
+        public string Number { get; } = number;
+        public string Name { get; } = name;
+    }
+
+    public class JournalEntryEditModel
+    {
+        [Required]
+        public string Reference { get; set; } = string.Empty;
+
+        public DateOnly EntryDate { get; set; } = DateOnly.FromDateTime(DateTime.Today);
+
+        public DateTime EntryDateBinding
+        {
+            get => EntryDate.ToDateTime(TimeOnly.MinValue);
+            set => EntryDate = DateOnly.FromDateTime(value);
+        }
+
+        public string? Memo { get; set; }
+
+        public List<JournalEntryLineModel> Lines { get; set; } = new()
+        {
+            new(), new()
+        };
+
+        public decimal TotalDebit => Lines.Sum(l => l.Debit);
+        public decimal TotalCredit => Lines.Sum(l => l.Credit);
+        public bool IsBalanced => TotalDebit == TotalCredit && TotalDebit > 0;
+    }
+
+    public class JournalEntryLineModel
+    {
+        public Guid? AccountId { get; set; }
+        public decimal Debit { get; set; }
+        public decimal Credit { get; set; }
+        public string Description { get; set; } = string.Empty;
+
+        public bool HasValue => AccountId.HasValue && (Debit > 0m || Credit > 0m);
+    }
+}
