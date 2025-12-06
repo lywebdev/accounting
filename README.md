@@ -17,6 +17,21 @@ A full-featured accounting system built with C# (.NET 8) and MudBlazor, showcasi
    dotnet run --project Accounting.Web/Accounting.Web.csproj
    ```
 
+### Migration / seeding helpers
+Use the built-in EF Core commands:
+
+```bash
+# Apply or update migrations (run from repo root)
+dotnet ef database update --project Accounting.Infrastructure/Accounting.Infrastructure.csproj --startup-project Accounting.Web/Accounting.Web.csproj
+
+# Run only the demo seeder (after migrations)
+dotnet run --project Accounting.Web -- seed
+
+# Full reset (SQLite): delete app_data/accounting.db, then run the two commands above
+```
+
+The seed routine populates the default chart of accounts plus a sample sales invoice.
+
 ### Switching to SQL Server / Azure SQL
 - Set `Database:Provider` to `SqlServer` (environment variable or `appsettings.Production.json`).
 - Provide a valid `ConnectionStrings:SqlServer`.

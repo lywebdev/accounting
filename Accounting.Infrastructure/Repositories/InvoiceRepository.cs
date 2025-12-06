@@ -10,7 +10,7 @@ public class InvoiceRepository(AccountingDbContext dbContext) : IInvoiceReposito
 {
     public async Task<Invoice?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => await dbContext.Invoices
-            .Include("_lines")
+            .Include(i => i.Lines)
             .FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
 
     public async Task<IReadOnlyList<Invoice>> GetAsync(InvoiceType? type, DateOnly? from, DateOnly? to, CancellationToken cancellationToken = default)
@@ -32,7 +32,7 @@ public class InvoiceRepository(AccountingDbContext dbContext) : IInvoiceReposito
         }
 
         return await query.OrderByDescending(i => i.IssueDate)
-            .Include("_lines")
+            .Include(i => i.Lines)
             .ToListAsync(cancellationToken);
     }
 

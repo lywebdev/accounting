@@ -1,11 +1,12 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Accounting.Core;
 using Accounting.Core.Options;
 using Accounting.Infrastructure;
+using Accounting.Infrastructure.Seeding;
 using Accounting.Web.Api.Accounts;
-using Accounting.Web.Api.JournalEntries;
-using Accounting.Web.Api.Invoices;
 using Accounting.Web.Api.Banking;
+using Accounting.Web.Api.Invoices;
+using Accounting.Web.Api.JournalEntries;
 using Accounting.Web.Api.Tax;
 using Accounting.Web.Components;
 using Microsoft.AspNetCore.Components;
@@ -17,8 +18,10 @@ namespace Accounting.Web;
 
 public static class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
+        var runSeeder = args.Any(a => a.Equals("--seed", StringComparison.OrdinalIgnoreCase) || a.Equals("seed", StringComparison.OrdinalIgnoreCase));
+
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddRazorComponents()
@@ -54,6 +57,14 @@ public static class Program
 
         var app = builder.Build();
 
+        if (runSeeder)
+        {
+            using var scope = app.Services.CreateScope();
+            var seeder = scope.ServiceProvider.GetRequiredService<IDatabaseSeeder>();
+            await seeder.SeedAsync();
+            return;
+        }
+
         if (!app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/Error");
@@ -76,6 +87,6 @@ public static class Program
         app.MapBankingEndpoints();
         app.MapTaxEndpoints();
 
-        app.Run();
+        await app.RunAsync();
     }
 }

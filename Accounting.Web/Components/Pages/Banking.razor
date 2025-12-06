@@ -30,8 +30,8 @@
             <MudDatePicker @bind-Date="_filterTo" Label="@Localizer["Banking_Filter_To"]" DateFormat="yyyy-MM-dd" />
             <MudSelect T="bool?" Label="@Localizer["Banking_Filter_Status"]" @bind-Value="_filterMatched" Dense="true">
                 <MudSelectItem Value="@((bool?)null)">@Localizer["Banking_Filter_Status_All"]</MudSelectItem>
-                <MudSelectItem Value="true">@Localizer["Banking_Filter_Status_Matched"]</MudSelectItem>
-                <MudSelectItem Value="false">@Localizer["Banking_Filter_Status_Unmatched"]</MudSelectItem>
+                <MudSelectItem Value="@((bool?)true)">@Localizer["Banking_Filter_Status_Matched"]</MudSelectItem>
+                <MudSelectItem Value="@((bool?)false)">@Localizer["Banking_Filter_Status_Unmatched"]</MudSelectItem>
             </MudSelect>
             <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="LoadTransactionsAsync">
                 <MudIcon Icon="@Icons.Material.Filled.FilterList" Class="mr-2" />@Localizer["Banking_Filter_Apply"]

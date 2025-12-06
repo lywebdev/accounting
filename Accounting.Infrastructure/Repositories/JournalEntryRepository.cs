@@ -9,7 +9,7 @@ public class JournalEntryRepository(AccountingDbContext dbContext) : IJournalEnt
 {
     public async Task<JournalEntry?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         => await dbContext.JournalEntries
-            .Include("_lines")
+            .Include(j => j.Lines)
             .FirstOrDefaultAsync(j => j.Id == id, cancellationToken);
 
     public async Task<IReadOnlyList<JournalEntry>> GetAsync(DateOnly? from, DateOnly? to, CancellationToken cancellationToken = default)
@@ -26,7 +26,7 @@ public class JournalEntryRepository(AccountingDbContext dbContext) : IJournalEnt
         }
 
         return await query.OrderByDescending(j => j.EntryDate)
-            .Include("_lines")
+            .Include(j => j.Lines)
             .ToListAsync(cancellationToken);
     }
 

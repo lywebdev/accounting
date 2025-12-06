@@ -1,6 +1,8 @@
 ﻿@using System.Globalization
+@using Microsoft.AspNetCore.Localization
 @inject NavigationManager NavigationManager
 @inject IStringLocalizer<SharedResources> Localizer
+@inject IJSRuntime JsRuntime
 
 <MudSelect T="string" Value="_selectedCulture" ValueChanged="OnCultureChanged" Dense="true" Label="@LanguageLabel" Class="language-switcher" AnchorOrigin="Origin.BottomRight">
     <MudSelectItem Value='@("en")'>@EnglishLabel</MudSelectItem>
@@ -13,12 +15,15 @@
     private string EnglishLabel => Localizer["Language_English"];
     private string DutchLabel => Localizer["Language_Dutch"];
 
-    private void OnCultureChanged(string culture)
+    private async Task OnCultureChanged(string culture)
     {
         if (string.IsNullOrWhiteSpace(culture))
         {
             return;
         }
+
+        var cookieValue = CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture));
+        await JsRuntime.InvokeVoidAsync("culture.set", cookieValue);
 
         var uri = new Uri(NavigationManager.Uri);
         var baseUri = uri.GetLeftPart(UriPartial.Path);

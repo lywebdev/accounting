@@ -1,7 +1,7 @@
-﻿namespace Accounting.Web.Localization;
+namespace Accounting.Web;
 
 /// <summary>
-/// Маркерный класс для доступа к общим ресурсам локализации.
+/// Marker class for shared localization resources.
 /// </summary>
 public class SharedResources
 {

@@ -5,6 +5,7 @@ using Accounting.Infrastructure.Integrations.Banking;
 using Accounting.Infrastructure.Integrations.Tax;
 using Accounting.Infrastructure.Persistence;
 using Accounting.Infrastructure.Repositories;
+using Accounting.Infrastructure.Seeding;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -50,6 +51,7 @@ public static class DependencyInjection
         services.AddScoped<IInvoiceRepository, InvoiceRepository>();
         services.AddScoped<IBankTransactionRepository, BankTransactionRepository>();
         services.AddScoped<ITaxDeclarationRepository, TaxDeclarationRepository>();
+        services.AddScoped<IDatabaseSeeder, DatabaseSeeder>();
 
         services.AddSingleton<IBankFeedClient, FakeBankingApiClient>();
         services.AddSingleton<IBankStatementImporter, CsvBankStatementImporter>();
