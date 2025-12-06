@@ -15,6 +15,7 @@
              EndIcon="@Icons.Material.Filled.ArrowDropDown">
         <MudMenuItem OnClick="OnEnglishSelected">@EnglishLabel</MudMenuItem>
         <MudMenuItem OnClick="OnDutchSelected">@DutchLabel</MudMenuItem>
+        <MudMenuItem OnClick="OnRussianSelected">@RussianLabel</MudMenuItem>
     </MudMenu>
 </div>
 
@@ -22,7 +23,13 @@
     private string _selectedCulture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
     private string EnglishLabel => Localizer["Language_English"];
     private string DutchLabel => Localizer["Language_Dutch"];
-    private string CurrentLanguageLabel => _selectedCulture == "nl" ? DutchLabel : EnglishLabel;
+    private string RussianLabel => Localizer["Language_Russian"];
+    private string CurrentLanguageLabel => _selectedCulture switch
+    {
+        "nl" => DutchLabel,
+        "ru" => RussianLabel,
+        _ => EnglishLabel
+    };
 
     private async Task OnCultureChanged(string culture)
     {
@@ -42,4 +49,5 @@
 
     private Task OnEnglishSelected() => OnCultureChanged("en");
     private Task OnDutchSelected() => OnCultureChanged("nl");
+    private Task OnRussianSelected() => OnCultureChanged("ru");
 }

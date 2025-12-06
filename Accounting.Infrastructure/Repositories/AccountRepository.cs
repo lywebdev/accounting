@@ -33,7 +33,14 @@ public class AccountRepository(AccountingDbContext dbContext) : IAccountReposito
 
     public async Task UpdateAsync(Account account, CancellationToken cancellationToken = default)
     {
-        dbContext.Accounts.Update(account);
+        var tracked = dbContext.Accounts.Local.FirstOrDefault(e => e.Id == account.Id);
+        if (tracked is not null)
+        {
+            dbContext.Entry(tracked).State = EntityState.Detached;
+        }
+
+        dbContext.Attach(account);
+        dbContext.Entry(account).State = EntityState.Modified;
         await dbContext.SaveChangesAsync(cancellationToken);
     }
 

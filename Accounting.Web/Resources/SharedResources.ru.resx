@@ -1,0 +1,613 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AppTitle" xml:space="preserve">
+    <value>AccountingApp</value>
+  </data>
+  <data name="Navigation_ChartOfAccounts" xml:space="preserve">
+    <value>План счетов</value>
+  </data>
+  <data name="Navigation_GeneralJournal" xml:space="preserve">
+    <value>Главная книга</value>
+  </data>
+  <data name="Navigation_Invoices" xml:space="preserve">
+    <value>Счета</value>
+  </data>
+  <data name="Navigation_Banking" xml:space="preserve">
+    <value>Банкинг</value>
+  </data>
+  <data name="Navigation_VAT" xml:space="preserve">
+    <value>НДС / Налоги</value>
+  </data>
+  <data name="Navigation_Reporting" xml:space="preserve">
+    <value>Отчётность</value>
+  </data>
+  <data name="Navigation_Settings" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="Language_Label" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="Language_English" xml:space="preserve">
+    <value>Английский</value>
+  </data>
+  <data name="Language_Dutch" xml:space="preserve">
+    <value>Нидерландский</value>
+  </data>
+  <data name="Language_Russian" xml:space="preserve">
+    <value>Русский</value>
+  </data>
+  <data name="Page_ChartOfAccounts_Title" xml:space="preserve">
+    <value>План счетов</value>
+  </data>
+  <data name="Page_GeneralJournal_Title" xml:space="preserve">
+    <value>Главная книга</value>
+  </data>
+  <data name="Page_Invoices_Title" xml:space="preserve">
+    <value>Счета</value>
+  </data>
+  <data name="Page_Banking_Title" xml:space="preserve">
+    <value>Рабочее место банкинга</value>
+  </data>
+  <data name="Page_VAT_Title" xml:space="preserve">
+    <value>НДС / Налоги</value>
+  </data>
+  <data name="Page_Reporting_Title" xml:space="preserve">
+    <value>Отчётность</value>
+  </data>
+  <data name="Page_UnderConstruction" xml:space="preserve">
+    <value>Каркас модуля готов; функциональный интерфейс появится в следующей итерации.</value>
+  </data>
+  <data name="Home_Welcome" xml:space="preserve">
+    <value>Добро пожаловать в AccountingApp</value>
+  </data>
+  <data name="Home_Description" xml:space="preserve">
+    <value>Все основные модули подключены согласно шаблону чистой архитектуры. Выберите раздел в меню навигации для продолжения.</value>
+  </data>
+  <data name="Coa_Title" xml:space="preserve">
+    <value>План счетов</value>
+  </data>
+  <data name="Coa_AddButton" xml:space="preserve">
+    <value>Добавить счёт</value>
+  </data>
+  <data name="Coa_Filter_Label" xml:space="preserve">
+    <value>Фильтр по категории</value>
+  </data>
+  <data name="Coa_Filter_All" xml:space="preserve">
+    <value>Все категории</value>
+  </data>
+  <data name="Coa_Table_Number" xml:space="preserve">
+    <value>Номер</value>
+  </data>
+  <data name="Coa_Table_Name" xml:space="preserve">
+    <value>Название</value>
+  </data>
+  <data name="Coa_Table_Category" xml:space="preserve">
+    <value>Категория</value>
+  </data>
+  <data name="Coa_Table_Status" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="Coa_Table_Actions" xml:space="preserve">
+    <value>Действия</value>
+  </data>
+  <data name="Coa_Status_Active" xml:space="preserve">
+    <value>Активен</value>
+  </data>
+  <data name="Coa_Status_Inactive" xml:space="preserve">
+    <value>Неактивен</value>
+  </data>
+  <data name="Coa_Action_Edit" xml:space="preserve">
+    <value>Изменить</value>
+  </data>
+  <data name="Coa_Action_Deactivate" xml:space="preserve">
+    <value>Деактивировать</value>
+  </data>
+  <data name="Coa_Action_Activate" xml:space="preserve">
+    <value>Активировать</value>
+  </data>
+  <data name="Coa_NoRecords" xml:space="preserve">
+    <value>По текущему фильтру счёта не найдены.</value>
+  </data>
+  <data name="Coa_Dialog_CreateTitle" xml:space="preserve">
+    <value>Создать счёт</value>
+  </data>
+  <data name="Coa_Dialog_EditTitle" xml:space="preserve">
+    <value>Редактировать счёт</value>
+  </data>
+  <data name="Coa_Dialog_Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="Coa_Dialog_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Coa_Field_Number" xml:space="preserve">
+    <value>Номер счёта</value>
+  </data>
+  <data name="Coa_Field_Name" xml:space="preserve">
+    <value>Название счёта</value>
+  </data>
+  <data name="Coa_Field_Category" xml:space="preserve">
+    <value>Категория</value>
+  </data>
+  <data name="Coa_Field_Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="Coa_Snackbar_CreateSuccess" xml:space="preserve">
+    <value>Счёт успешно создан.</value>
+  </data>
+  <data name="Coa_Snackbar_UpdateSuccess" xml:space="preserve">
+    <value>Счёт успешно обновлён.</value>
+  </data>
+  <data name="Coa_Snackbar_Deactivate" xml:space="preserve">
+    <value>Счёт деактивирован.</value>
+  </data>
+  <data name="Coa_Snackbar_Activate" xml:space="preserve">
+    <value>Счёт активирован.</value>
+  </data>
+  <data name="Account_Category_Assets" xml:space="preserve">
+    <value>Активы</value>
+  </data>
+  <data name="Account_Category_Liabilities" xml:space="preserve">
+    <value>Обязательства</value>
+  </data>
+  <data name="Account_Category_Equity" xml:space="preserve">
+    <value>Капитал</value>
+  </data>
+  <data name="Account_Category_Revenue" xml:space="preserve">
+    <value>Доходы</value>
+  </data>
+  <data name="Account_Category_Expense" xml:space="preserve">
+    <value>Расходы</value>
+  </data>
+  <data name="Journal_Title" xml:space="preserve">
+    <value>Главная книга</value>
+  </data>
+  <data name="Journal_AddButton" xml:space="preserve">
+    <value>Новая проводка</value>
+  </data>
+  <data name="Journal_Filter_From" xml:space="preserve">
+    <value>С даты</value>
+  </data>
+  <data name="Journal_Filter_To" xml:space="preserve">
+    <value>По дату</value>
+  </data>
+  <data name="Journal_NoRecords" xml:space="preserve">
+    <value>В выбранном диапазоне проводок нет.</value>
+  </data>
+  <data name="Journal_Table_Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="Journal_Table_Reference" xml:space="preserve">
+    <value>Референс</value>
+  </data>
+  <data name="Journal_Table_Memo" xml:space="preserve">
+    <value>Примечание</value>
+  </data>
+  <data name="Journal_Table_Debit" xml:space="preserve">
+    <value>Дебет всего</value>
+  </data>
+  <data name="Journal_Table_Credit" xml:space="preserve">
+    <value>Кредит всего</value>
+  </data>
+  <data name="Journal_Lines_Title" xml:space="preserve">
+    <value>Строки проводки</value>
+  </data>
+  <data name="Journal_Lines_Add" xml:space="preserve">
+    <value>Добавить строку</value>
+  </data>
+  <data name="Journal_Lines_Account" xml:space="preserve">
+    <value>Счёт</value>
+  </data>
+  <data name="Journal_Lines_Debit" xml:space="preserve">
+    <value>Дебет</value>
+  </data>
+  <data name="Journal_Lines_Credit" xml:space="preserve">
+    <value>Кредит</value>
+  </data>
+  <data name="Journal_Lines_Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="Journal_Lines_TotalDebit" xml:space="preserve">
+    <value>Дебет всего</value>
+  </data>
+  <data name="Journal_Lines_TotalCredit" xml:space="preserve">
+    <value>Кредит всего</value>
+  </data>
+  <data name="Journal_Lines_Balanced" xml:space="preserve">
+    <value>Сбалансировано</value>
+  </data>
+  <data name="Journal_Lines_NotBalanced" xml:space="preserve">
+    <value>Не сбалансировано</value>
+  </data>
+  <data name="Journal_Field_Reference" xml:space="preserve">
+    <value>Референс</value>
+  </data>
+  <data name="Journal_Field_Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="Journal_Field_Memo" xml:space="preserve">
+    <value>Примечание</value>
+  </data>
+  <data name="Journal_Dialog_Title" xml:space="preserve">
+    <value>Создать проводку</value>
+  </data>
+  <data name="Journal_Dialog_Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="Journal_Dialog_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Journal_Snackbar_Create" xml:space="preserve">
+    <value>Проводка создана.</value>
+  </data>
+  <data name="Journal_Snackbar_Delete" xml:space="preserve">
+    <value>Проводка удалена.</value>
+  </data>
+  <data name="Invoices_Title" xml:space="preserve">
+    <value>Счета</value>
+  </data>
+  <data name="Invoices_AddButton" xml:space="preserve">
+    <value>Новый счёт</value>
+  </data>
+  <data name="Invoices_Filter_Type" xml:space="preserve">
+    <value>Тип</value>
+  </data>
+  <data name="Invoices_Filter_AllTypes" xml:space="preserve">
+    <value>Все типы</value>
+  </data>
+  <data name="Invoices_Filter_From" xml:space="preserve">
+    <value>С даты</value>
+  </data>
+  <data name="Invoices_Filter_To" xml:space="preserve">
+    <value>По дату</value>
+  </data>
+  <data name="Invoices_NoRecords" xml:space="preserve">
+    <value>Счета по заданным фильтрам отсутствуют.</value>
+  </data>
+  <data name="Invoices_Table_Number" xml:space="preserve">
+    <value>Номер</value>
+  </data>
+  <data name="Invoices_Table_Type" xml:space="preserve">
+    <value>Тип</value>
+  </data>
+  <data name="Invoices_Table_Counterparty" xml:space="preserve">
+    <value>Контрагент</value>
+  </data>
+  <data name="Invoices_Table_IssueDate" xml:space="preserve">
+    <value>Дата выставления</value>
+  </data>
+  <data name="Invoices_Table_Total" xml:space="preserve">
+    <value>Итого</value>
+  </data>
+  <data name="Invoices_Table_Status" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="Invoices_Status_Draft" xml:space="preserve">
+    <value>Черновик</value>
+  </data>
+  <data name="Invoices_Status_Posted" xml:space="preserve">
+    <value>Проведён</value>
+  </data>
+  <data name="Invoice_Field_Type" xml:space="preserve">
+    <value>Тип счёта</value>
+  </data>
+  <data name="Invoice_Field_Number" xml:space="preserve">
+    <value>Номер счёта</value>
+  </data>
+  <data name="Invoice_Field_Counterparty" xml:space="preserve">
+    <value>Контрагент</value>
+  </data>
+  <data name="Invoice_Field_IssueDate" xml:space="preserve">
+    <value>Дата выставления</value>
+  </data>
+  <data name="Invoice_Field_DueDate" xml:space="preserve">
+    <value>Срок оплаты</value>
+  </data>
+  <data name="Invoice_Lines_Title" xml:space="preserve">
+    <value>Позиции счёта</value>
+  </data>
+  <data name="Invoice_Lines_Add" xml:space="preserve">
+    <value>Добавить строку</value>
+  </data>
+  <data name="Invoice_Lines_Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="Invoice_Lines_Account" xml:space="preserve">
+    <value>Счёт доходов</value>
+  </data>
+  <data name="Invoice_Lines_Quantity" xml:space="preserve">
+    <value>Кол-во</value>
+  </data>
+  <data name="Invoice_Lines_UnitPrice" xml:space="preserve">
+    <value>Цена за единицу</value>
+  </data>
+  <data name="Invoice_Lines_Vat" xml:space="preserve">
+    <value>НДС %</value>
+  </data>
+  <data name="Invoice_Lines_Total" xml:space="preserve">
+    <value>Итого</value>
+  </data>
+  <data name="Invoice_Dialog_Title" xml:space="preserve">
+    <value>Создать счёт-фактуру</value>
+  </data>
+  <data name="Invoice_Dialog_Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="Invoice_Dialog_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Invoices_Snackbar_Create" xml:space="preserve">
+    <value>Счёт-фактура создана.</value>
+  </data>
+  <data name="Invoices_Snackbar_Posted" xml:space="preserve">
+    <value>Счёт-фактура проведена.</value>
+  </data>
+  <data name="Invoices_Snackbar_Delete" xml:space="preserve">
+    <value>Счёт-фактура удалена.</value>
+  </data>
+  <data name="Invoice_Type_Sales" xml:space="preserve">
+    <value>Продажи</value>
+  </data>
+  <data name="Invoice_Type_Purchase" xml:space="preserve">
+    <value>Покупка</value>
+  </data>
+  <data name="Banking_Title" xml:space="preserve">
+    <value>Банкинг</value>
+  </data>
+  <data name="Banking_ImportCsv" xml:space="preserve">
+    <value>Импорт CSV</value>
+  </data>
+  <data name="Banking_Sync" xml:space="preserve">
+    <value>Синхронизировать ленту</value>
+  </data>
+  <data name="Banking_Table_Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="Banking_Table_Counterparty" xml:space="preserve">
+    <value>Контрагент</value>
+  </data>
+  <data name="Banking_Table_Reference" xml:space="preserve">
+    <value>Референс</value>
+  </data>
+  <data name="Banking_Table_Amount" xml:space="preserve">
+    <value>Сумма</value>
+  </data>
+  <data name="Banking_Table_Status" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="Banking_Filter_From" xml:space="preserve">
+    <value>С даты</value>
+  </data>
+  <data name="Banking_Filter_To" xml:space="preserve">
+    <value>По дату</value>
+  </data>
+  <data name="Banking_Filter_Status" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="Banking_Filter_Status_All" xml:space="preserve">
+    <value>Все</value>
+  </data>
+  <data name="Banking_Filter_Status_Matched" xml:space="preserve">
+    <value>Сопоставлено</value>
+  </data>
+  <data name="Banking_Filter_Status_Unmatched" xml:space="preserve">
+    <value>Не сопоставлено</value>
+  </data>
+  <data name="Banking_Filter_Apply" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="Banking_Status_Matched" xml:space="preserve">
+    <value>Сопоставлено</value>
+  </data>
+  <data name="Banking_Status_Unmatched" xml:space="preserve">
+    <value>Ожидает</value>
+  </data>
+  <data name="Banking_Action_Match" xml:space="preserve">
+    <value>Сопоставить</value>
+  </data>
+  <data name="Banking_Match_SelectInvoice" xml:space="preserve">
+    <value>Выберите счёт</value>
+  </data>
+  <data name="Banking_Match_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Banking_Match_Save" xml:space="preserve">
+    <value>Связать</value>
+  </data>
+  <data name="Banking_Import_Title" xml:space="preserve">
+    <value>Загрузите банковскую выписку CSV</value>
+  </data>
+  <data name="Banking_Import_Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Banking_Import_Save" xml:space="preserve">
+    <value>Импортировать</value>
+  </data>
+  <data name="Banking_Snackbar_Synced" xml:space="preserve">
+    <value>Банковская лента синхронизирована.</value>
+  </data>
+  <data name="Banking_Snackbar_Loaded" xml:space="preserve">
+    <value>Транзакции загружены.</value>
+  </data>
+  <data name="Banking_Snackbar_Matched" xml:space="preserve">
+    <value>Транзакция сопоставлена со счётом.</value>
+  </data>
+  <data name="Banking_Snackbar_Imported" xml:space="preserve">
+    <value>Транзакции импортированы.</value>
+  </data>
+  <data name="Banking_Action_AutoMatch" xml:space="preserve">
+    <value>Автоподбор</value>
+  </data>
+  <data name="Banking_Status_Posted" xml:space="preserve">
+    <value>Отражено в учёте</value>
+  </data>
+  <data name="Banking_Summary_Message" xml:space="preserve">
+    <value>Последняя операция {0}: импортировано {1}, сопоставлено {2}, проводок {3}.</value>
+  </data>
+  <data name="Banking_Summary_Source_Import" xml:space="preserve">
+    <value>Импортировать</value>
+  </data>
+  <data name="Banking_Summary_Source_Sync" xml:space="preserve">
+    <value>Синхронизация ленты</value>
+  </data>
+  <data name="Banking_Summary_Source_Auto" xml:space="preserve">
+    <value>Ручной автоподбор</value>
+  </data>
+  <data name="Banking_AutoMatch_Success" xml:space="preserve">
+    <value>Автоматически сопоставлено транзакций: {0}.</value>
+  </data>
+  <data name="Banking_AutoMatch_None" xml:space="preserve">
+    <value>Не удалось сопоставить ни одной транзакции.</value>
+  </data>
+  <data name="VAT_Tab_Declaration" xml:space="preserve">
+    <value>Квартальная декларация</value>
+  </data>
+  <data name="VAT_Tab_Validation" xml:space="preserve">
+    <value>Проверка НДС</value>
+  </data>
+  <data name="VAT_Field_Year" xml:space="preserve">
+    <value>Год</value>
+  </data>
+  <data name="VAT_Field_Period" xml:space="preserve">
+    <value>Квартал</value>
+  </data>
+  <data name="VAT_Period_Q1" xml:space="preserve">
+    <value>Q1 (янв-мар)</value>
+  </data>
+  <data name="VAT_Period_Q2" xml:space="preserve">
+    <value>Q2 (апр-июн)</value>
+  </data>
+  <data name="VAT_Period_Q3" xml:space="preserve">
+    <value>Q3 (июл-сен)</value>
+  </data>
+  <data name="VAT_Period_Q4" xml:space="preserve">
+    <value>Q4 (окт-дек)</value>
+  </data>
+  <data name="VAT_Action_Calculate" xml:space="preserve">
+    <value>Рассчитать</value>
+  </data>
+  <data name="VAT_Action_Submit" xml:space="preserve">
+    <value>Отправить</value>
+  </data>
+  <data name="VAT_Label_Payable" xml:space="preserve">
+    <value>НДС к уплате</value>
+  </data>
+  <data name="VAT_Label_Receivable" xml:space="preserve">
+    <value>НДС к возмещению</value>
+  </data>
+  <data name="VAT_Label_Net" xml:space="preserve">
+    <value>Сумма НДС</value>
+  </data>
+  <data name="VAT_Label_Status" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="VAT_Status_Draft" xml:space="preserve">
+    <value>Черновик</value>
+  </data>
+  <data name="VAT_Status_Submitted" xml:space="preserve">
+    <value>Отправлено</value>
+  </data>
+  <data name="VAT_Status_Accepted" xml:space="preserve">
+    <value>Принято</value>
+  </data>
+  <data name="VAT_Status_Rejected" xml:space="preserve">
+    <value>Отклонено</value>
+  </data>
+  <data name="VAT_Empty_State" xml:space="preserve">
+    <value>Выберите период и нажмите «Рассчитать», чтобы загрузить данные декларации.</value>
+  </data>
+  <data name="VAT_History_Title" xml:space="preserve">
+    <value>История отправок</value>
+  </data>
+  <data name="VAT_History_Table_Period" xml:space="preserve">
+    <value>Период</value>
+  </data>
+  <data name="VAT_History_Table_Submitted" xml:space="preserve">
+    <value>Дата отправки</value>
+  </data>
+  <data name="VAT_NotSubmitted" xml:space="preserve">
+    <value>Не отправлено</value>
+  </data>
+  <data name="VAT_Validation_Title" xml:space="preserve">
+    <value>Проверка НДС-номера в песочнице налоговой службы</value>
+  </data>
+  <data name="VAT_Validation_Label" xml:space="preserve">
+    <value>Номер НДС</value>
+  </data>
+  <data name="VAT_Validation_Button" xml:space="preserve">
+    <value>Проверить</value>
+  </data>
+  <data name="VAT_Validation_Result_Valid" xml:space="preserve">
+    <value>Номер НДС действителен.</value>
+  </data>
+  <data name="VAT_Validation_Result_Invalid" xml:space="preserve">
+    <value>Номер НДС недействителен.</value>
+  </data>
+  <data name="VAT_Validation_Snackbar_Valid" xml:space="preserve">
+    <value>Номер НДС принят налоговым органом.</value>
+  </data>
+  <data name="VAT_Validation_Snackbar_Invalid" xml:space="preserve">
+    <value>Номер НДС отклонён налоговым органом.</value>
+  </data>
+  <data name="VAT_Snackbar_Submitted" xml:space="preserve">
+    <value>Декларация отправлена: {0}.</value>
+  </data>
+</root>

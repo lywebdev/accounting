@@ -1,7 +1,6 @@
 @using System.ComponentModel.DataAnnotations
 @using Accounting.Core.Enums
 @using MudBlazor
-@using MudBlazor.Services
 @inject IStringLocalizer<SharedResources> Localizer
 
 <MudDialog>
@@ -38,7 +37,7 @@
 </MudDialog>
 
 @code {
-    [CascadingParameter] private IDialogReference DialogReference { get; set; } = default!;
+    [CascadingParameter] private IMudDialogInstance DialogInstance { get; set; } = default!;
 
     [Parameter]
     public AccountEditModel Model { get; set; } = new();
@@ -56,10 +55,10 @@
             return;
         }
 
-        DialogReference.Close(DialogResult.Ok(Model));
+        DialogInstance.Close(DialogResult.Ok(Model));
     }
 
-    private void Cancel() => DialogReference.Close(DialogResult.Cancel());
+    private void Cancel() => DialogInstance.Cancel();
 
     public class AccountEditModel
     {

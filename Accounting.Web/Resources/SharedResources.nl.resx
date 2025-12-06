@@ -91,6 +91,9 @@
   <data name="Language_Dutch" xml:space="preserve">
     <value>Nederlands</value>
   </data>
+  <data name="Language_Russian" xml:space="preserve">
+    <value>Russisch</value>
+  </data>
   <data name="Page_ChartOfAccounts_Title" xml:space="preserve">
     <value>Grootboekrekeningen</value>
   </data>

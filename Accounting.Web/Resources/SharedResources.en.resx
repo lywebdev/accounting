@@ -91,6 +91,9 @@
   <data name="Language_Dutch" xml:space="preserve">
     <value>Dutch</value>
   </data>
+  <data name="Language_Russian" xml:space="preserve">
+    <value>Russian</value>
+  </data>
   <data name="Page_ChartOfAccounts_Title" xml:space="preserve">
     <value>Chart of Accounts</value>
   </data>
