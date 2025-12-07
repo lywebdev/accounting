@@ -244,6 +244,45 @@
   <data name="Home_Note" xml:space="preserve">
     <value>Nieuw in finance? Begin met het grootboekschema, boek daarna enkele memoriaal-, factuur-, bank- en btw-scenario's om te zien hoe alles samenhangt.</value>
   </data>
+  <data name="Home_Module_Open" xml:space="preserve">
+    <value>Module openen</value>
+  </data>
+  <data name="Home_Module_CoA_Title" xml:space="preserve">
+    <value>Grootboekschema</value>
+  </data>
+  <data name="Home_Module_CoA_Description" xml:space="preserve">
+    <value>Bouw de grootboekstructuur op, groepeer rekeningen per categorie en leg richtlijnen vast voor collega's.</value>
+  </data>
+  <data name="Home_Module_Journal_Title" xml:space="preserve">
+    <value>Memoriaal</value>
+  </data>
+  <data name="Home_Module_Journal_Description" xml:space="preserve">
+    <value>Registreer handmatige debet- en creditboekingen voor correcties, overlopende posten en afsluitingen.</value>
+  </data>
+  <data name="Home_Module_Invoices_Title" xml:space="preserve">
+    <value>Facturen</value>
+  </data>
+  <data name="Home_Module_Invoices_Description" xml:space="preserve">
+    <value>Beheer verkoop- en inkoopstromen, volg btw per regel en boek de resultaten door naar het grootboek.</value>
+  </data>
+  <data name="Home_Module_Banking_Title" xml:space="preserve">
+    <value>Bank</value>
+  </data>
+  <data name="Home_Module_Banking_Description" xml:space="preserve">
+    <value>Importeer afschriften of synchroniseer de sandbox-feed en koppel betalingen automatisch aan facturen.</value>
+  </data>
+  <data name="Home_Module_Vat_Title" xml:space="preserve">
+    <value>Btw / Belasting</value>
+  </data>
+  <data name="Home_Module_Vat_Description" xml:space="preserve">
+    <value>Simuleer kwartaalaangiften, valideer btw-nummers en verstuur inzendingen naar de fictieve fiscus.</value>
+  </data>
+  <data name="Home_Module_Reporting_Title" xml:space="preserve">
+    <value>Rapportages</value>
+  </data>
+  <data name="Home_Module_Reporting_Description" xml:space="preserve">
+    <value>Genereer resultatenrekening, balans, proefbalans en grootboekrapporten met exportopties.</value>
+  </data>
   <data name="Coa_Title" xml:space="preserve">
     <value>Grootboekrekeningen</value>
   </data>
@@ -260,7 +299,7 @@
     <value>Filter op categorie</value>
   </data>
   <data name="Coa_Filter_All" xml:space="preserve">
-    <value>Alle categorieën</value>
+    <value>Alle categorieen</value>
   </data>
   <data name="Coa_Table_Number" xml:space="preserve">
     <value>Nummer</value>
@@ -370,6 +409,18 @@
   <data name="Journal_Note" xml:space="preserve">
     <value>Het memoriaal registreert handmatige debet- en creditposten. Elke boeking moet in evenwicht zijn voordat zij kan worden geboekt; gebruik het voor correcties, afsluitingen en uitzonderingen.</value>
   </data>
+  <data name="Journal_Guide_Title" xml:space="preserve">
+    <value>Zo werk je met het memoriaal</value>
+  </data>
+  <data name="Journal_Guide_WhatIsIt" xml:space="preserve">
+    <value>- Memoriaalboekingen leggen handmatige posten vast die niet via facturen of bankmutaties lopen.</value>
+  </data>
+  <data name="Journal_Guide_WhenUse" xml:space="preserve">
+    <value>- Gebruik ze voor overlopende posten, correcties, openingsbalansen of aanpassingen die de accountant vraagt.</value>
+  </data>
+  <data name="Journal_Guide_HowTo" xml:space="preserve">
+    <value>- Kies een duidelijke referentie, datum en omschrijving en voeg daarna minimaal twee regels toe die debet en credit in evenwicht houden.</value>
+  </data>
   <data name="Journal_Filter_From" xml:space="preserve">
     <value>Vanaf datum</value>
   </data>
@@ -430,6 +481,9 @@
   <data name="Journal_Field_Reference" xml:space="preserve">
     <value>Referentie</value>
   </data>
+  <data name="Journal_Field_Reference_Help" xml:space="preserve">
+    <value>Gebruik een korte code (bijv. MJ-2025-05) zodat je de boeking later eenvoudig kunt terugvinden.</value>
+  </data>
   <data name="Journal_Field_Date" xml:space="preserve">
     <value>Datum</value>
   </data>
@@ -446,7 +500,10 @@
     <value>Annuleren</value>
   </data>
   <data name="Journal_Dialog_Note" xml:space="preserve">
-    <value>Voeg minimaal twee regels toe: één debet en één credit. De balans-chip moet groen worden voordat u kunt boeken.</value>
+    <value>Voeg minimaal twee regels toe: een debet en een credit. De balans-chip moet groen worden voordat u kunt boeken.</value>
+  </data>
+  <data name="Journal_Dialog_Helper" xml:space="preserve">
+    <value>Tip: debet verhoogt activa en kosten; credit verhoogt passiva, eigen vermogen en omzet. Beschrijf kort waarom de boeking nodig is.</value>
   </data>
   <data name="Journal_Snackbar_Create" xml:space="preserve">
     <value>Boeking aangemaakt.</value>
@@ -498,6 +555,9 @@
   </data>
   <data name="Invoices_Action_RecordPayment" xml:space="preserve">
     <value>Betaling registreren</value>
+  </data>
+  <data name="Invoices_Action_Post" xml:space="preserve">
+    <value>Boeken</value>
   </data>
   <data name="Invoices_Action_Delete" xml:space="preserve">
     <value>Factuur verwijderen</value>
@@ -578,7 +638,7 @@
     <value>Annuleren</value>
   </data>
   <data name="Invoice_Dialog_Note" xml:space="preserve">
-    <value>Vul de kopgegevens en minimaal één regel in. De gekozen omzet- of kostenrekening bepaalt de automatische boeking; btw wordt per regel berekend.</value>
+    <value>Vul de kopgegevens en minimaal een regel in. De gekozen omzet- of kostenrekening bepaalt de automatische boeking; btw wordt per regel berekend.</value>
   </data>
   <data name="Invoice_PaymentDialog_Title" xml:space="preserve">
     <value>Betaling registreren voor factuur {0}</value>
@@ -716,7 +776,7 @@
     <value>Transactie gekoppeld aan factuur.</value>
   </data>
   <data name="Banking_Snackbar_Imported" xml:space="preserve">
-    <value>Transacties geïmporteerd.</value>
+    <value>Transacties geimporteerd.</value>
   </data>
   <data name="VAT_Tab_Declaration" xml:space="preserve">
     <value>Kwartaal aangifte</value>
@@ -851,3 +911,6 @@
     <value>Geen transacties konden worden gekoppeld.</value>
   </data>
 </root>
+
+
+

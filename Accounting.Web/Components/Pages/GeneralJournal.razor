@@ -1,5 +1,6 @@
 @page "/general-journal"
 @using Accounting.Core.Entities
+@using MudBlazor
 @inject IJournalService JournalService
 @inject IChartOfAccountsService ChartService
 @inject ISnackbar Snackbar
@@ -26,6 +27,14 @@
 
 <MudPaper Class="report-note">
     @Localizer["Journal_Note"]
+</MudPaper>
+<MudPaper Class="pa-4 mb-4 journal-guide">
+    <MudText Typo="Typo.subtitle1" Class="mb-2">@Localizer["Journal_Guide_Title"]</MudText>
+    <MudList Dense="true" T="string">
+        <MudListItem T="string">@Localizer["Journal_Guide_WhatIsIt"]</MudListItem>
+        <MudListItem T="string">@Localizer["Journal_Guide_WhenUse"]</MudListItem>
+        <MudListItem T="string">@Localizer["Journal_Guide_HowTo"]</MudListItem>
+    </MudList>
 </MudPaper>
 
 @if (_isLoading)
@@ -147,7 +156,8 @@ else
             { nameof(JournalEntryDialog.Accounts), _accounts }
         };
 
-        var dialog = await DialogService.ShowAsync<JournalEntryDialog>(Localizer["Journal_Dialog_Title"], parameters);
+        var options = new DialogOptions { MaxWidth = MaxWidth.ExtraLarge, FullWidth = true, CloseButton = true };
+        var dialog = await DialogService.ShowAsync<JournalEntryDialog>(Localizer["Journal_Dialog_Title"], parameters, options);
         var result = await dialog.Result;
 
         if (result is { Canceled: false, Data: JournalEntryDialog.JournalEntryEditModel model })

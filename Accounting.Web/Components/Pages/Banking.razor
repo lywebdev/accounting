@@ -217,7 +217,7 @@
     {
         var invoices = await InvoiceService.GetAsync(null, null, null, cancellationToken);
         return invoices
-            .Where(i => !i.IsPosted)
+            .Where(i => i.CanRegisterPayment)
             .Where(i => string.IsNullOrWhiteSpace(value) || i.Number.Contains(value, StringComparison.OrdinalIgnoreCase))
             .Select(i => new InvoiceLookup(i.Id, i.Number, i.Counterparty, i.TotalGross("EUR").Amount));
     }

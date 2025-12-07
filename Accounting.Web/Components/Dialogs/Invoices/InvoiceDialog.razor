@@ -1,5 +1,6 @@
 @using System.ComponentModel.DataAnnotations
 @using Accounting.Core.Enums
+@using MudBlazor
 @inject IStringLocalizer<SharedResources> Localizer
 
 <MudDialog>
@@ -41,7 +42,7 @@
                             <MudSelect T="Guid?" Value="line.RevenueAccountId" ValueChanged="value => line.RevenueAccountId = value" Required="true">
                                 @foreach (var account in Accounts)
                                 {
-                                    <MudSelectItem Value="@account.Id">@($"{account.Number} - {account.Name}")</MudSelectItem>
+                                    <MudSelectItem Value="@((Guid?)account.Id)">@($"{account.Number} - {account.Name}")</MudSelectItem>
                                 }
                             </MudSelect>
                         </MudTd>
@@ -69,7 +70,7 @@
 </MudDialog>
 
 @code {
-    [CascadingParameter] private IDialogReference DialogReference { get; set; } = default!;
+    [CascadingParameter] private IMudDialogInstance DialogInstance { get; set; } = default!;
 
     [Parameter]
     public InvoiceEditModel Model { get; set; } = new();
@@ -97,10 +98,10 @@
             return;
         }
 
-        DialogReference.Close(DialogResult.Ok(Model));
+        DialogInstance.Close(DialogResult.Ok(Model));
     }
 
-    private void Cancel() => DialogReference.Close(DialogResult.Cancel());
+    private void Cancel() => DialogInstance.Cancel();
 
     public sealed record AccountOption(Guid Id, string Number, string Name);
 

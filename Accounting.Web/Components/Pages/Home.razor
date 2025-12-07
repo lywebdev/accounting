@@ -3,10 +3,43 @@
 
 <PageTitle>@Localizer["AppTitle"]</PageTitle>
 
-<MudPaper Class="pa-5">
+<MudPaper Class="pa-5 mb-4">
     <MudText Typo="Typo.h4" GutterBottom="true">@Localizer["Home_Welcome"]</MudText>
     <MudText Typo="Typo.body1">@Localizer["Home_Description"]</MudText>
     <MudAlert Severity="Severity.Info" Variant="Variant.Text" Class="mt-4">
         @Localizer["Home_Note"]
     </MudAlert>
 </MudPaper>
+
+<MudGrid GutterSize="2">
+    @foreach (var module in _modules)
+    {
+        <MudItem xs="12" sm="6" md="4">
+            <MudPaper Class="pa-4 h-100 d-flex flex-column">
+                <MudText Typo="Typo.subtitle1">@Localizer[module.TitleKey]</MudText>
+                <MudText Typo="Typo.body2" Class="mt-2 mb-4 text-secondary">@Localizer[module.DescriptionKey]</MudText>
+                <MudSpacer />
+                <MudButton Variant="Variant.Outlined"
+                           Color="Color.Primary"
+                           EndIcon="@Icons.Material.Filled.ArrowForward"
+                           Href="@module.Link">
+                    @Localizer["Home_Module_Open"]
+                </MudButton>
+            </MudPaper>
+        </MudItem>
+    }
+</MudGrid>
+
+@code {
+    private readonly HomeModule[] _modules =
+    [
+        new("Home_Module_CoA_Title", "Home_Module_CoA_Description", "/chart-of-accounts"),
+        new("Home_Module_Journal_Title", "Home_Module_Journal_Description", "/general-journal"),
+        new("Home_Module_Invoices_Title", "Home_Module_Invoices_Description", "/invoices"),
+        new("Home_Module_Banking_Title", "Home_Module_Banking_Description", "/banking"),
+        new("Home_Module_Vat_Title", "Home_Module_Vat_Description", "/vat"),
+        new("Home_Module_Reporting_Title", "Home_Module_Reporting_Description", "/reporting")
+    ];
+
+    private sealed record HomeModule(string TitleKey, string DescriptionKey, string Link);
+}

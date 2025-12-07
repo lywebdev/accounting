@@ -47,7 +47,7 @@ else if (_invoices.Count == 0)
 }
 else
 {
-    <MudTable Items="_invoices" Dense="true" RowClassFunc='@((_, __) => "clickable-row")'>
+    <MudTable Items="_invoices" Dense="true">
         <HeaderContent>
             <MudTh>@Localizer["Invoices_Table_Number"]</MudTh>
             <MudTh>@Localizer["Invoices_Table_Type"]</MudTh>
@@ -76,33 +76,41 @@ else
                 </MudStack>
             </MudTd>
             <MudTd>
-                <MudStack Row="true" Spacing="1" AlignItems="AlignItems.Center">
+                <MudButtonGroup Variant="Variant.Outlined" Size="Size.Small">
                     <MudTooltip Text="@Localizer["Invoices_Action_Send"]">
-                        <MudIconButton Icon="@Icons.Material.Filled.Send"
-                                       Color="Color.Info"
-                                       Disabled="!invoice.CanMarkAsSent"
-                                       OnClick="() => MarkAsSentAsync(invoice)" />
+                        <MudButton Disabled="!invoice.CanMarkAsSent"
+                                   Color="Color.Info"
+                                   StartIcon="@Icons.Material.Filled.Send"
+                                   OnClick="() => MarkAsSentAsync(invoice)">
+                            @Localizer["Invoices_Action_Send"]
+                        </MudButton>
                     </MudTooltip>
                     <MudTooltip Text="@Localizer["Invoices_Action_RecordPayment"]">
-                        <MudIconButton Icon="@Icons.Material.Filled.AttachMoney"
-                                       Color="Color.Success"
-                                       Disabled="!invoice.CanRegisterPayment"
-                                       OnClick="() => OpenRecordPaymentDialogAsync(invoice)" />
+                        <MudButton Disabled="!invoice.CanRegisterPayment"
+                                   Color="Color.Success"
+                                   StartIcon="@Icons.Material.Filled.AttachMoney"
+                                   OnClick="() => OpenRecordPaymentDialogAsync(invoice)">
+                            @Localizer["Invoices_Action_RecordPayment"]
+                        </MudButton>
                     </MudTooltip>
                     @if (!invoice.IsPosted)
                     {
                         <MudTooltip Text="@Localizer["Invoices_Status_Posted"]">
-                            <MudIconButton Icon="@Icons.Material.Filled.Check"
-                                           Color="Color.Success"
-                                           OnClick="() => PostInvoiceAsync(invoice.Id)" />
+                            <MudButton Color="Color.Secondary"
+                                       StartIcon="@Icons.Material.Filled.Check"
+                                       OnClick="() => PostInvoiceAsync(invoice.Id)">
+                                @Localizer["Invoices_Action_Post"]
+                            </MudButton>
                         </MudTooltip>
                         <MudTooltip Text="@Localizer["Invoices_Action_Delete"]">
-                            <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                                           Color="Color.Error"
-                                           OnClick="() => DeleteInvoiceAsync(invoice.Id)" />
+                            <MudButton Color="Color.Error"
+                                       StartIcon="@Icons.Material.Filled.Delete"
+                                       OnClick="() => DeleteInvoiceAsync(invoice.Id)">
+                                @Localizer["Invoices_Action_Delete"]
+                            </MudButton>
                         </MudTooltip>
                     }
-                </MudStack>
+                </MudButtonGroup>
             </MudTd>
         </RowTemplate>
         <ChildRowContent Context="invoice">

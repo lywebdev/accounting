@@ -244,6 +244,45 @@
   <data name="Home_Note" xml:space="preserve">
     <value>Если вы только знакомитесь с бухгалтерией, начните с плана счетов, затем создайте пару проводок, счетов, банковских операций и налоговых деклараций, чтобы увидеть связь между ними.</value>
   </data>
+  <data name="Home_Module_Open" xml:space="preserve">
+    <value>Открыть модуль</value>
+  </data>
+  <data name="Home_Module_CoA_Title" xml:space="preserve">
+    <value>План счетов</value>
+  </data>
+  <data name="Home_Module_CoA_Description" xml:space="preserve">
+    <value>Постройте структуру бухгалтерии, сгруппируйте счета по категориям и добавьте подсказки для коллег.</value>
+  </data>
+  <data name="Home_Module_Journal_Title" xml:space="preserve">
+    <value>Журнал операций</value>
+  </data>
+  <data name="Home_Module_Journal_Description" xml:space="preserve">
+    <value>Фиксируйте ручные дебетовые и кредитовые проводки для корректировок, начислений и закрытий периода.</value>
+  </data>
+  <data name="Home_Module_Invoices_Title" xml:space="preserve">
+    <value>Счета-фактуры</value>
+  </data>
+  <data name="Home_Module_Invoices_Description" xml:space="preserve">
+    <value>Ведите продажи и закупки, рассчитывайте НДС по строкам и отражайте итог в бухгалтерии.</value>
+  </data>
+  <data name="Home_Module_Banking_Title" xml:space="preserve">
+    <value>Банкинг</value>
+  </data>
+  <data name="Home_Module_Banking_Description" xml:space="preserve">
+    <value>Импортируйте выписки или синхронизируйте песочницу и автоматически сопоставляйте платежи со счетами.</value>
+  </data>
+  <data name="Home_Module_Vat_Title" xml:space="preserve">
+    <value>НДС / Налоги</value>
+  </data>
+  <data name="Home_Module_Vat_Description" xml:space="preserve">
+    <value>Симулируйте квартальные декларации, проверяйте налоговые номера и отправляйте отчеты в тестовую инспекцию.</value>
+  </data>
+  <data name="Home_Module_Reporting_Title" xml:space="preserve">
+    <value>Отчетность</value>
+  </data>
+  <data name="Home_Module_Reporting_Description" xml:space="preserve">
+    <value>Формируйте P&amp;L, баланс, оборотно-сальдовую ведомость и общий журнал с возможностью экспорта.</value>
+  </data>
   <data name="Coa_Title" xml:space="preserve">
     <value>План счетов</value>
   </data>
@@ -370,6 +409,18 @@
   <data name="Journal_Note" xml:space="preserve">
     <value>Общий журнал фиксирует ручные дебетовые и кредитовые проводки. Каждая запись должна быть сбалансирована перед проведением, поэтому используйте его для корректировок и редких событий.</value>
   </data>
+  <data name="Journal_Guide_Title" xml:space="preserve">
+    <value>Как работать с журналом операций</value>
+  </data>
+  <data name="Journal_Guide_WhatIsIt" xml:space="preserve">
+    <value>- Журнал фиксирует ручные проводки, которые обходят модули счетов и банка.</value>
+  </data>
+  <data name="Journal_Guide_WhenUse" xml:space="preserve">
+    <value>- Используйте его для начислений, корректировок, вводного баланса и правок по запросу аудиторов.</value>
+  </data>
+  <data name="Journal_Guide_HowTo" xml:space="preserve">
+    <value>- Укажите понятный номер, дату и описание, затем добавьте минимум две строки с равными дебетами и кредитами.</value>
+  </data>
   <data name="Journal_Filter_From" xml:space="preserve">
     <value>С даты</value>
   </data>
@@ -430,6 +481,9 @@
   <data name="Journal_Field_Reference" xml:space="preserve">
     <value>Референс</value>
   </data>
+  <data name="Journal_Field_Reference_Help" xml:space="preserve">
+    <value>Введите короткий код (например, АЖ-2025-05), чтобы потом легко найти исходную операцию.</value>
+  </data>
   <data name="Journal_Field_Date" xml:space="preserve">
     <value>Дата</value>
   </data>
@@ -446,7 +500,10 @@
     <value>Отмена</value>
   </data>
   <data name="Journal_Dialog_Note" xml:space="preserve">
-    <value>В каждой проводке должно быть минимум две строки. Дебет обязан равняться кредиту — ориентируйтесь на индикатор баланса.</value>
+    <value>В каждой проводке должно быть минимум две строки. Дебет обязан равняться кредиту - ориентируйтесь на индикатор баланса.</value>
+  </data>
+  <data name="Journal_Dialog_Helper" xml:space="preserve">
+    <value>Подсказка: дебет увеличивает активы и расходы, кредит - обязательства, капитал и доходы. В описании поясните деловую причину.</value>
   </data>
   <data name="Journal_Snackbar_Create" xml:space="preserve">
     <value>Проводка создана.</value>
@@ -498,6 +555,9 @@
   </data>
   <data name="Invoices_Action_RecordPayment" xml:space="preserve">
     <value>Зарегистрировать оплату</value>
+  </data>
+  <data name="Invoices_Action_Post" xml:space="preserve">
+    <value>Провести</value>
   </data>
   <data name="Invoices_Action_Delete" xml:space="preserve">
     <value>Удалить счёт</value>
@@ -851,3 +911,6 @@
     <value>Декларация отправлена: {0}.</value>
   </data>
 </root>
+
+
+

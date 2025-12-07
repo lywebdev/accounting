@@ -1,16 +1,21 @@
 @using System.ComponentModel.DataAnnotations
 @using Accounting.Core.Enums
+@using MudBlazor
 @inject IStringLocalizer<SharedResources> Localizer
 
-<MudDialog>
+<MudDialog Class="journal-entry-dialog">
     <DialogContent>
         <MudAlert Severity="Severity.Info" Dense="true" Variant="Variant.Text" Class="mb-3">
             @Localizer["Journal_Dialog_Note"]
+        </MudAlert>
+        <MudAlert Severity="Severity.Success" Dense="true" Variant="Variant.Text" Class="mb-4">
+            @Localizer["Journal_Dialog_Helper"]
         </MudAlert>
         <MudForm @ref="_form">
             <MudTextField @bind-Value="Model.Reference"
                           Label="@Localizer["Journal_Field_Reference"]"
                           Required="true"
+                          HelperText="@Localizer["Journal_Field_Reference_Help"]"
                           MaxLength="64" />
             <MudDatePicker Date="Model.EntryDateBinding"
                            DateChanged="value => Model.EntryDateBinding = value ?? DateTime.Today"
@@ -44,7 +49,7 @@
                             <MudSelect T="Guid?" Value="@context.AccountId" ValueChanged="value => context.AccountId = value" Required="true">
                                 @foreach (var account in Accounts)
                                 {
-                                    <MudSelectItem Value="@account.Id">@($"{account.Number} - {account.Name}")</MudSelectItem>
+                                    <MudSelectItem Value="@((Guid?)account.Id)">@($"{account.Number} - {account.Name}")</MudSelectItem>
                                 }
                             </MudSelect>
                         </MudTd>
@@ -79,7 +84,7 @@
 </MudDialog>
 
 @code {
-    [CascadingParameter] private IDialogReference DialogReference { get; set; } = default!;
+    [CascadingParameter] private IMudDialogInstance DialogInstance { get; set; } = default!;
 
     [Parameter]
     public JournalEntryEditModel Model { get; set; } = new();
@@ -112,10 +117,10 @@
             return;
         }
 
-        DialogReference.Close(DialogResult.Ok(Model));
+        DialogInstance.Close(DialogResult.Ok(Model));
     }
 
-    private void Cancel() => DialogReference.Close(DialogResult.Cancel());
+    private void Cancel() => DialogInstance.Cancel();
 
     public sealed class AccountOption(Guid id, string number, string name)
     {

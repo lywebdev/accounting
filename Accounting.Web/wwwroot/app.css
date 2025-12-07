@@ -86,3 +86,19 @@ h1:focus {
     font-size: 0.95rem;
 }
 
+.filter-panel {
+    padding: 1.25rem;
+    margin: 1rem 1rem 1.5rem;
+    border-radius: 12px;
+    background-color: #fff;
+}
+
+.journal-guide {
+    background-color: #fff;
+    border-radius: 12px;
+}
+
+.journal-entry-dialog .mud-dialog-content {
+    padding-bottom: 1.5rem;
+}
+

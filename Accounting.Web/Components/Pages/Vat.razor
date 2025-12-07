@@ -14,7 +14,7 @@
 
 <MudTabs Rounded="true">
     <MudTabPanel Text="@Localizer["VAT_Tab_Declaration"]">
-        <MudPaper Class="pa-4 mb-4">
+        <MudPaper Class="filter-panel">
             <MudGrid Spacing="2">
                 <MudItem xs="12" sm="6" md="3">
                     <MudNumericField T="int" Label="@Localizer["VAT_Field_Year"]" @bind-Value="_selectedYear" Min="2000" Max="2100" Immediate="true" />
@@ -27,19 +27,19 @@
                         <MudSelectItem Value="4">@Localizer["VAT_Period_Q4"]</MudSelectItem>
                     </MudSelect>
                 </MudItem>
-                <MudItem xs="12" sm="6" md="3">
-                    <MudTooltip Text="@Localizer["VAT_Tooltip_Calculate"]">
-                        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="LoadDeclarationAsync" Disabled="@_isLoading">
-                            <MudIcon Icon="@Icons.Material.Filled.Calculate" Class="mr-2" />@Localizer["VAT_Action_Calculate"]
-                        </MudButton>
-                    </MudTooltip>
-                </MudItem>
-                <MudItem xs="12" sm="6" md="3">
-                    <MudTooltip Text="@Localizer["VAT_Tooltip_Submit"]">
-                        <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="SubmitDeclarationAsync" Disabled="@(_currentDeclaration is null || _currentDeclaration.Status == TaxDeclarationStatus.Accepted || _isLoading)">
-                            <MudIcon Icon="@Icons.Material.Filled.Send" Class="mr-2" />@Localizer["VAT_Action_Submit"]
-                        </MudButton>
-                    </MudTooltip>
+                <MudItem xs="12" md="6">
+                    <MudStack Row="true" Spacing="1" Justify="Justify.FlexEnd">
+                        <MudTooltip Text="@Localizer["VAT_Tooltip_Calculate"]">
+                            <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="LoadDeclarationAsync" Disabled="@_isLoading">
+                                <MudIcon Icon="@Icons.Material.Filled.Calculate" Class="mr-2" />@Localizer["VAT_Action_Calculate"]
+                            </MudButton>
+                        </MudTooltip>
+                        <MudTooltip Text="@Localizer["VAT_Tooltip_Submit"]">
+                            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="SubmitDeclarationAsync" Disabled="@(_currentDeclaration is null || _currentDeclaration.Status == TaxDeclarationStatus.Accepted || _isLoading)">
+                                <MudIcon Icon="@Icons.Material.Filled.Send" Class="mr-2" />@Localizer["VAT_Action_Submit"]
+                            </MudButton>
+                        </MudTooltip>
+                    </MudStack>
                 </MudItem>
             </MudGrid>
         </MudPaper>

@@ -23,7 +23,7 @@
             <MudSelect T="AccountCategory" Label="@Localizer["Coa_Field_Category"]" @bind-Value="Model.Category" Class="mt-4">
                 @foreach (var category in Enum.GetValues<AccountCategory>())
                 {
-                    <MudSelectItem Value="category">@Localizer[$"Account_Category_{category}"]</MudSelectItem>
+                    <MudSelectItem Value="@category">@Localizer[$"Account_Category_{category}"]</MudSelectItem>
                 }
             </MudSelect>
             <MudTextField @bind-Value="Model.Description"
