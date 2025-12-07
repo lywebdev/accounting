@@ -36,6 +36,14 @@ public static class InvoiceEndpoints
             return Results.NoContent();
         });
 
+        group.MapGet("/{id:guid}/pdf", async (Guid id, IInvoiceService service, IInvoiceDocumentService documentService, CancellationToken ct) =>
+        {
+            var invoice = await service.GetByIdAsync(id, ct);
+            var pdf = await documentService.GeneratePdfAsync(invoice, ct);
+            var fileName = $"invoice-{invoice.Number}.pdf";
+            return Results.File(pdf, "application/pdf", fileName);
+        });
+
         return app;
     }
 }

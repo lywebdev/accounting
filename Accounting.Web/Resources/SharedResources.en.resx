@@ -121,17 +121,32 @@
   <data name="Reporting_Filter_From" xml:space="preserve">
     <value>From date</value>
   </data>
+  <data name="Reporting_Filter_From_Help" xml:space="preserve">
+    <value>Starting point for all reports on this page.</value>
+  </data>
   <data name="Reporting_Filter_To" xml:space="preserve">
     <value>To date</value>
+  </data>
+  <data name="Reporting_Filter_To_Help" xml:space="preserve">
+    <value>Closing date; keep it aligned with fiscal periods.</value>
   </data>
   <data name="Reporting_Filter_Currency" xml:space="preserve">
     <value>Currency</value>
   </data>
+  <data name="Reporting_Filter_Currency_Help" xml:space="preserve">
+    <value>Display currency only; source values stay in EUR.</value>
+  </data>
   <data name="Reporting_Filter_Category" xml:space="preserve">
     <value>Filter accounts by category</value>
   </data>
+  <data name="Reporting_Filter_Category_Help" xml:space="preserve">
+    <value>Limits the trial balance to a single account class.</value>
+  </data>
   <data name="Reporting_Filter_Account" xml:space="preserve">
     <value>Focus account (general ledger)</value>
+  </data>
+  <data name="Reporting_Filter_Account_Help" xml:space="preserve">
+    <value>Choose an account to slice the General Ledger tab.</value>
   </data>
   <data name="Reporting_Filter_Account_All" xml:space="preserve">
     <value>All accounts</value>
@@ -331,6 +346,12 @@
   <data name="Coa_Status_Inactive" xml:space="preserve">
     <value>Inactive</value>
   </data>
+  <data name="Coa_Status_Hint_Active" xml:space="preserve">
+    <value>Active accounts appear in every picker and can be used in transactions.</value>
+  </data>
+  <data name="Coa_Status_Hint_Inactive" xml:space="preserve">
+    <value>Inactive accounts stay in the ledger history but disappear from new entries.</value>
+  </data>
   <data name="Coa_Action_Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
@@ -406,6 +427,12 @@
   <data name="Journal_Tooltip_Add" xml:space="preserve">
     <value>Record a manual journal entry</value>
   </data>
+  <data name="Journal_CopyLast" xml:space="preserve">
+    <value>Duplicate last</value>
+  </data>
+  <data name="Journal_CopyLast_Tooltip" xml:space="preserve">
+    <value>Prefill the form using the most recent journal entry</value>
+  </data>
   <data name="Journal_Note" xml:space="preserve">
     <value>The general journal captures manual debits and credits. Every entry must balance before it can be posted, so use it for adjustments, corrections and one-off events.</value>
   </data>
@@ -471,6 +498,18 @@
   </data>
   <data name="Journal_Lines_TotalCredit" xml:space="preserve">
     <value>Total credit</value>
+  </data>
+  <data name="Journal_Summary_Title" xml:space="preserve">
+    <value>Debits and credits by account category</value>
+  </data>
+  <data name="Journal_Summary_Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Journal_Summary_Debit" xml:space="preserve">
+    <value>Debit</value>
+  </data>
+  <data name="Journal_Summary_Credit" xml:space="preserve">
+    <value>Credit</value>
   </data>
   <data name="Journal_Lines_Balanced" xml:space="preserve">
     <value>Balanced</value>
@@ -562,6 +601,9 @@
   <data name="Invoices_Action_Delete" xml:space="preserve">
     <value>Delete invoice</value>
   </data>
+  <data name="Invoices_Action_DownloadPdf" xml:space="preserve">
+    <value>Download PDF</value>
+  </data>
   <data name="Invoices_NoRecords" xml:space="preserve">
     <value>No invoices for the selected filters.</value>
   </data>
@@ -595,8 +637,14 @@
   <data name="Invoice_Field_Number" xml:space="preserve">
     <value>Invoice number</value>
   </data>
+  <data name="Invoice_Field_Number_Required" xml:space="preserve">
+    <value>Invoice number is required (3-32 characters).</value>
+  </data>
   <data name="Invoice_Field_Counterparty" xml:space="preserve">
     <value>Counterparty</value>
+  </data>
+  <data name="Invoice_Field_Counterparty_Required" xml:space="preserve">
+    <value>Counterparty name is required (min 3 characters).</value>
   </data>
   <data name="Invoice_Field_IssueDate" xml:space="preserve">
     <value>Issue date</value>
@@ -628,6 +676,15 @@
   <data name="Invoice_Lines_Total" xml:space="preserve">
     <value>Total</value>
   </data>
+  <data name="Invoice_Field_PaymentTerms" xml:space="preserve">
+    <value>Payment terms</value>
+  </data>
+  <data name="Invoice_Field_PaymentTerms_Hint" xml:space="preserve">
+    <value>Due date is recalculated automatically when you change the term.</value>
+  </data>
+  <data name="Invoice_Field_PaymentTerms_Option" xml:space="preserve">
+    <value>{0} days</value>
+  </data>
   <data name="Invoice_Dialog_Title" xml:space="preserve">
     <value>Create invoice</value>
   </data>
@@ -639,6 +696,66 @@
   </data>
   <data name="Invoice_Dialog_Note" xml:space="preserve">
     <value>Add at least one line with a revenue or expense account; VAT is calculated per line and the totals drive posting.</value>
+  </data>
+  <data name="Invoice_Wizard_Basics" xml:space="preserve">
+    <value>1. Details</value>
+  </data>
+  <data name="Invoice_Wizard_Dates" xml:space="preserve">
+    <value>2. Dates</value>
+  </data>
+  <data name="Invoice_Wizard_Lines" xml:space="preserve">
+    <value>3. Lines</value>
+  </data>
+  <data name="Invoice_Preset_Sales" xml:space="preserve">
+    <value>Sales template</value>
+  </data>
+  <data name="Invoice_Preset_Sales_Tooltip" xml:space="preserve">
+    <value>Prefill common SaaS/services invoice data</value>
+  </data>
+  <data name="Invoice_Preset_Purchase" xml:space="preserve">
+    <value>Purchase template</value>
+  </data>
+  <data name="Invoice_Preset_Purchase_Tooltip" xml:space="preserve">
+    <value>Prefill a vendor bill example</value>
+  </data>
+  <data name="Invoice_Preset_Sales_Memo" xml:space="preserve">
+    <value>Monthly service fee</value>
+  </data>
+  <data name="Invoice_Preset_Sales_Line" xml:space="preserve">
+    <value>Subscription seats</value>
+  </data>
+  <data name="Invoice_Preset_Purchase_Memo" xml:space="preserve">
+    <value>Hardware purchase</value>
+  </data>
+  <data name="Invoice_Preset_Purchase_Line" xml:space="preserve">
+    <value>Laptop bundle</value>
+  </data>
+  <data name="Invoice_Summary_LineCount" xml:space="preserve">
+    <value>{0} line(s)</value>
+  </data>
+  <data name="Invoice_Summary_Total" xml:space="preserve">
+    <value>Estimated gross {0} EUR</value>
+  </data>
+  <data name="Invoice_Preview_Button" xml:space="preserve">
+    <value>Preview</value>
+  </data>
+  <data name="Invoice_Preview_Title" xml:space="preserve">
+    <value>Quick preview</value>
+  </data>
+  <data name="Invoice_Preview_Message" xml:space="preserve">
+    <value>Use this snapshot to double-check dates and totals before posting.</value>
+  </data>
+  <data name="Invoice_Preview_Issue" xml:space="preserve">
+    <value>Issue date: {0}</value>
+  </data>
+  <data name="Invoice_Preview_Due" xml:space="preserve">
+    <value>Due date: {0}</value>
+  </data>
+  <data name="Invoice_Preview_Total" xml:space="preserve">
+    <value>Gross total: {0} EUR</value>
+  </data>
+  <data name="Invoice_Preview_Error" xml:space="preserve">
+    <value>Fill out invoice details and lines before previewing.</value>
   </data>
   <data name="Invoice_PaymentDialog_Title" xml:space="preserve">
     <value>Record payment for invoice {0}</value>
@@ -681,6 +798,18 @@
   </data>
   <data name="Banking_Note" xml:space="preserve">
     <value>Banking ingests CSV files or the simulated API feed, matches payments to invoices, and can auto-create journal entries. Review unmatched items to keep AR/AP in sync with the ledger.</value>
+  </data>
+  <data name="Banking_Onboarding_Title" xml:space="preserve">
+    <value>How to get started</value>
+  </data>
+  <data name="Banking_Onboarding_Step1" xml:space="preserve">
+    <value>Import a recent CSV or sync the sandbox bank feed.</value>
+  </data>
+  <data name="Banking_Onboarding_Step2" xml:space="preserve">
+    <value>Use the filters above to narrow down unmatched transactions.</value>
+  </data>
+  <data name="Banking_Onboarding_Step3" xml:space="preserve">
+    <value>Match payments to invoices or trigger auto-matching when ready.</value>
   </data>
   <data name="Banking_ImportCsv" xml:space="preserve">
     <value>Import CSV</value>
@@ -730,6 +859,15 @@
   <data name="Banking_Filter_Status_Unmatched" xml:space="preserve">
     <value>Unmatched</value>
   </data>
+  <data name="Banking_Filter_Search" xml:space="preserve">
+    <value>Search reference/counterparty</value>
+  </data>
+  <data name="Banking_Filter_AmountMin" xml:space="preserve">
+    <value>Min amount</value>
+  </data>
+  <data name="Banking_Filter_AmountMax" xml:space="preserve">
+    <value>Max amount</value>
+  </data>
   <data name="Banking_Filter_Apply" xml:space="preserve">
     <value>Apply</value>
   </data>
@@ -745,8 +883,26 @@
   <data name="Banking_Action_Match" xml:space="preserve">
     <value>Match</value>
   </data>
+  <data name="Banking_Error_Load" xml:space="preserve">
+    <value>Unable to load bank transactions: {0}</value>
+  </data>
+  <data name="Banking_Error_Sync" xml:space="preserve">
+    <value>Unable to synchronize the bank feed: {0}</value>
+  </data>
+  <data name="Banking_Error_Match" xml:space="preserve">
+    <value>Unable to match the transaction: {0}</value>
+  </data>
+  <data name="Banking_Error_Import" xml:space="preserve">
+    <value>Unable to import the CSV file: {0}</value>
+  </data>
+  <data name="Banking_Error_AutoMatch" xml:space="preserve">
+    <value>Unable to auto-match transactions: {0}</value>
+  </data>
   <data name="Banking_Match_SelectInvoice" xml:space="preserve">
     <value>Select invoice</value>
+  </data>
+  <data name="Banking_Match_Helper" xml:space="preserve">
+    <value>Tip: only open invoices appear here. Clear the filters if the list is empty.</value>
   </data>
   <data name="Banking_Match_Note" xml:space="preserve">
     <value>Only open invoices appear here. If nothing matches, cancel, adjust filters or register the invoice before linking.</value>
@@ -789,6 +945,12 @@
   </data>
   <data name="Banking_Summary_Message" xml:space="preserve">
     <value>Last {0}: imported {1}, matched {2}, journal entries {3}.</value>
+  </data>
+  <data name="Banking_Empty_Hint" xml:space="preserve">
+    <value>No transactions match the current filters. Upload a CSV or sync the sandbox feed to populate the list.</value>
+  </data>
+  <data name="Banking_Empty_DownloadSample" xml:space="preserve">
+    <value>Download sample CSV</value>
   </data>
   <data name="Banking_Summary_Source_Import" xml:space="preserve">
     <value>Import</value>

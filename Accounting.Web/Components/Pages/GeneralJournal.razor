@@ -1,5 +1,6 @@
 @page "/general-journal"
 @using Accounting.Core.Entities
+@using Accounting.Core.Enums
 @using MudBlazor
 @inject IJournalService JournalService
 @inject IChartOfAccountsService ChartService
@@ -12,11 +13,18 @@
 <MudPaper Class="pa-4 mb-4">
     <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
         <MudText Typo="Typo.h5">@Localizer["Journal_Title"]</MudText>
-        <MudTooltip Text="@Localizer["Journal_Tooltip_Add"]">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="OpenCreateDialogAsync">
-                <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-2" />@Localizer["Journal_AddButton"]
-            </MudButton>
-        </MudTooltip>
+        <MudStack Row="true" Spacing="1">
+            <MudTooltip Text="@Localizer["Journal_Tooltip_Add"]">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => OpenCreateDialogAsync()">
+                    <MudIcon Icon="@Icons.Material.Filled.Add" Class="mr-2" />@Localizer["Journal_AddButton"]
+                </MudButton>
+            </MudTooltip>
+            <MudTooltip Text="@Localizer["Journal_CopyLast_Tooltip"]">
+                <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Disabled="!HasEntries" OnClick="CopyLastEntryAsync">
+                    <MudIcon Icon="@Icons.Material.Filled.ContentCopy" Class="mr-2" />@Localizer["Journal_CopyLast"]
+                </MudButton>
+            </MudTooltip>
+        </MudStack>
     </MudStack>
 
     <MudStack Row="true" Class="mt-4" Spacing="2">
@@ -36,6 +44,24 @@
         <MudListItem T="string">@Localizer["Journal_Guide_HowTo"]</MudListItem>
     </MudList>
 </MudPaper>
+@if (_categorySummaries.Count > 0)
+{
+    <MudPaper Class="pa-4 mb-4">
+        <MudText Typo="Typo.subtitle2" Class="mb-2">@Localizer["Journal_Summary_Title"]</MudText>
+        <MudTable Items="_categorySummaries" Dense="true">
+            <HeaderContent>
+                <MudTh>@Localizer["Journal_Summary_Category"]</MudTh>
+                <MudTh Class="text-end">@Localizer["Journal_Summary_Debit"]</MudTh>
+                <MudTh Class="text-end">@Localizer["Journal_Summary_Credit"]</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>@Localizer[$"Account_Category_{context.Category}"]</MudTd>
+                <MudTd Class="text-end">@context.TotalDebit.ToString("N2")</MudTd>
+                <MudTd Class="text-end">@context.TotalCredit.ToString("N2")</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudPaper>
+}
 
 @if (_isLoading)
 {
@@ -91,12 +117,16 @@ else
 
 @code {
     private readonly List<JournalEntryViewModel> _entries = new();
+    private readonly List<JournalEntry> _rawEntries = new();
+    private readonly List<CategorySummary> _categorySummaries = new();
+    private readonly Dictionary<Guid, AccountCategory> _accountCategories = new();
     private readonly CancellationTokenSource _disposeCts = new();
     private CancellationTokenSource? _loadCts;
     private IReadOnlyList<JournalEntryDialog.AccountOption> _accounts = Array.Empty<JournalEntryDialog.AccountOption>();
     private bool _isLoading;
     private DateTime? _fromDate = DateTime.Today.AddMonths(-1);
     private DateTime? _toDate = DateTime.Today;
+    private bool HasEntries => _entries.Count > 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -105,6 +135,11 @@ else
         _accounts = accountEntities
             .Select(a => new JournalEntryDialog.AccountOption(a.Id, a.Number, a.Name))
             .ToList();
+        _accountCategories.Clear();
+        foreach (var account in accountEntities)
+        {
+            _accountCategories[account.Id] = account.Category;
+        }
         await LoadEntriesAsync();
     }
 
@@ -115,11 +150,14 @@ else
         try
         {
             _entries.Clear();
+            _rawEntries.Clear();
             var entries = await JournalService.GetAsync(ConvertToDateOnly(_fromDate), ConvertToDateOnly(_toDate), token);
             foreach (var entry in entries)
             {
+                _rawEntries.Add(entry);
                 _entries.Add(JournalEntryViewModel.FromEntity(entry, _accounts));
             }
+            UpdateCategorySummaries();
         }
         catch (OperationCanceledException)
         {
@@ -148,11 +186,11 @@ else
         await LoadEntriesAsync();
     }
 
-    private async Task OpenCreateDialogAsync()
+    private async Task OpenCreateDialogAsync(JournalEntryDialog.JournalEntryEditModel? seedModel = null)
     {
         var parameters = new DialogParameters
         {
-            { nameof(JournalEntryDialog.Model), new JournalEntryDialog.JournalEntryEditModel() },
+            { nameof(JournalEntryDialog.Model), seedModel ?? new JournalEntryDialog.JournalEntryEditModel() },
             { nameof(JournalEntryDialog.Accounts), _accounts }
         };
 
@@ -164,6 +202,35 @@ else
         {
             await CreateEntryAsync(model);
         }
+    }
+
+    private async Task CopyLastEntryAsync()
+    {
+        var last = _rawEntries.OrderByDescending(e => e.EntryDate).ThenByDescending(e => e.Reference).FirstOrDefault();
+        if (last is null)
+        {
+            return;
+        }
+
+        var model = new JournalEntryDialog.JournalEntryEditModel
+        {
+            Reference = $"{last.Reference}-COPY",
+            EntryDate = last.EntryDate,
+            Memo = last.Memo
+        };
+        model.Lines.Clear();
+        foreach (var line in last.Lines)
+        {
+            model.Lines.Add(new JournalEntryDialog.JournalEntryLineModel
+            {
+                AccountId = line.AccountId,
+                Debit = line.Debit,
+                Credit = line.Credit,
+                Description = line.Description
+            });
+        }
+
+        await OpenCreateDialogAsync(model);
     }
 
     private async Task CreateEntryAsync(JournalEntryDialog.JournalEntryEditModel model)
@@ -179,6 +246,41 @@ else
         {
             Logger.LogError(ex, "Failed to create journal entry {Reference}", model.Reference);
             Snackbar.Add(ex.Message, Severity.Error);
+        }
+    }
+
+    private void UpdateCategorySummaries()
+    {
+        _categorySummaries.Clear();
+        if (_rawEntries.Count == 0)
+        {
+            return;
+        }
+
+        var totals = new Dictionary<AccountCategory, (decimal debit, decimal credit)>();
+        foreach (var entry in _rawEntries)
+        {
+            foreach (var line in entry.Lines)
+            {
+                if (!_accountCategories.TryGetValue(line.AccountId, out var category))
+                {
+                    continue;
+                }
+
+                if (!totals.TryGetValue(category, out var agg))
+                {
+                    agg = (0m, 0m);
+                }
+
+                agg.debit += line.Debit;
+                agg.credit += line.Credit;
+                totals[category] = agg;
+            }
+        }
+
+        foreach (var kvp in totals.OrderBy(k => k.Key))
+        {
+            _categorySummaries.Add(new CategorySummary(kvp.Key, kvp.Value.debit, kvp.Value.credit));
         }
     }
 
@@ -230,6 +332,7 @@ else
     }
 
     private sealed record JournalEntryLineViewModel(string AccountLabel, decimal Debit, decimal Credit, string Description);
+    private sealed record CategorySummary(AccountCategory Category, decimal TotalDebit, decimal TotalCredit);
 
     private static DateOnly? ConvertToDateOnly(DateTime? input)
         => input.HasValue ? DateOnly.FromDateTime(input.Value) : null;

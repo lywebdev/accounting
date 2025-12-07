@@ -121,17 +121,32 @@
   <data name="Reporting_Filter_From" xml:space="preserve">
     <value>Vanaf datum</value>
   </data>
+  <data name="Reporting_Filter_From_Help" xml:space="preserve">
+    <value>Startpunt voor alle rapporten in dit scherm.</value>
+  </data>
   <data name="Reporting_Filter_To" xml:space="preserve">
     <value>Tot datum</value>
+  </data>
+  <data name="Reporting_Filter_To_Help" xml:space="preserve">
+    <value>Einddatum; stem af op de gekozen verslagperiode.</value>
   </data>
   <data name="Reporting_Filter_Currency" xml:space="preserve">
     <value>Valuta</value>
   </data>
+  <data name="Reporting_Filter_Currency_Help" xml:space="preserve">
+    <value>Alleen weergavevaluta, bronwaarden blijven EUR.</value>
+  </data>
   <data name="Reporting_Filter_Category" xml:space="preserve">
     <value>Filter op categorie</value>
   </data>
+  <data name="Reporting_Filter_Category_Help" xml:space="preserve">
+    <value>Beperk de proefbalans tot één soort rekening.</value>
+  </data>
   <data name="Reporting_Filter_Account" xml:space="preserve">
     <value>Focusrekening (grootboek)</value>
+  </data>
+  <data name="Reporting_Filter_Account_Help" xml:space="preserve">
+    <value>Selecteer een rekening voor het grootboek-tabblad.</value>
   </data>
   <data name="Reporting_Filter_Account_All" xml:space="preserve">
     <value>Alle rekeningen</value>
@@ -331,6 +346,12 @@
   <data name="Coa_Status_Inactive" xml:space="preserve">
     <value>Inactief</value>
   </data>
+  <data name="Coa_Status_Hint_Active" xml:space="preserve">
+    <value>Actieve rekeningen zijn beschikbaar in alle selecties en kunnen in transacties worden gebruikt.</value>
+  </data>
+  <data name="Coa_Status_Hint_Inactive" xml:space="preserve">
+    <value>Inactieve rekeningen blijven zichtbaar voor historiek maar worden niet meer aangeboden in nieuwe boekingen.</value>
+  </data>
   <data name="Coa_Action_Edit" xml:space="preserve">
     <value>Bewerken</value>
   </data>
@@ -406,6 +427,12 @@
   <data name="Journal_Tooltip_Add" xml:space="preserve">
     <value>Memoriaalboeking vastleggen</value>
   </data>
+  <data name="Journal_CopyLast" xml:space="preserve">
+    <value>Laatste kopiëren</value>
+  </data>
+  <data name="Journal_CopyLast_Tooltip" xml:space="preserve">
+    <value>Vul het formulier vooraf met de meest recente boeking</value>
+  </data>
   <data name="Journal_Note" xml:space="preserve">
     <value>Het memoriaal registreert handmatige debet- en creditposten. Elke boeking moet in evenwicht zijn voordat zij kan worden geboekt; gebruik het voor correcties, afsluitingen en uitzonderingen.</value>
   </data>
@@ -471,6 +498,18 @@
   </data>
   <data name="Journal_Lines_TotalCredit" xml:space="preserve">
     <value>Totaal credit</value>
+  </data>
+  <data name="Journal_Summary_Title" xml:space="preserve">
+    <value>Debet en credit per categorie</value>
+  </data>
+  <data name="Journal_Summary_Category" xml:space="preserve">
+    <value>Categorie</value>
+  </data>
+  <data name="Journal_Summary_Debit" xml:space="preserve">
+    <value>Debet</value>
+  </data>
+  <data name="Journal_Summary_Credit" xml:space="preserve">
+    <value>Credit</value>
   </data>
   <data name="Journal_Lines_Balanced" xml:space="preserve">
     <value>In balans</value>
@@ -562,6 +601,9 @@
   <data name="Invoices_Action_Delete" xml:space="preserve">
     <value>Factuur verwijderen</value>
   </data>
+  <data name="Invoices_Action_DownloadPdf" xml:space="preserve">
+    <value>PDF downloaden</value>
+  </data>
   <data name="Invoices_NoRecords" xml:space="preserve">
     <value>Geen facturen voor de huidige filter.</value>
   </data>
@@ -595,8 +637,14 @@
   <data name="Invoice_Field_Number" xml:space="preserve">
     <value>Factuurnummer</value>
   </data>
+  <data name="Invoice_Field_Number_Required" xml:space="preserve">
+    <value>Factuurnummer is verplicht (3-32 tekens).</value>
+  </data>
   <data name="Invoice_Field_Counterparty" xml:space="preserve">
     <value>Relatie</value>
+  </data>
+  <data name="Invoice_Field_Counterparty_Required" xml:space="preserve">
+    <value>Naam van de relatie is verplicht (minimaal 3 tekens).</value>
   </data>
   <data name="Invoice_Field_IssueDate" xml:space="preserve">
     <value>Factuurdatum</value>
@@ -628,6 +676,15 @@
   <data name="Invoice_Lines_Total" xml:space="preserve">
     <value>Totaal</value>
   </data>
+  <data name="Invoice_Field_PaymentTerms" xml:space="preserve">
+    <value>Betaaltermijn</value>
+  </data>
+  <data name="Invoice_Field_PaymentTerms_Hint" xml:space="preserve">
+    <value>De vervaldatum wordt automatisch aangepast op basis van deze keuze.</value>
+  </data>
+  <data name="Invoice_Field_PaymentTerms_Option" xml:space="preserve">
+    <value>{0} dagen</value>
+  </data>
   <data name="Invoice_Dialog_Title" xml:space="preserve">
     <value>Factuur aanmaken</value>
   </data>
@@ -639,6 +696,66 @@
   </data>
   <data name="Invoice_Dialog_Note" xml:space="preserve">
     <value>Vul de kopgegevens en minimaal een regel in. De gekozen omzet- of kostenrekening bepaalt de automatische boeking; btw wordt per regel berekend.</value>
+  </data>
+  <data name="Invoice_Wizard_Basics" xml:space="preserve">
+    <value>1. Gegevens</value>
+  </data>
+  <data name="Invoice_Wizard_Dates" xml:space="preserve">
+    <value>2. Data</value>
+  </data>
+  <data name="Invoice_Wizard_Lines" xml:space="preserve">
+    <value>3. Regels</value>
+  </data>
+  <data name="Invoice_Preset_Sales" xml:space="preserve">
+    <value>Verkoopsjabloon</value>
+  </data>
+  <data name="Invoice_Preset_Sales_Tooltip" xml:space="preserve">
+    <value>Vul typische SaaS-/dienstgegevens vooraf in</value>
+  </data>
+  <data name="Invoice_Preset_Purchase" xml:space="preserve">
+    <value>Inkoopsjabloon</value>
+  </data>
+  <data name="Invoice_Preset_Purchase_Tooltip" xml:space="preserve">
+    <value>Voorbeeld voor een leveranciersfactuur</value>
+  </data>
+  <data name="Invoice_Preset_Sales_Memo" xml:space="preserve">
+    <value>Maandelijkse dienstverlening</value>
+  </data>
+  <data name="Invoice_Preset_Sales_Line" xml:space="preserve">
+    <value>Abonnementseenheden</value>
+  </data>
+  <data name="Invoice_Preset_Purchase_Memo" xml:space="preserve">
+    <value>Aanschaf hardware</value>
+  </data>
+  <data name="Invoice_Preset_Purchase_Line" xml:space="preserve">
+    <value>Laptop-bundel</value>
+  </data>
+  <data name="Invoice_Summary_LineCount" xml:space="preserve">
+    <value>{0} regel(s)</value>
+  </data>
+  <data name="Invoice_Summary_Total" xml:space="preserve">
+    <value>Voorlopig brutobedrag {0} EUR</value>
+  </data>
+  <data name="Invoice_Preview_Button" xml:space="preserve">
+    <value>Voorbeeld</value>
+  </data>
+  <data name="Invoice_Preview_Title" xml:space="preserve">
+    <value>Snel voorvertoning</value>
+  </data>
+  <data name="Invoice_Preview_Message" xml:space="preserve">
+    <value>Controleer datums en totaal voordat je de factuur boekt.</value>
+  </data>
+  <data name="Invoice_Preview_Issue" xml:space="preserve">
+    <value>Factuurdatum: {0}</value>
+  </data>
+  <data name="Invoice_Preview_Due" xml:space="preserve">
+    <value>Vervaldatum: {0}</value>
+  </data>
+  <data name="Invoice_Preview_Total" xml:space="preserve">
+    <value>Brutobedrag: {0} EUR</value>
+  </data>
+  <data name="Invoice_Preview_Error" xml:space="preserve">
+    <value>Vul de factuurgegevens en regels in voordat je de voorvertoning bekijkt.</value>
   </data>
   <data name="Invoice_PaymentDialog_Title" xml:space="preserve">
     <value>Betaling registreren voor factuur {0}</value>
@@ -681,6 +798,18 @@
   </data>
   <data name="Banking_Note" xml:space="preserve">
     <value>De bankomgeving importeert CSV-bestanden of de gesimuleerde API-feed, koppelt betalingen aan facturen en kan automatisch journaalposten maken. Controleer openstaande mutaties om debiteuren en crediteuren synchroon te houden.</value>
+  </data>
+  <data name="Banking_Onboarding_Title" xml:space="preserve">
+    <value>Aan de slag</value>
+  </data>
+  <data name="Banking_Onboarding_Step1" xml:space="preserve">
+    <value>Importeer een recente CSV of synchroniseer de sandboxbankfeed.</value>
+  </data>
+  <data name="Banking_Onboarding_Step2" xml:space="preserve">
+    <value>Gebruik de filters hierboven om ongekoppelde transacties te verfijnen.</value>
+  </data>
+  <data name="Banking_Onboarding_Step3" xml:space="preserve">
+    <value>Koppel betalingen aan facturen of start de automatische matching.</value>
   </data>
   <data name="Banking_ImportCsv" xml:space="preserve">
     <value>CSV importeren</value>
@@ -730,6 +859,15 @@
   <data name="Banking_Filter_Status_Unmatched" xml:space="preserve">
     <value>Ongekoppeld</value>
   </data>
+  <data name="Banking_Filter_Search" xml:space="preserve">
+    <value>Zoek referentie/relatie</value>
+  </data>
+  <data name="Banking_Filter_AmountMin" xml:space="preserve">
+    <value>Min. bedrag</value>
+  </data>
+  <data name="Banking_Filter_AmountMax" xml:space="preserve">
+    <value>Max. bedrag</value>
+  </data>
   <data name="Banking_Filter_Apply" xml:space="preserve">
     <value>Toepassen</value>
   </data>
@@ -745,8 +883,26 @@
   <data name="Banking_Action_Match" xml:space="preserve">
     <value>Koppelen</value>
   </data>
+  <data name="Banking_Error_Load" xml:space="preserve">
+    <value>Kan banktransacties niet laden: {0}</value>
+  </data>
+  <data name="Banking_Error_Sync" xml:space="preserve">
+    <value>Kan de bankfeed niet synchroniseren: {0}</value>
+  </data>
+  <data name="Banking_Error_Match" xml:space="preserve">
+    <value>Kan de transactie niet koppelen: {0}</value>
+  </data>
+  <data name="Banking_Error_Import" xml:space="preserve">
+    <value>Kan het CSV-bestand niet importeren: {0}</value>
+  </data>
+  <data name="Banking_Error_AutoMatch" xml:space="preserve">
+    <value>Automatische matching is mislukt: {0}</value>
+  </data>
   <data name="Banking_Match_SelectInvoice" xml:space="preserve">
     <value>Selecteer factuur</value>
+  </data>
+  <data name="Banking_Match_Helper" xml:space="preserve">
+    <value>Tip: alleen openstaande facturen worden getoond. Wis de filters als de lijst leeg blijft.</value>
   </data>
   <data name="Banking_Match_Note" xml:space="preserve">
     <value>Alleen openstaande facturen worden getoond. Geen match? Annuleer, pas filters aan of maak eerst een factuur.</value>
@@ -894,6 +1050,12 @@
   </data>
   <data name="Banking_Summary_Message" xml:space="preserve">
     <value>Laatst {0}: geimporteerd {1}, gekoppeld {2}, dagboekregels {3}.</value>
+  </data>
+  <data name="Banking_Empty_Hint" xml:space="preserve">
+    <value>Geen transacties voor deze filters. Importeer een CSV of synchroniseer de sandbox-feed om gegevens te laden.</value>
+  </data>
+  <data name="Banking_Empty_DownloadSample" xml:space="preserve">
+    <value>Download voorbeeld-CSV</value>
   </data>
   <data name="Banking_Summary_Source_Import" xml:space="preserve">
     <value>Import</value>

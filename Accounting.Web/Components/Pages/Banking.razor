@@ -38,11 +38,14 @@
         <MudStack Row="true" AlignItems="AlignItems.End" Spacing="2">
             <MudDatePicker @bind-Date="_filterFrom" Label="@Localizer["Banking_Filter_From"]" DateFormat="yyyy-MM-dd" />
             <MudDatePicker @bind-Date="_filterTo" Label="@Localizer["Banking_Filter_To"]" DateFormat="yyyy-MM-dd" />
-            <MudSelect T="bool?" Label="@Localizer["Banking_Filter_Status"]" @bind-Value="_filterMatched" Dense="true">
+            <MudSelect T="bool?" Label="@Localizer["Banking_Filter_Status"]" @bind-Value="_filterMatched">
                 <MudSelectItem Value="@((bool?)null)">@Localizer["Banking_Filter_Status_All"]</MudSelectItem>
                 <MudSelectItem Value="@((bool?)true)">@Localizer["Banking_Filter_Status_Matched"]</MudSelectItem>
                 <MudSelectItem Value="@((bool?)false)">@Localizer["Banking_Filter_Status_Unmatched"]</MudSelectItem>
             </MudSelect>
+            <MudTextField @bind-Value="_searchTerm" Label="@Localizer["Banking_Filter_Search"]" />
+            <MudNumericField @bind-Value="_amountMin" Label="@Localizer["Banking_Filter_AmountMin"]" />
+            <MudNumericField @bind-Value="_amountMax" Label="@Localizer["Banking_Filter_AmountMax"]" />
             <MudTooltip Text="@Localizer["Banking_Tooltip_Filter"]">
                 <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="LoadTransactionsAsync">
                     <MudIcon Icon="@Icons.Material.Filled.FilterList" Class="mr-2" />@Localizer["Banking_Filter_Apply"]
@@ -55,6 +58,14 @@
 <MudPaper Class="report-note">
     @Localizer["Banking_Note"]
 </MudPaper>
+<MudPaper Class="pa-4 mb-4">
+    <MudText Typo="Typo.subtitle1" Class="mb-2">@Localizer["Banking_Onboarding_Title"]</MudText>
+    <MudList Dense="true" T="string">
+        <MudListItem T="string">@Localizer["Banking_Onboarding_Step1"]</MudListItem>
+        <MudListItem T="string">@Localizer["Banking_Onboarding_Step2"]</MudListItem>
+        <MudListItem T="string">@Localizer["Banking_Onboarding_Step3"]</MudListItem>
+    </MudList>
+</MudPaper>
 
 @if (_lastOperationSummary is not null)
 {
@@ -66,7 +77,11 @@
     </MudAlert>
 }
 
-<MudTable T="BankTransactionRow" Items="_transactions" Dense="true" Hover="true" Loading="@_isLoading" OnRowClick="HandleRowClick" RowClassFunc='@((_, __) => "clickable-row")'>
+@{
+    var filteredTransactions = FilteredTransactions.ToList();
+}
+
+<MudTable T="BankTransactionRow" Items="filteredTransactions" Dense="true" Hover="true" Loading="@_isLoading" OnRowClick="HandleRowClick" RowClassFunc='@((_, __) => "clickable-row")'>
     <LoadingContent>
         <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
     </LoadingContent>
@@ -97,6 +112,17 @@
         </MudTd>
     </RowTemplate>
 </MudTable>
+@if (!_isLoading && filteredTransactions.Count == 0)
+{
+    <MudAlert Severity="Severity.Info" Dense="true" Class="mt-3">
+        <MudText>@Localizer["Banking_Empty_Hint"]</MudText>
+        <MudStack Row="true" Spacing="1" Class="mt-2">
+            <MudButton Variant="Variant.Outlined" OnClick="SyncExternalAsync">@Localizer["Banking_Sync"]</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoadTransactionsAsync">@Localizer["Banking_Filter_Apply"]</MudButton>
+            <MudButton Variant="Variant.Text" Href="samples/banking-sample.csv" Target="_blank">@Localizer["Banking_Empty_DownloadSample"]</MudButton>
+        </MudStack>
+    </MudAlert>
+}
 
 @if (_selectedTransaction is not null)
 {
@@ -111,6 +137,7 @@
                          Dense="true"
                          Placeholder="@Localizer["Banking_Match_SelectInvoice"]"
                          @bind-Value="_selectedInvoice" />
+        <MudText Typo="Typo.caption" Class="mt-1">@Localizer["Banking_Match_Helper"]</MudText>
         <MudStack Row="true" Justify="Justify.FlexEnd" Class="mt-2" Spacing="2">
             <MudButton Variant="Variant.Text" OnClick="() => _selectedTransaction = null">@Localizer["Banking_Match_Cancel"]</MudButton>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="_selectedInvoice is null" OnClick="MatchSelectedInvoiceAsync">@Localizer["Banking_Match_Save"]</MudButton>
@@ -129,8 +156,12 @@
     private DateTime? _filterFrom;
     private DateTime? _filterTo;
     private bool? _filterMatched;
+    private string? _searchTerm;
+    private decimal? _amountMin;
+    private decimal? _amountMax;
     private bool _hasAnnouncedInitialLoad;
     private OperationSummary? _lastOperationSummary;
+    private IEnumerable<BankTransactionRow> FilteredTransactions => _transactions.Where(MatchesClientFilters);
 
     protected override async Task OnInitializedAsync()
     {
@@ -179,7 +210,7 @@
         catch (Exception ex)
         {
             Logger.LogError(ex, "Failed to load bank transactions");
-            Snackbar.Add(ex.Message, Severity.Error);
+            Snackbar.Add(Localizer["Banking_Error_Load", ex.Message].Value, Severity.Error);
         }
         finally
         {
@@ -202,7 +233,7 @@
         catch (Exception ex)
         {
             Logger.LogError(ex, "Failed to sync external transactions");
-            Snackbar.Add(ex.Message, Severity.Error);
+            Snackbar.Add(Localizer["Banking_Error_Sync", ex.Message].Value, Severity.Error);
         }
     }
 
@@ -241,7 +272,7 @@
         catch (Exception ex)
         {
             Logger.LogError(ex, "Failed to match transaction {TransactionId} to invoice {InvoiceId}", _selectedTransaction?.Id, _selectedInvoice?.Id);
-            Snackbar.Add(ex.Message, Severity.Error);
+            Snackbar.Add(Localizer["Banking_Error_Match", ex.Message].Value, Severity.Error);
         }
     }
 
@@ -271,7 +302,7 @@
         catch (Exception ex)
         {
             Logger.LogError(ex, "Failed to import CSV");
-            Snackbar.Add(ex.Message, Severity.Error);
+            Snackbar.Add(Localizer["Banking_Error_Import", ex.Message].Value, Severity.Error);
         }
     }
 
@@ -294,7 +325,7 @@
         catch (Exception ex)
         {
             Logger.LogError(ex, "Failed to auto-match transactions");
-            Snackbar.Add(ex.Message, Severity.Error);
+            Snackbar.Add(Localizer["Banking_Error_AutoMatch", ex.Message].Value, Severity.Error);
         }
     }
 
@@ -312,6 +343,31 @@
             imported,
             result?.Matched ?? 0,
             result?.JournalEntriesCreated ?? 0);
+    }
+
+    private bool MatchesClientFilters(BankTransactionRow transaction)
+    {
+        if (!string.IsNullOrWhiteSpace(_searchTerm))
+        {
+            var term = _searchTerm.Trim();
+            if (!(transaction.Counterparty.Contains(term, StringComparison.OrdinalIgnoreCase) ||
+                  transaction.Reference.Contains(term, StringComparison.OrdinalIgnoreCase)))
+            {
+                return false;
+            }
+        }
+
+        if (_amountMin.HasValue && transaction.Amount < _amountMin.Value)
+        {
+            return false;
+        }
+
+        if (_amountMax.HasValue && transaction.Amount > _amountMax.Value)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     private sealed record BankTransactionRow(Guid Id, DateOnly BookingDate, string Counterparty, string Reference, decimal Amount, Guid? MatchedInvoiceId, Guid? JournalEntryId);

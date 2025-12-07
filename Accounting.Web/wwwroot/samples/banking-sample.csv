@@ -1,0 +1,6 @@
+BookingDate,Counterparty,Reference,Amount
+2025-05-01,Acme B.V.,INV-1001,1200.00
+2025-05-02,Delta Supplies,PO-5542,-845.50
+2025-05-03,Northwind,INV-1002,450.00
+2025-05-05,Payroll,-, -5200.00
+2025-05-07,City Utilities,UTIL-778,-215.34

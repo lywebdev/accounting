@@ -38,3 +38,10 @@ The seed routine populates the default chart of accounts plus a sample sales inv
 - Re-run `dotnet ef database update ...` against the target database.
 
 This dual profile keeps the repo easy to clone/run (SQLite file) while staying production ready (SQL Server/Azure SQL).
+
+## UX helpers
+- **Chart of Accounts** displays status hints (active vs inactive) so you know when a ledger can be used in transactions.
+- **Journal & Invoice dialogs** run fullscreen, include inline guides, templates, and payment-term selectors. Use the Preview button in the invoice dialog to open a printable HTML summary.
+- **Banking workspace** provides inline helper text, search/amount filters, and an empty-state hint that links to the sync/import actions.
+- **Sample banking data** is available via `wwwroot/samples/banking-sample.csv` (the UI links to it from the empty state).
+- **Reporting filters** show helper text next to each input, explaining which tabs rely on the selected criteria.

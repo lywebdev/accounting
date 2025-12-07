@@ -36,6 +36,12 @@ public class InvoiceService(IInvoiceRepository repository, IValidator<Invoice> v
         return invoice;
     }
 
+    public async Task<Invoice> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var invoice = await repository.GetByIdAsync(id, cancellationToken);
+        return invoice ?? throw new InvalidOperationException("Invoice not found");
+    }
+
     public async Task<Invoice> PostAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var invoice = await repository.GetByIdAsync(id, cancellationToken) ?? throw new InvalidOperationException("Invoice not found");

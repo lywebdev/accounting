@@ -1,5 +1,6 @@
 @page "/chart-of-accounts"
 @using Accounting.Core.Entities
+@using MudBlazor
 @inject IChartOfAccountsService ChartService
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
@@ -56,9 +57,11 @@ else
             <MudTd DataLabel="@Localizer["Coa_Table_Name"]">@context.Name</MudTd>
             <MudTd DataLabel="@Localizer["Coa_Table_Category"]">@Localizer[$"Account_Category_{context.Category}"]</MudTd>
             <MudTd DataLabel="@Localizer["Coa_Table_Status"]">
-                <MudChip T="bool" Value="context.IsActive" Color="context.IsActive ? Color.Success : Color.Error" Variant="Variant.Filled" Size="Size.Small">
-                    @(context.IsActive ? Localizer["Coa_Status_Active"].Value : Localizer["Coa_Status_Inactive"].Value)
-                </MudChip>
+                <MudTooltip Text='@Localizer[context.IsActive ? "Coa_Status_Hint_Active" : "Coa_Status_Hint_Inactive"]'>
+                    <MudChip T="bool" Value="context.IsActive" Color="context.IsActive ? Color.Success : Color.Error" Variant="Variant.Filled" Size="Size.Small">
+                        @(context.IsActive ? Localizer["Coa_Status_Active"].Value : Localizer["Coa_Status_Inactive"].Value)
+                    </MudChip>
+                </MudTooltip>
             </MudTd>
             <MudTd DataLabel="@Localizer["Coa_Table_Actions"]">
                 <MudTooltip Text="@Localizer["Coa_Tooltip_Edit"]">

@@ -1,4 +1,5 @@
-﻿@page "/"
+@page "/"
+@using MudBlazor
 @inject IStringLocalizer<SharedResources> Localizer
 
 <PageTitle>@Localizer["AppTitle"]</PageTitle>
@@ -11,7 +12,7 @@
     </MudAlert>
 </MudPaper>
 
-<MudGrid GutterSize="2">
+<MudGrid>
     @foreach (var module in _modules)
     {
         <MudItem xs="12" sm="6" md="4">
@@ -43,3 +44,4 @@
 
     private sealed record HomeModule(string TitleKey, string DescriptionKey, string Link);
 }
+

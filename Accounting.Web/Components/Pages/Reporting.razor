@@ -15,26 +15,28 @@
     <MudStack Row="true" Spacing="2" Class="mt-2" AlignItems="AlignItems.End">
         <MudDatePicker @bind-Date="_filterFrom"
                        Label="@Localizer["Reporting_Filter_From"]"
+                       HelperText="@Localizer["Reporting_Filter_From_Help"]"
                        DateFormat="yyyy-MM-dd"
                        MaxDate="_filterTo" />
         <MudDatePicker @bind-Date="_filterTo"
                        Label="@Localizer["Reporting_Filter_To"]"
+                       HelperText="@Localizer["Reporting_Filter_To_Help"]"
                        DateFormat="yyyy-MM-dd"
                        MinDate="_filterFrom" />
-        <MudSelect T="string" Label="@Localizer["Reporting_Filter_Currency"]" @bind-Value="_currency" Class="filter-control">
+        <MudSelect T="string" Label="@Localizer["Reporting_Filter_Currency"]" HelperText="@Localizer["Reporting_Filter_Currency_Help"]" @bind-Value="_currency" Class="filter-control">
             @foreach (var currency in _currencies)
             {
                 <MudSelectItem Value="@currency">@currency</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="AccountCategory?" Label="@Localizer["Reporting_Filter_Category"]" @bind-Value="_trialBalanceCategory" Class="filter-control">
+        <MudSelect T="AccountCategory?" Label="@Localizer["Reporting_Filter_Category"]" HelperText="@Localizer["Reporting_Filter_Category_Help"]" @bind-Value="_trialBalanceCategory" Class="filter-control">
             <MudSelectItem Value="@( (AccountCategory?)null )">@Localizer["Coa_Filter_All"]</MudSelectItem>
             @foreach (var category in Enum.GetValues<AccountCategory>())
             {
                 <MudSelectItem Value="@( (AccountCategory?)category )">@Localizer[$"Account_Category_{category}"]</MudSelectItem>
             }
         </MudSelect>
-        <MudSelect T="Guid?" Label="@Localizer["Reporting_Filter_Account"]" @bind-Value="_ledgerAccountId" Class="filter-control">
+        <MudSelect T="Guid?" Label="@Localizer["Reporting_Filter_Account"]" HelperText="@Localizer["Reporting_Filter_Account_Help"]" @bind-Value="_ledgerAccountId" Class="filter-control">
             <MudSelectItem Value="@( (Guid?)null )">@Localizer["Reporting_Filter_Account_All"]</MudSelectItem>
             @foreach (var account in _accountOptions)
             {

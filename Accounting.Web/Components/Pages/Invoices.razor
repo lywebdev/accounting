@@ -2,6 +2,7 @@
 @using Accounting.Core.Entities
 @using Accounting.Core.Enums
 @using Accounting.Core.ValueObjects
+@using MudBlazor
 @inject IInvoiceService InvoiceService
 @inject IChartOfAccountsService ChartService
 @inject ISnackbar Snackbar
@@ -76,41 +77,44 @@ else
                 </MudStack>
             </MudTd>
             <MudTd>
-                <MudButtonGroup Variant="Variant.Outlined" Size="Size.Small">
+                <MudStack Row="true" Class="invoice-actions" AlignItems="AlignItems.Center" Spacing="1">
                     <MudTooltip Text="@Localizer["Invoices_Action_Send"]">
-                        <MudButton Disabled="!invoice.CanMarkAsSent"
-                                   Color="Color.Info"
-                                   StartIcon="@Icons.Material.Filled.Send"
-                                   OnClick="() => MarkAsSentAsync(invoice)">
-                            @Localizer["Invoices_Action_Send"]
-                        </MudButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.Send"
+                                       Color="Color.Info"
+                                       Variant="Variant.Outlined"
+                                       Disabled="!invoice.CanMarkAsSent"
+                                       OnClick="() => MarkAsSentAsync(invoice)" />
                     </MudTooltip>
                     <MudTooltip Text="@Localizer["Invoices_Action_RecordPayment"]">
-                        <MudButton Disabled="!invoice.CanRegisterPayment"
-                                   Color="Color.Success"
-                                   StartIcon="@Icons.Material.Filled.AttachMoney"
-                                   OnClick="() => OpenRecordPaymentDialogAsync(invoice)">
-                            @Localizer["Invoices_Action_RecordPayment"]
-                        </MudButton>
+                        <MudIconButton Icon="@Icons.Material.Filled.AttachMoney"
+                                       Color="Color.Success"
+                                       Variant="Variant.Outlined"
+                                       Disabled="!invoice.CanRegisterPayment"
+                                       OnClick="() => OpenRecordPaymentDialogAsync(invoice)" />
+                    </MudTooltip>
+                    <MudTooltip Text="@Localizer["Invoices_Action_DownloadPdf"]">
+                        <MudIconButton Icon="@Icons.Material.Filled.PictureAsPdf"
+                                       Color="Color.Secondary"
+                                       Variant="Variant.Outlined"
+                                       Href="@($"/api/invoices/{invoice.Id}/pdf")"
+                                       Target="_blank" />
                     </MudTooltip>
                     @if (!invoice.IsPosted)
                     {
-                        <MudTooltip Text="@Localizer["Invoices_Status_Posted"]">
-                            <MudButton Color="Color.Secondary"
-                                       StartIcon="@Icons.Material.Filled.Check"
-                                       OnClick="() => PostInvoiceAsync(invoice.Id)">
-                                @Localizer["Invoices_Action_Post"]
-                            </MudButton>
+                        <MudTooltip Text="@Localizer["Invoices_Action_Post"]">
+                            <MudIconButton Icon="@Icons.Material.Filled.Check"
+                                           Color="Color.Info"
+                                           Variant="Variant.Outlined"
+                                           OnClick="() => PostInvoiceAsync(invoice.Id)" />
                         </MudTooltip>
                         <MudTooltip Text="@Localizer["Invoices_Action_Delete"]">
-                            <MudButton Color="Color.Error"
-                                       StartIcon="@Icons.Material.Filled.Delete"
-                                       OnClick="() => DeleteInvoiceAsync(invoice.Id)">
-                                @Localizer["Invoices_Action_Delete"]
-                            </MudButton>
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                           Color="Color.Error"
+                                           Variant="Variant.Outlined"
+                                           OnClick="() => DeleteInvoiceAsync(invoice.Id)" />
                         </MudTooltip>
                     }
-                </MudButtonGroup>
+                </MudStack>
             </MudTd>
         </RowTemplate>
         <ChildRowContent Context="invoice">
@@ -203,7 +207,8 @@ else
             { nameof(InvoiceDialog.Accounts), _accounts }
         };
 
-        var dialog = await DialogService.ShowAsync<InvoiceDialog>(Localizer["Invoice_Dialog_Title"], parameters);
+        var options = new DialogOptions { CloseButton = true, FullWidth = true, MaxWidth = MaxWidth.ExtraLarge };
+        var dialog = await DialogService.ShowAsync<InvoiceDialog>(Localizer["Invoice_Dialog_Title"], parameters, options);
         var result = await dialog.Result;
 
         if (result is { Canceled: false, Data: InvoiceDialog.InvoiceEditModel model })

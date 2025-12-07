@@ -102,3 +102,13 @@ h1:focus {
     padding-bottom: 1.5rem;
 }
 
+.wizard-steps .mud-chip {
+    min-width: 120px;
+    justify-content: center;
+}
+
+.invoice-actions {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+

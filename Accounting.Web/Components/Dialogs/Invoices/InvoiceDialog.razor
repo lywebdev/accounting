@@ -1,24 +1,72 @@
 @using System.ComponentModel.DataAnnotations
+@using System.Text
 @using Accounting.Core.Enums
 @using MudBlazor
 @inject IStringLocalizer<SharedResources> Localizer
+@inject IJSRuntime JsRuntime
+@inject ISnackbar Snackbar
 
-<MudDialog>
+<MudDialog Class="invoice-dialog">
     <DialogContent>
         <MudAlert Severity="Severity.Info" Dense="true" Variant="Variant.Text" Class="mb-3">
             @Localizer["Invoice_Dialog_Note"]
         </MudAlert>
+        <MudStack Row="true" Spacing="1" Class="mb-3 wizard-steps">
+            <MudChip T="string" Color="BasicsComplete ? Color.Success : Color.Default" Variant="Variant.Outlined">
+                @Localizer["Invoice_Wizard_Basics"]
+            </MudChip>
+            <MudChip T="string" Color="DatesComplete ? Color.Success : Color.Default" Variant="Variant.Outlined">
+                @Localizer["Invoice_Wizard_Dates"]
+            </MudChip>
+            <MudChip T="string" Color="LinesComplete ? Color.Success : Color.Default" Variant="Variant.Outlined">
+                @Localizer["Invoice_Wizard_Lines"]
+            </MudChip>
+        </MudStack>
         <MudForm @ref="_form">
-            <MudSelect T="InvoiceType" @bind-Value="Model.Type" Label="@Localizer["Invoice_Field_Type"]" Required="true">
-                @foreach (InvoiceType type in Enum.GetValues(typeof(InvoiceType)))
-                {
-                    <MudSelectItem Value="@type">@Localizer[$"Invoice_Type_{type}"]</MudSelectItem>
-                }
-            </MudSelect>
-            <MudTextField @bind-Value="Model.Number" Label="@Localizer["Invoice_Field_Number"]" Required="true" MaxLength="32" Class="mt-3" />
-            <MudTextField @bind-Value="Model.Counterparty" Label="@Localizer["Invoice_Field_Counterparty"]" Required="true" MaxLength="128" Class="mt-3" />
-            <MudDatePicker Date="Model.IssueDateBinding" DateChanged="value => Model.IssueDateBinding = value ?? DateTime.Today" Label="@Localizer["Invoice_Field_IssueDate"]" Class="mt-3" />
-            <MudDatePicker Date="Model.DueDateBinding" DateChanged="value => Model.DueDateBinding = value ?? DateTime.Today" Label="@Localizer["Invoice_Field_DueDate"]" Class="mt-3" />
+            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
+                <MudSelect T="InvoiceType" @bind-Value="Model.Type" Label="@Localizer["Invoice_Field_Type"]" Required="true" Class="flex-grow-1 mr-2">
+                    @foreach (InvoiceType type in Enum.GetValues(typeof(InvoiceType)))
+                    {
+                        <MudSelectItem Value="@type">@Localizer[$"Invoice_Type_{type}"]</MudSelectItem>
+                    }
+                </MudSelect>
+                <MudTooltip Text="@Localizer["Invoice_Preset_Sales_Tooltip"]">
+                    <MudButton Variant="Variant.Text" Color="Color.Success" OnClick="() => ApplyTemplate(TemplateType.Sales)">
+                        @Localizer["Invoice_Preset_Sales"]
+                    </MudButton>
+                </MudTooltip>
+                <MudTooltip Text="@Localizer["Invoice_Preset_Purchase_Tooltip"]">
+                    <MudButton Variant="Variant.Text" Color="Color.Info" OnClick="() => ApplyTemplate(TemplateType.Purchase)">
+                        @Localizer["Invoice_Preset_Purchase"]
+                    </MudButton>
+                </MudTooltip>
+            </MudStack>
+            <MudTextField @bind-Value="Model.Number"
+                          For="@(() => Model.Number)"
+                          Label="@Localizer["Invoice_Field_Number"]"
+                          Required="true"
+                          RequiredError="@Localizer["Invoice_Field_Number_Required"].Value"
+                          MaxLength="32"
+                          Immediate="true"
+                          Class="mt-3" />
+            <MudTextField @bind-Value="Model.Counterparty"
+                          For="@(() => Model.Counterparty)"
+                          Label="@Localizer["Invoice_Field_Counterparty"]"
+                          Required="true"
+                          RequiredError="@Localizer["Invoice_Field_Counterparty_Required"].Value"
+                          MaxLength="128"
+                          Immediate="true"
+                          Class="mt-3" />
+            <MudStack Row="true" Spacing="2" Class="mt-3">
+                <MudDatePicker Date="Model.IssueDateBinding" DateChanged="OnIssueDateChanged" Label="@Localizer["Invoice_Field_IssueDate"]" />
+                <MudDatePicker Date="Model.DueDateBinding" Label="@Localizer["Invoice_Field_DueDate"]" />
+                <MudSelect T="int" Label="@Localizer["Invoice_Field_PaymentTerms"]" HelperText="@Localizer["Invoice_Field_PaymentTerms_Hint"]" Value="Model.PaymentTermDays" ValueChanged="OnPaymentTermChanged">
+                    @foreach (var option in _paymentTerms)
+                    {
+                        <MudSelectItem Value="@option">@Localizer["Invoice_Field_PaymentTerms_Option", option]</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudStack>
 
             <MudPaper Class="pa-3 mt-4">
                 <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.SpaceBetween">
@@ -61,6 +109,10 @@
                     </RowTemplate>
                 </MudTable>
             </MudPaper>
+            <MudStack Row="true" Justify="Justify.SpaceBetween" Class="mt-3">
+                <MudText Typo="Typo.body2">@Localizer["Invoice_Summary_LineCount", Model.Lines.Count]</MudText>
+                <MudText Typo="Typo.body2">@Localizer["Invoice_Summary_Total", CalculateDraftTotal().ToString("0.00")]</MudText>
+            </MudStack>
         </MudForm>
     </DialogContent>
     <DialogActions>
@@ -79,6 +131,10 @@
     public IReadOnlyList<AccountOption> Accounts { get; set; } = Array.Empty<AccountOption>();
 
     private MudForm _form = default!;
+    private readonly int[] _paymentTerms = new[] { 7, 14, 30, 60 };
+    private bool BasicsComplete => !string.IsNullOrWhiteSpace(Model.Number) && !string.IsNullOrWhiteSpace(Model.Counterparty);
+    private bool DatesComplete => Model.DueDate >= Model.IssueDate;
+    private bool LinesComplete => Model.Lines.Count > 0 && Model.Lines.All(l => l.HasValue);
 
     private void AddLine() => Model.Lines.Add(new InvoiceLineEditModel());
 
@@ -103,21 +159,132 @@
 
     private void Cancel() => DialogInstance.Cancel();
 
+    private void OnPaymentTermChanged(int days)
+    {
+        Model.PaymentTermDays = days;
+        Model.DueDate = Model.IssueDate.AddDays(days);
+    }
+
+    private void OnIssueDateChanged(DateTime? date)
+    {
+        var applied = date ?? DateTime.Today;
+        Model.IssueDate = DateOnly.FromDateTime(applied);
+        Model.DueDate = Model.IssueDate.AddDays(Model.PaymentTermDays);
+    }
+
+    private void ApplyTemplate(TemplateType template)
+    {
+        Model.Lines.Clear();
+        switch (template)
+        {
+            case TemplateType.Sales:
+                Model.Type = InvoiceType.Sales;
+                Model.Memo = Localizer["Invoice_Preset_Sales_Memo"];
+                Model.Lines.Add(new InvoiceLineEditModel
+                {
+                    Description = Localizer["Invoice_Preset_Sales_Line"],
+                    Quantity = 10,
+                    UnitPrice = 250,
+                    VatRate = 21,
+                    RevenueAccountId = Accounts.FirstOrDefault()?.Id
+                });
+                break;
+            case TemplateType.Purchase:
+                Model.Type = InvoiceType.Purchase;
+                Model.Memo = Localizer["Invoice_Preset_Purchase_Memo"];
+                Model.Lines.Add(new InvoiceLineEditModel
+                {
+                    Description = Localizer["Invoice_Preset_Purchase_Line"],
+                    Quantity = 1,
+                    UnitPrice = 1200,
+                    VatRate = 21,
+                    RevenueAccountId = Accounts.FirstOrDefault()?.Id
+                });
+                break;
+        }
+    }
+
+    private decimal CalculateDraftTotal() =>
+        Model.Lines.Sum(l => l.Quantity * l.UnitPrice * (1 + (l.VatRate / 100m)));
+
+    private async Task PreviewAsync()
+    {
+        await _form.Validate();
+        if (!_form.IsValid || Model.Lines.Any(l => !l.HasValue))
+        {
+            Snackbar.Add(Localizer["Invoice_Preview_Error"].Value, Severity.Warning);
+            return;
+        }
+
+        var html = BuildPreviewHtml();
+        await JsRuntime.InvokeVoidAsync("previewHtml", html, Localizer["Invoice_Preview_Title"].Value);
+    }
+
+    private string BuildPreviewHtml()
+    {
+        var sb = new StringBuilder();
+        sb.Append(
+            "<style>" +
+            "body { font-family: Arial, Helvetica, sans-serif; margin: 2rem; }" +
+            "table { border-collapse: collapse; width: 100%; margin-top: 1rem; }" +
+            "th, td { border: 1px solid #e5e7eb; padding: .5rem; text-align: left; }" +
+            "th { background-color: #f3f4f6; }" +
+            "tfoot td { font-weight: bold; }" +
+            "</style><h2>Invoice preview</h2>");
+        sb.AppendFormat("<p><strong>{0}:</strong> {1}</p>", Localizer["Invoice_Field_Number"], Model.Number);
+        sb.AppendFormat("<p><strong>{0}:</strong> {1}</p>", Localizer["Invoice_Field_Counterparty"], Model.Counterparty);
+        sb.AppendFormat("<p><strong>{0}:</strong> {1:yyyy-MM-dd}</p>", Localizer["Invoice_Preview_Issue"].Value, Model.IssueDate.ToDateTime(TimeOnly.MinValue));
+        sb.AppendFormat("<p><strong>{0}:</strong> {1:yyyy-MM-dd}</p>", Localizer["Invoice_Preview_Due"].Value, Model.DueDate.ToDateTime(TimeOnly.MinValue));
+        sb.Append("<table><thead><tr>");
+        sb.AppendFormat("<th>{0}</th>", Localizer["Invoice_Lines_Description"]);
+        sb.AppendFormat("<th>{0}</th>", Localizer["Invoice_Lines_Quantity"]);
+        sb.AppendFormat("<th>{0}</th>", Localizer["Invoice_Lines_UnitPrice"]);
+        sb.AppendFormat("<th>{0}</th>", Localizer["Invoice_Lines_Vat"]);
+        sb.AppendFormat("<th>{0}</th>", Localizer["Invoice_Lines_Total"]);
+        sb.Append("</tr></thead><tbody>");
+        foreach (var line in Model.Lines)
+        {
+            var total = line.Quantity * line.UnitPrice * (1 + (line.VatRate / 100m));
+            sb.Append("<tr>");
+            sb.AppendFormat("<td>{0}</td>", line.Description);
+            sb.AppendFormat("<td>{0}</td>", line.Quantity);
+            sb.AppendFormat("<td>{0:0.00}</td>", line.UnitPrice);
+            sb.AppendFormat("<td>{0}%</td>", line.VatRate);
+            sb.AppendFormat("<td>{0:0.00}</td>", total);
+            sb.Append("</tr>");
+        }
+        sb.Append("</tbody>");
+        sb.AppendFormat("<tfoot><tr><td colspan=\"4\">{0}</td><td>{1:0.00} EUR</td></tr></tfoot>", Localizer["Invoice_Preview_Total"].Value, CalculateDraftTotal());
+        sb.Append("</table>");
+        return sb.ToString();
+    }
+
     public sealed record AccountOption(Guid Id, string Number, string Name);
 
     public class InvoiceEditModel
     {
         public InvoiceType Type { get; set; } = InvoiceType.Sales;
-        [Required] public string Number { get; set; } = string.Empty;
-        [Required] public string Counterparty { get; set; } = string.Empty;
+        [Required]
+        [StringLength(32, MinimumLength = 3)]
+        public string Number { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(128, MinimumLength = 3)]
+        public string Counterparty { get; set; } = string.Empty;
         public DateOnly IssueDate { get; set; } = DateOnly.FromDateTime(DateTime.Today);
         public DateOnly DueDate { get; set; } = DateOnly.FromDateTime(DateTime.Today.AddDays(30));
+        public int PaymentTermDays { get; set; } = 30;
+        public string? Memo { get; set; }
         public List<InvoiceLineEditModel> Lines { get; set; } = new() { new() };
 
         public DateTime IssueDateBinding
         {
             get => IssueDate.ToDateTime(TimeOnly.MinValue);
-            set => IssueDate = DateOnly.FromDateTime(value);
+            set
+            {
+                IssueDate = DateOnly.FromDateTime(value);
+                DueDate = IssueDate.AddDays(PaymentTermDays);
+            }
         }
 
         public DateTime DueDateBinding
@@ -136,5 +303,11 @@
         public string Description { get; set; } = string.Empty;
 
         public bool HasValue => RevenueAccountId.HasValue && Quantity > 0 && UnitPrice >= 0;
+    }
+
+    private enum TemplateType
+    {
+        Sales,
+        Purchase
     }
 }

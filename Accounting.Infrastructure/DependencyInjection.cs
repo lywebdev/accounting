@@ -1,11 +1,13 @@
 using System.IO;
 using Accounting.Core.Interfaces.Integrations;
 using Accounting.Core.Interfaces.Repositories;
+using Accounting.Core.Interfaces.Services;
 using Accounting.Infrastructure.Integrations.Banking;
 using Accounting.Infrastructure.Integrations.Tax;
 using Accounting.Infrastructure.Persistence;
 using Accounting.Infrastructure.Repositories;
 using Accounting.Infrastructure.Seeding;
+using Accounting.Infrastructure.Documents;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -55,6 +57,7 @@ public static class DependencyInjection
 
         services.AddSingleton<IBankFeedClient, FakeBankingApiClient>();
         services.AddSingleton<IBankStatementImporter, CsvBankStatementImporter>();
+        services.AddSingleton<IInvoiceDocumentService, InvoiceDocumentService>();
         services.AddSingleton<ITaxAuthorityClient, FakeTaxAuthorityApiClient>();
 
         return services;
