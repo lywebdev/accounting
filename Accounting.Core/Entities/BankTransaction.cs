@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Accounting.Core.Constants;
 using Accounting.Core.ValueObjects;
 
@@ -13,7 +14,7 @@ public class BankTransaction
     public Guid? MatchedInvoiceId { get; private set; }
     public Guid? JournalEntryId { get; private set; }
 
-    public BankTransaction(DateOnly bookingDate, string counterparty, string reference, Money amount)
+    public BankTransaction(DateOnly bookingDate, string? counterparty, string? reference, Money amount)
     {
         BookingDate = bookingDate;
         Counterparty = counterparty ?? throw new ArgumentNullException(nameof(counterparty));
@@ -24,10 +25,13 @@ public class BankTransaction
     public void LinkToInvoice(Guid invoiceId) => MatchedInvoiceId = invoiceId;
     public void LinkToJournalEntry(Guid journalEntryId) => JournalEntryId = journalEntryId;
 
+#pragma warning disable IDE0051 // EF Core requires parameterless constructor
     private BankTransaction()
     {
         Counterparty = string.Empty;
         Reference = string.Empty;
         Amount = Money.Zero(CurrencyCodes.Euro);
     }
+#pragma warning restore IDE0051
 }
+

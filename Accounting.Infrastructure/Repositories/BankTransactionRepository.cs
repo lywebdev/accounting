@@ -49,13 +49,13 @@ public class BankTransactionRepository(AccountingDbContext dbContext) : IBankTra
         if (amountMin.HasValue)
         {
             var min = amountMin.Value;
-            query = query.Where(t => Math.Abs(t.Amount.Amount) >= min);
+            query = query.Where(t => t.Amount.Amount >= min);
         }
 
         if (amountMax.HasValue)
         {
             var max = amountMax.Value;
-            query = query.Where(t => Math.Abs(t.Amount.Amount) <= max);
+            query = query.Where(t => t.Amount.Amount <= max);
         }
 
         return await query.AsNoTracking()

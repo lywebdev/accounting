@@ -5,5 +5,4 @@ namespace Accounting.Core.Interfaces.Services;
 public interface IJournalQueryService
 {
     Task<IReadOnlyList<JournalEntry>> GetAsync(DateOnly? from, DateOnly? to, CancellationToken cancellationToken = default);
-    Task<JournalEntry?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 }

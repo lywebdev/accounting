@@ -1,4 +1,5 @@
-﻿using Accounting.Core.Enums;
+using System.Diagnostics.CodeAnalysis;
+using Accounting.Core.Enums;
 
 namespace Accounting.Core.Entities;
 
@@ -35,9 +36,13 @@ public class Account
     public void Deactivate() => IsActive = false;
     public void Activate() => IsActive = true;
 
+#pragma warning disable IDE0051 // EF Core requires parameterless constructor
     private Account()
     {
         Number = string.Empty;
         Name = string.Empty;
     }
+#pragma warning restore IDE0051
 }
+
+

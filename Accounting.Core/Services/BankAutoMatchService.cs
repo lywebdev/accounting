@@ -16,7 +16,7 @@ public class BankAutoMatchService(
     IJournalCommandService journalService,
     IOptions<BankingSettings> bankingOptions) : IBankAutoMatchService
 {
-    private readonly BankingSettings settings = bankingOptions.Value;
+    private readonly BankingSettings _settings = bankingOptions.Value;
 
     public async Task<BankAutoMatchResult> AutoMatchAsync(CancellationToken cancellationToken = default)
     {
@@ -84,14 +84,14 @@ public class BankAutoMatchService(
             return null;
         }
 
-        string reference = transaction.Reference ?? string.Empty;
+        var reference = transaction.Reference ?? string.Empty;
         var referenceMatch = candidates.FirstOrDefault(i => reference.Contains(i.Number, StringComparison.OrdinalIgnoreCase));
         if (referenceMatch is not null)
         {
             return referenceMatch;
         }
 
-        string counterparty = transaction.Counterparty ?? string.Empty;
+        var counterparty = transaction.Counterparty ?? string.Empty;
         var counterpartyMatch = candidates.FirstOrDefault(i => counterparty.Contains(i.Counterparty, StringComparison.OrdinalIgnoreCase));
         if (counterpartyMatch is not null)
         {
@@ -103,18 +103,18 @@ public class BankAutoMatchService(
 
     private async Task<Guid?> TryCreateSettlementEntryAsync(BankTransaction transaction, Invoice invoice, CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(settings.BankAccountNumber))
+        if (string.IsNullOrWhiteSpace(_settings.BankAccountNumber))
         {
             return null;
         }
 
-        var bankAccount = await accountRepository.GetByNumberAsync(settings.BankAccountNumber, cancellationToken);
+        var bankAccount = await accountRepository.GetByNumberAsync(_settings.BankAccountNumber, cancellationToken);
         if (bankAccount is null)
         {
             return null;
         }
 
-        var offsetNumber = invoice.Type == InvoiceType.Sales ? settings.AccountsReceivableNumber : settings.AccountsPayableNumber;
+        var offsetNumber = invoice.Type == InvoiceType.Sales ? _settings.AccountsReceivableNumber : _settings.AccountsPayableNumber;
         if (string.IsNullOrWhiteSpace(offsetNumber))
         {
             return null;

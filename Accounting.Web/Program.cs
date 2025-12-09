@@ -43,8 +43,8 @@ public static class Program
             return new HttpClient { BaseAddress = new Uri(navigation.BaseUri) };
         });
 
-        builder.Services.AddCoreLayer();
-        builder.Services.AddInfrastructure(builder.Configuration);
+        var serviceCollection = builder.Services.AddCoreLayer();
+        serviceCollection.AddInfrastructure(builder.Configuration);
 
         var supportedCultures = builder.Configuration.GetSection("Localization:SupportedCultures").Get<string[]>() ?? new[] { "en", "nl" };
         var defaultCulture = builder.Configuration.GetValue("Localization:DefaultCulture", "en")!;

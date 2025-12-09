@@ -5,7 +5,7 @@ namespace Accounting.Core.ValueObjects;
 
 public record Money
 {
-    public Money(decimal amount, string currency)
+    public Money(decimal amount, string? currency)
     {
         Amount = decimal.Round(amount, 2, MidpointRounding.AwayFromZero);
         Currency = (currency ?? CurrencyCodes.Euro).ToUpperInvariant();

@@ -1,4 +1,4 @@
-namespace Accounting.Web;
+namespace Accounting.Web.Localization;
 
 /// <summary>
 /// Marker class for shared localization resources.

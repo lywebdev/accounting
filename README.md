@@ -1,57 +1,43 @@
 # Accounting
-Accounting is a full-featured bookkeeping workspace built with .NET 8, Razor Components, and MudBlazor. It includes a chart of accounts, invoices, journal entries, tax tools, and a banking module, so it can serve as a demo environment or the foundation of a production-grade app.
+Accounting is a clean-architecture bookkeeping playground built with .NET 8, Razor Components, MudBlazor, and EF Core. It ships with a chart of accounts, invoices, banking, VAT tools, and reporting so you can explore the full flow end-to-end or extend it for production scenarios.
 
-## Requirements
-- .NET SDK 8.0 (build, migrations, and hosting).
-- SQLite is the default database; the file lives at `Accounting.Web/app_data/accounting.db`.
-- `dotnet-ef` CLI tool is required for manual migration management.
+## Prerequisites
+- .NET SDK 8.0+
+- `dotnet-ef` (`dotnet tool update --global dotnet-ef`)
+- SQLite (default) or SQL Server (optional switch via configuration)
 
-## Quick Start (SQLite)
-1. Install or update `dotnet-ef` if needed:
-   ```powershell
-   dotnet tool update --global dotnet-ef --version 8.0.10
-   ```
-2. Restore dependencies:
-   ```powershell
-   dotnet restore
-   ```
-3. Apply migrations (creates the SQLite database file):
-   ```powershell
-   dotnet ef database update --project Accounting.Infrastructure/Accounting.Infrastructure.csproj --startup-project Accounting.Web/Accounting.Web.csproj
-   ```
-4. Seed demo data (optional but recommended so the UI has invoices, accounts, etc.):
-   ```powershell
-   dotnet run --project Accounting.Web -- seed
-   ```
-5. Start the web host:
-   ```powershell
-   dotnet run --project Accounting.Web/Accounting.Web.csproj
-   ```
-6. Browse to `https://localhost:5001` (or the port shown in the console). English is the default UI culture; other languages are available via the built-in localization menu or `?culture=xx`.
+## Getting Started (SQLite)
+1. Restore dependencies  
+   `dotnet restore`
+2. Apply migrations to create/update `Accounting.Web/app_data/accounting.db`  
+   `dotnet ef database update --project Accounting.Infrastructure/Accounting.Infrastructure.csproj --startup-project Accounting.Web/Accounting.Web.csproj`
+3. Seed demo data (recommended for first run)  
+   `dotnet run --project Accounting.Web -- seed`
+4. Launch the app  
+   `dotnet run --project Accounting.Web/Accounting.Web.csproj`
+5. Browse to the URL shown in the console (`https://localhost:5001` by default). The UI loads in English; you can switch to Dutch, Russian, or Ukrainian via the language menu or the `?culture=` query string.
 
-## Database Operations
-- Update database to the latest migration:
-  ```powershell
-  dotnet ef database update --project Accounting.Infrastructure/Accounting.Infrastructure.csproj --startup-project Accounting.Web/Accounting.Web.csproj
-  ```
-- Add a new migration:
-  ```powershell
-  dotnet ef migrations add <MigrationName> --project Accounting.Infrastructure/Accounting.Infrastructure.csproj --startup-project Accounting.Web/Accounting.Web.csproj
-  ```
-- Re-run demo seeding after migrations:
-  ```powershell
-  dotnet run --project Accounting.Web -- seed
-  ```
-- Reset SQLite completely: delete `Accounting.Web/app_data/accounting.db`, then repeat the migration and seeding commands.
+## Local Development Tasks
+- **Add a migration**  
+  `dotnet ef migrations add <MigrationName> --project Accounting.Infrastructure/Accounting.Infrastructure.csproj --startup-project Accounting.Web/Accounting.Web.csproj`
+- **Apply migrations after schema changes**  
+  `dotnet ef database update --project Accounting.Infrastructure/Accounting.Infrastructure.csproj --startup-project Accounting.Web/Accounting.Web.csproj`
+- **Reseed demo data** (safe after migrations or whenever you need fresh fixtures)  
+  `dotnet run --project Accounting.Web -- seed`
+- **Reset SQLite**  
+  Delete `Accounting.Web/app_data/accounting.db`, then rerun the migration and seeding commands.
 
-## Switching to SQL Server or Azure SQL
-1. Set the following in `appsettings.*` or environment variables:
-   - `Database:Provider=SqlServer`
-   - `ConnectionStrings:SqlServer=<your connection string>`
-2. Run `dotnet ef database update` against the SQL Server connection.
-3. Seed data by running `dotnet run --project Accounting.Web -- seed` if you want the same demo content.
+## Switching to SQL Server
+1. Configure `Database:Provider=SqlServer` and set `ConnectionStrings:SqlServer` in `appsettings.Development.json` or user secrets.
+2. Run the same `dotnet ef database update` command; EF will target SQL Server automatically.
+3. (Optional) Seed demo data: `dotnet run --project Accounting.Web -- seed`.
 
-## Useful References
-- Sample banking CSV is available at `wwwroot/samples/banking-sample.csv` for quick imports.
-- Application logs are written to `Accounting.Web/Logs`.
-- All localization resources live under `Accounting.Web/Resources`; you can switch cultures via the UI or by appending `?culture=xx` to any page.
+## Localization
+- Resource files live under `Accounting.Web/Resources` with the shared marker `Accounting.Web.Localization.SharedResources`.
+- Supported UI cultures: `en` (default), `nl`, `ru`, `uk`. Update `appsettings.json` or `appsettings.*.json` if you add more.
+- The `LanguageSwitcher` component sets a cookie plus `culture/ui-culture` query parameters so URLs remain shareable per language.
+
+## Helpful Paths
+- Sample CSV for banking imports: `Accounting.Web/wwwroot/samples/banking-sample.csv`
+- Application logs: `Accounting.Web/Logs`
+- Database file (SQLite): `Accounting.Web/app_data/accounting.db`

@@ -62,1021 +62,1020 @@
     <value>AccountingApp</value>
   </data>
   <data name="Navigation_ChartOfAccounts" xml:space="preserve">
-    <value>План рахунків</value>
+    <value>Chart of Accounts</value>
   </data>
   <data name="Navigation_GeneralJournal" xml:space="preserve">
-    <value>Загальний журнал</value>
+    <value>General Journal</value>
   </data>
   <data name="Navigation_Invoices" xml:space="preserve">
-    <value>Рахунки-фактури</value>
+    <value>Invoices</value>
   </data>
   <data name="Navigation_Banking" xml:space="preserve">
-    <value>Банківська справа</value>
+    <value>Banking</value>
   </data>
   <data name="Navigation_VAT" xml:space="preserve">
-    <value>ПДВ / податок</value>
+    <value>VAT / Tax</value>
   </data>
   <data name="Navigation_Reporting" xml:space="preserve">
-    <value>Звітність</value>
+    <value>Reporting</value>
   </data>
   <data name="Navigation_Settings" xml:space="preserve">
-    <value>Налаштування</value>
+    <value>Settings</value>
   </data>
   <data name="Language_Label" xml:space="preserve">
-    <value>Мова</value>
+    <value>Language</value>
   </data>
   <data name="Language_English" xml:space="preserve">
-    <value>англійська</value>
+    <value>English</value>
   </data>
   <data name="Language_Dutch" xml:space="preserve">
-    <value>голландська</value>
+    <value>Dutch</value>
   </data>
   <data name="Language_Russian" xml:space="preserve">
-    <value>російська</value>
+    <value>Russian</value>
   </data>
   <data name="Language_Ukrainian" xml:space="preserve">
-    <value>українська</value>
+    <value>Ukrainian</value>
   </data>
   <data name="Page_ChartOfAccounts_Title" xml:space="preserve">
-    <value>План рахунків</value>
+    <value>Chart of Accounts</value>
   </data>
   <data name="Page_GeneralJournal_Title" xml:space="preserve">
-    <value>Загальний журнал</value>
+    <value>General Journal</value>
   </data>
   <data name="Page_Invoices_Title" xml:space="preserve">
-    <value>Рахунки-фактури</value>
+    <value>Invoices</value>
   </data>
   <data name="Page_Banking_Title" xml:space="preserve">
-    <value>Банківська робоча область</value>
+    <value>Banking Workspace</value>
   </data>
   <data name="Page_VAT_Title" xml:space="preserve">
-    <value>ПДВ / податок</value>
+    <value>VAT / Tax</value>
   </data>
   <data name="VAT_Note" xml:space="preserve">
-    <value>Консоль ПДВ симулює податковий орган: обчислюйте квартальні декларації, надсилайте їх для отримання відповідей «Прийнято/Відхилено» та підтверджуйте номери ПДВ перед тим, як залучати клієнтів.</value>
+    <value>The VAT console simulates a tax authority: calculate quarterly declarations, submit them to get Accepted/Rejected responses, and validate VAT numbers before onboarding customers.</value>
   </data>
   <data name="Page_Reporting_Title" xml:space="preserve">
-    <value>Звітність</value>
+    <value>Reporting</value>
   </data>
   <data name="Reporting_Filter_Title" xml:space="preserve">
-    <value>Панель інструментів звітності</value>
+    <value>Reporting toolbox</value>
   </data>
   <data name="Reporting_Filter_From" xml:space="preserve">
-    <value>Від дати</value>
+    <value>From date</value>
   </data>
   <data name="Reporting_Filter_From_Help" xml:space="preserve">
-    <value>Відправна точка для всіх звітів на цій сторінці.</value>
+    <value>Starting point for all reports on this page.</value>
   </data>
   <data name="Reporting_Filter_To" xml:space="preserve">
-    <value>На сьогоднішній день</value>
+    <value>To date</value>
   </data>
   <data name="Reporting_Filter_To_Help" xml:space="preserve">
-    <value>Дата закриття; </value>
+    <value>Closing date; keep it aligned with fiscal periods.</value>
   </data>
   <data name="Reporting_Filter_Currency" xml:space="preserve">
-    <value>Валюта</value>
+    <value>Currency</value>
   </data>
   <data name="Reporting_Filter_Currency_Help" xml:space="preserve">
-    <value>Показувати лише валюту; </value>
+    <value>Display currency only; source values stay in EUR.</value>
   </data>
   <data name="Reporting_Filter_Category" xml:space="preserve">
-    <value>Фільтрувати облікові записи за категоріями</value>
+    <value>Filter accounts by category</value>
   </data>
   <data name="Reporting_Filter_Category_Help" xml:space="preserve">
-    <value>Обмежує пробний баланс одним класом рахунку.</value>
+    <value>Limits the trial balance to a single account class.</value>
   </data>
   <data name="Reporting_Filter_Account" xml:space="preserve">
-    <value>Фокусний рахунок (головна книга)</value>
+    <value>Focus account (general ledger)</value>
   </data>
   <data name="Reporting_Filter_Account_Help" xml:space="preserve">
-    <value>Виберіть обліковий запис для розділення вкладки Головна книга.</value>
+    <value>Choose an account to slice the General Ledger tab.</value>
   </data>
   <data name="Reporting_Filter_Account_All" xml:space="preserve">
-    <value>Всі рахунки</value>
+    <value>All accounts</value>
   </data>
   <data name="Reporting_Filter_Run" xml:space="preserve">
-    <value>Запустити звіт</value>
+    <value>Run report</value>
   </data>
   <data name="Reporting_Filter_Export" xml:space="preserve">
-    <value>Експорт CSV</value>
+    <value>Export CSV</value>
   </data>
   <data name="Reporting_Filter_InvalidRange" xml:space="preserve">
-    <value>Виберіть дійсний діапазон дат.</value>
+    <value>Please select a valid date range.</value>
   </data>
   <data name="Reporting_Tab_PnL" xml:space="preserve">
-    <value>Прибуток і збиток</value>
+    <value>Profit &amp; Loss</value>
   </data>
   <data name="Reporting_Tab_Balance" xml:space="preserve">
-    <value>Баланс</value>
+    <value>Balance Sheet</value>
   </data>
   <data name="Reporting_Tab_TrialBalance" xml:space="preserve">
-    <value>Пробний баланс</value>
+    <value>Trial Balance</value>
   </data>
   <data name="Reporting_Tab_GeneralLedger" xml:space="preserve">
-    <value>Головна книга</value>
+    <value>General Ledger</value>
   </data>
   <data name="Reporting_PnL_Note" xml:space="preserve">
-    <value>Прибутки та збитки підсумовують усі доходи та витрати за період, щоб ви могли швидко побачити, заробив бізнес гроші чи спалив готівку.</value>
+    <value>P&amp;L summarizes all revenue and expenses within the period so you can quickly see whether the business earned money or burned cash.</value>
   </data>
   <data name="Reporting_Balance_Note" xml:space="preserve">
-    <value>Балансовий звіт відповідає на запитання: «Що ми маємо і що ми повинні?» </value>
+    <value>The balance sheet answers “What do we own and owe?” by listing assets, liabilities and equity at the period end.</value>
   </data>
   <data name="Reporting_TB_Note" xml:space="preserve">
-    <value>Пробний баланс показує суму дебету та кредиту кожного рахунку; </value>
+    <value>The trial balance shows each account’s debit and credit total; it is the accountant’s quick health check before closing the books.</value>
   </data>
   <data name="Reporting_GL_Note" xml:space="preserve">
-    <value>Використовуйте головну книгу, щоб перевірити кожен рядок журналу для певного рахунку та зрозуміти, як змінився поточний баланс.</value>
+    <value>Use the general ledger to inspect every journal entry line for a specific account and understand how the running balance evolved.</value>
   </data>
   <data name="Reporting_Table_Caption" xml:space="preserve">
-    <value>Підпис</value>
+    <value>Caption</value>
   </data>
   <data name="Reporting_Table_Amount" xml:space="preserve">
-    <value>Сума</value>
+    <value>Amount</value>
   </data>
   <data name="Reporting_Row_Revenue" xml:space="preserve">
-    <value>Дохід</value>
+    <value>Revenue</value>
   </data>
   <data name="Reporting_Row_Expenses" xml:space="preserve">
-    <value>Витрати</value>
+    <value>Expenses</value>
   </data>
   <data name="Reporting_Row_NetIncome" xml:space="preserve">
-    <value>Чистий прибуток</value>
+    <value>Net income</value>
   </data>
   <data name="Reporting_Row_Assets" xml:space="preserve">
-    <value>Активи</value>
+    <value>Assets</value>
   </data>
   <data name="Reporting_Row_Liabilities" xml:space="preserve">
-    <value>Зобов'язання</value>
+    <value>Liabilities</value>
   </data>
   <data name="Reporting_Row_Equity" xml:space="preserve">
-    <value>Власний капітал</value>
+    <value>Equity</value>
   </data>
   <data name="Reporting_TB_Number" xml:space="preserve">
-    <value>№ рахунку</value>
+    <value>Account #</value>
   </data>
   <data name="Reporting_TB_Name" xml:space="preserve">
-    <value>Ім'я облікового запису</value>
+    <value>Account name</value>
   </data>
   <data name="Reporting_TB_Debit" xml:space="preserve">
-    <value>Дебетовий</value>
+    <value>Debit</value>
   </data>
   <data name="Reporting_TB_Credit" xml:space="preserve">
-    <value>Кредит</value>
+    <value>Credit</value>
   </data>
   <data name="Reporting_GL_Date" xml:space="preserve">
-    <value>Дата</value>
+    <value>Date</value>
   </data>
   <data name="Reporting_GL_Reference" xml:space="preserve">
-    <value>довідка</value>
+    <value>Reference</value>
   </data>
   <data name="Reporting_GL_Account" xml:space="preserve">
-    <value>Обліковий запис</value>
+    <value>Account</value>
   </data>
   <data name="Reporting_GL_Description" xml:space="preserve">
-    <value>опис</value>
+    <value>Description</value>
   </data>
   <data name="Reporting_GL_Debit" xml:space="preserve">
-    <value>Дебетовий</value>
+    <value>Debit</value>
   </data>
   <data name="Reporting_GL_Credit" xml:space="preserve">
-    <value>Кредит</value>
+    <value>Credit</value>
   </data>
   <data name="Reporting_GL_Balance" xml:space="preserve">
-    <value>Біговий баланс</value>
+    <value>Running balance</value>
   </data>
   <data name="Reporting_Metadata_GeneratedAt" xml:space="preserve">
-    <value>Створено о {0}</value>
+    <value>Generated at {0}</value>
   </data>
   <data name="Reporting_NoData" xml:space="preserve">
-    <value>Ще немає даних для вибраних критеріїв.</value>
+    <value>No data for the selected criteria yet.</value>
   </data>
   <data name="Page_UnderConstruction" xml:space="preserve">
-    <value>Модульні риштування готові; </value>
+    <value>Module scaffolding is ready; functional UI will be implemented in the next iteration.</value>
   </data>
   <data name="Home_Welcome" xml:space="preserve">
-    <value>Ласкаво просимо в AccountingApp</value>
+    <value>Welcome to AccountingApp</value>
   </data>
   <data name="Home_Description" xml:space="preserve">
-    <value>Усі первинні модулі підключаються відповідно до плану чистої архітектури. </value>
+    <value>All primary modules are wired according to the clean architecture blueprint. Select an area from the navigation menu to continue.</value>
   </data>
   <data name="Home_Note" xml:space="preserve">
-    <value>Новачок у фінансах? </value>
+    <value>New to finance? Start by reviewing the chart of accounts, then capture sample journal entries, invoices, banking activity and tax to see how the ledgers connect.</value>
   </data>
   <data name="Home_Module_Open" xml:space="preserve">
-    <value>Відкритий модуль</value>
+    <value>Open module</value>
   </data>
   <data name="Home_Module_CoA_Title" xml:space="preserve">
-    <value>План рахунків</value>
+    <value>Chart of Accounts</value>
   </data>
   <data name="Home_Module_CoA_Description" xml:space="preserve">
-    <value>Створіть структуру бухгалтерської книги компанії, згрупуйте облікові записи за категоріями та отримайте вказівки для колег.</value>
+    <value>Build the company ledger structure, group accounts by category and capture guidance for colleagues.</value>
   </data>
   <data name="Home_Module_Journal_Title" xml:space="preserve">
-    <value>Загальний журнал</value>
+    <value>General Journal</value>
   </data>
   <data name="Home_Module_Journal_Description" xml:space="preserve">
-    <value>Записуйте дебети та кредити вручну для коригувань, нарахувань і закриття.</value>
+    <value>Record manual debits and credits for adjustments, accruals and closing entries.</value>
   </data>
   <data name="Home_Module_Invoices_Title" xml:space="preserve">
-    <value>Рахунки-фактури</value>
+    <value>Invoices</value>
   </data>
   <data name="Home_Module_Invoices_Description" xml:space="preserve">
-    <value>Керуйте потоками продажів і закупівель, відстежуйте ПДВ за рядками та публікуйте результати в бухгалтерській книзі.</value>
+    <value>Manage sales and purchase flows, track VAT per line, and post results to the ledger.</value>
   </data>
   <data name="Home_Module_Banking_Title" xml:space="preserve">
-    <value>Банківська справа</value>
+    <value>Banking</value>
   </data>
   <data name="Home_Module_Banking_Description" xml:space="preserve">
-    <value>Імпортуйте виписки або синхронізуйте канал ізольованого програмного середовища, а потім автоматично зіставляйте платежі з рахунками-фактурами.</value>
+    <value>Import statements or sync the sandbox feed, then match payments to invoices automatically.</value>
   </data>
   <data name="Home_Module_Vat_Title" xml:space="preserve">
-    <value>ПДВ / податок</value>
+    <value>VAT / Tax</value>
   </data>
   <data name="Home_Module_Vat_Description" xml:space="preserve">
-    <value>Симулюйте квартальні декларації з ПДВ, підтверджуйте реєстрацію та надсилайте подання до фальшивого органу.</value>
+    <value>Simulate quarterly VAT declarations, validate registrations and send submissions to the fake authority.</value>
   </data>
   <data name="Home_Module_Reporting_Title" xml:space="preserve">
-    <value>Звітність</value>
+    <value>Reporting</value>
   </data>
   <data name="Home_Module_Reporting_Description" xml:space="preserve">
-    <value>Створюйте прибутки та збитки, баланс, пробний баланс і фрагменти головної книги з опціями експорту.</value>
+    <value>Generate P&amp;L, balance sheet, trial balance and general ledger slices with export options.</value>
   </data>
   <data name="Coa_Title" xml:space="preserve">
-    <value>План рахунків</value>
+    <value>Chart of Accounts</value>
   </data>
   <data name="Coa_AddButton" xml:space="preserve">
-    <value>Додати акаунт</value>
+    <value>Add account</value>
   </data>
   <data name="Coa_Tooltip_Add" xml:space="preserve">
-    <value>Створіть новий обліковий запис книги</value>
+    <value>Create a new ledger account</value>
   </data>
   <data name="Coa_Note" xml:space="preserve">
-    <value>План рахунків є основою бухгалтерської книги. </value>
+    <value>The chart of accounts is the backbone of the ledger. Organize assets, liabilities, equity, revenue and expense buckets here and deactivate records instead of deleting them to preserve history.</value>
   </data>
   <data name="Coa_Filter_Label" xml:space="preserve">
-    <value>Фільтрувати за категорією</value>
+    <value>Filter by category</value>
   </data>
   <data name="Coa_Filter_All" xml:space="preserve">
-    <value>Всі категорії</value>
+    <value>All categories</value>
   </data>
   <data name="Coa_Table_Number" xml:space="preserve">
-    <value>Номер</value>
+    <value>Number</value>
   </data>
   <data name="Coa_Table_Name" xml:space="preserve">
-    <value>Ім'я</value>
+    <value>Name</value>
   </data>
   <data name="Coa_Table_Category" xml:space="preserve">
-    <value>Категорія</value>
+    <value>Category</value>
   </data>
   <data name="Coa_Table_Status" xml:space="preserve">
-    <value>Статус</value>
+    <value>Status</value>
   </data>
   <data name="Coa_Table_Actions" xml:space="preserve">
-    <value>Дії</value>
+    <value>Actions</value>
   </data>
   <data name="Coa_Tooltip_Edit" xml:space="preserve">
-    <value>Редагувати обліковий запис</value>
+    <value>Edit account</value>
   </data>
   <data name="Coa_Tooltip_Deactivate" xml:space="preserve">
-    <value>Деактивувати обліковий запис</value>
+    <value>Deactivate account</value>
   </data>
   <data name="Coa_Tooltip_Activate" xml:space="preserve">
-    <value>Активувати акаунт</value>
+    <value>Activate account</value>
   </data>
   <data name="Coa_Status_Active" xml:space="preserve">
-    <value>Активний</value>
+    <value>Active</value>
   </data>
   <data name="Coa_Status_Inactive" xml:space="preserve">
-    <value>Неактивний</value>
+    <value>Inactive</value>
   </data>
   <data name="Coa_Status_Hint_Active" xml:space="preserve">
-    <value>Активні облікові записи відображаються в кожному засобі вибору, і їх можна використовувати в транзакціях.</value>
+    <value>Active accounts appear in every picker and can be used in transactions.</value>
   </data>
   <data name="Coa_Status_Hint_Inactive" xml:space="preserve">
-    <value>Неактивні облікові записи залишаються в історії книги, але зникають із нових записів.</value>
+    <value>Inactive accounts stay in the ledger history but disappear from new entries.</value>
   </data>
   <data name="Coa_Action_Edit" xml:space="preserve">
-    <value>Редагувати</value>
+    <value>Edit</value>
   </data>
   <data name="Coa_Action_Deactivate" xml:space="preserve">
-    <value>Дезактивувати</value>
+    <value>Deactivate</value>
   </data>
   <data name="Coa_Action_Activate" xml:space="preserve">
-    <value>активувати</value>
+    <value>Activate</value>
   </data>
   <data name="Coa_NoRecords" xml:space="preserve">
-    <value>Немає облікових записів для поточного фільтра.</value>
+    <value>No accounts found for the current filter.</value>
   </data>
   <data name="Coa_Dialog_CreateTitle" xml:space="preserve">
-    <value>Створити акаунт</value>
+    <value>Create account</value>
   </data>
   <data name="Coa_Dialog_EditTitle" xml:space="preserve">
-    <value>Редагувати обліковий запис</value>
+    <value>Edit account</value>
   </data>
   <data name="Coa_Dialog_Save" xml:space="preserve">
-    <value>зберегти</value>
+    <value>Save</value>
   </data>
   <data name="Coa_Dialog_Cancel" xml:space="preserve">
-    <value>Скасувати</value>
+    <value>Cancel</value>
   </data>
   <data name="Coa_Dialog_Note" xml:space="preserve">
-    <value>Використовуйте правила нумерації, яких очікує ваша фінансова команда; </value>
+    <value>Use the numbering convention your finance team expects; once an account is used in transactions its number should stay immutable.</value>
   </data>
   <data name="Coa_Field_Number" xml:space="preserve">
-    <value>Номер рахунку</value>
+    <value>Account number</value>
   </data>
   <data name="Coa_Field_Name" xml:space="preserve">
-    <value>Ім'я облікового запису</value>
+    <value>Account name</value>
   </data>
   <data name="Coa_Field_Category" xml:space="preserve">
-    <value>Категорія</value>
+    <value>Category</value>
   </data>
   <data name="Coa_Field_Description" xml:space="preserve">
-    <value>опис</value>
+    <value>Description</value>
   </data>
   <data name="Coa_Snackbar_CreateSuccess" xml:space="preserve">
-    <value>Обліковий запис успішно створено.</value>
+    <value>Account created successfully.</value>
   </data>
   <data name="Coa_Snackbar_UpdateSuccess" xml:space="preserve">
-    <value>Обліковий запис успішно оновлено.</value>
+    <value>Account updated successfully.</value>
   </data>
   <data name="Coa_Snackbar_Deactivate" xml:space="preserve">
-    <value>Обліковий запис деактивовано.</value>
+    <value>Account deactivated.</value>
   </data>
   <data name="Coa_Snackbar_Activate" xml:space="preserve">
-    <value>Аккаунт активований.</value>
+    <value>Account activated.</value>
   </data>
   <data name="Account_Category_Assets" xml:space="preserve">
-    <value>Активи</value>
+    <value>Assets</value>
   </data>
   <data name="Account_Category_Liabilities" xml:space="preserve">
-    <value>Зобов'язання</value>
+    <value>Liabilities</value>
   </data>
   <data name="Account_Category_Equity" xml:space="preserve">
-    <value>Власний капітал</value>
+    <value>Equity</value>
   </data>
   <data name="Account_Category_Revenue" xml:space="preserve">
-    <value>Дохід</value>
+    <value>Revenue</value>
   </data>
   <data name="Account_Category_Expense" xml:space="preserve">
-    <value>Витрати</value>
+    <value>Expense</value>
   </data>
   <data name="Journal_Title" xml:space="preserve">
-    <value>Загальний журнал</value>
+    <value>General Journal</value>
   </data>
   <data name="Journal_AddButton" xml:space="preserve">
-    <value>Новий запис</value>
+    <value>New entry</value>
   </data>
   <data name="Journal_Tooltip_Add" xml:space="preserve">
-    <value>Зробіть запис у журналі вручну</value>
+    <value>Record a manual journal entry</value>
   </data>
   <data name="Journal_CopyLast" xml:space="preserve">
-    <value>Останній дублікат</value>
+    <value>Duplicate last</value>
   </data>
   <data name="Journal_CopyLast_Tooltip" xml:space="preserve">
-    <value>Попередньо заповніть форму, використовуючи останній запис у журналі</value>
+    <value>Prefill the form using the most recent journal entry</value>
   </data>
   <data name="Journal_Note" xml:space="preserve">
-    <value>Загальний журнал фіксує дебетування та кредитування вручну. </value>
+    <value>The general journal captures manual debits and credits. Every entry must balance before it can be posted, so use it for adjustments, corrections and one-off events.</value>
   </data>
   <data name="Journal_Guide_Title" xml:space="preserve">
-    <value>Як користуватися журналом</value>
+    <value>How to use the journal</value>
   </data>
   <data name="Journal_Guide_WhatIsIt" xml:space="preserve">
-    <value>- Записи в журналі записують проводки вручну, які обходять рахунки-фактури або банківські робочі процеси.</value>
+    <value>- Journal entries record manual postings that bypass invoices or banking workflows.</value>
   </data>
   <data name="Journal_Guide_WhenUse" xml:space="preserve">
-    <value>- Використовуйте їх для нарахувань, виправлень, початкових балансів або будь-яких коригувальних записів, які вимагають аудитори.</value>
+    <value>- Use them for accruals, corrections, opening balances, or any adjusting entry requested by auditors.</value>
   </data>
   <data name="Journal_Guide_HowTo" xml:space="preserve">
-    <value>- Виберіть чітку довідку, дату та записку, а потім додайте принаймні два рядки, які балансують дебет і кредит.</value>
+    <value>- Pick a clear reference, date and memo, then add at least two lines that balance debits and credits.</value>
   </data>
   <data name="Journal_Filter_From" xml:space="preserve">
-    <value>Від дати</value>
+    <value>From date</value>
   </data>
   <data name="Journal_Filter_To" xml:space="preserve">
-    <value>На сьогоднішній день</value>
+    <value>To date</value>
   </data>
   <data name="Journal_NoRecords" xml:space="preserve">
-    <value>Немає записів у журналі для вибраного діапазону.</value>
+    <value>No journal entries for the selected range.</value>
   </data>
   <data name="Journal_Table_Date" xml:space="preserve">
-    <value>Дата</value>
+    <value>Date</value>
   </data>
   <data name="Journal_Table_Reference" xml:space="preserve">
-    <value>довідка</value>
+    <value>Reference</value>
   </data>
   <data name="Journal_Table_Memo" xml:space="preserve">
-    <value>Пам'ятка</value>
+    <value>Memo</value>
   </data>
   <data name="Journal_Table_Debit" xml:space="preserve">
-    <value>Загальний дебет</value>
+    <value>Total debit</value>
   </data>
   <data name="Journal_Table_Credit" xml:space="preserve">
-    <value>Загальний кредит</value>
+    <value>Total credit</value>
   </data>
   <data name="Journal_Tooltip_Delete" xml:space="preserve">
-    <value>Видалити запис</value>
+    <value>Delete entry</value>
   </data>
   <data name="Journal_Lines_Title" xml:space="preserve">
-    <value>Рядки журналу</value>
+    <value>Journal lines</value>
   </data>
   <data name="Journal_Lines_Add" xml:space="preserve">
-    <value>Додайте лінію</value>
+    <value>Add line</value>
   </data>
   <data name="Journal_Lines_Account" xml:space="preserve">
-    <value>Обліковий запис</value>
+    <value>Account</value>
   </data>
   <data name="Journal_Lines_Debit" xml:space="preserve">
-    <value>Дебетовий</value>
+    <value>Debit</value>
   </data>
   <data name="Journal_Lines_Credit" xml:space="preserve">
-    <value>Кредит</value>
+    <value>Credit</value>
   </data>
   <data name="Journal_Lines_Description" xml:space="preserve">
-    <value>опис</value>
+    <value>Description</value>
   </data>
   <data name="Journal_Lines_TotalDebit" xml:space="preserve">
-    <value>Загальний дебет</value>
+    <value>Total debit</value>
   </data>
   <data name="Journal_Lines_TotalCredit" xml:space="preserve">
-    <value>Загальний кредит</value>
+    <value>Total credit</value>
   </data>
   <data name="Journal_Summary_Title" xml:space="preserve">
-    <value>Дебетування та кредитування за категоріями рахунків</value>
+    <value>Debits and credits by account category</value>
   </data>
   <data name="Journal_Summary_Category" xml:space="preserve">
-    <value>Категорія</value>
+    <value>Category</value>
   </data>
   <data name="Journal_Summary_Debit" xml:space="preserve">
-    <value>Дебетовий</value>
+    <value>Debit</value>
   </data>
   <data name="Journal_Summary_Credit" xml:space="preserve">
-    <value>Кредит</value>
+    <value>Credit</value>
   </data>
   <data name="Journal_Lines_Balanced" xml:space="preserve">
-    <value>Збалансований</value>
+    <value>Balanced</value>
   </data>
   <data name="Journal_Lines_NotBalanced" xml:space="preserve">
-    <value>Не збалансований</value>
+    <value>Not balanced</value>
   </data>
   <data name="Journal_Field_Reference" xml:space="preserve">
-    <value>довідка</value>
+    <value>Reference</value>
   </data>
   <data name="Journal_Field_Reference_Help" xml:space="preserve">
-    <value>Використовуйте короткий код (наприклад, AJ-2025-05), щоб пізніше можна було узгодити запис із вихідними документами.</value>
+    <value>Use a short code (e.g., AJ-2025-05) so you can later reconcile the entry with source documents.</value>
   </data>
   <data name="Journal_Field_Date" xml:space="preserve">
-    <value>Дата</value>
+    <value>Date</value>
   </data>
   <data name="Journal_Field_Memo" xml:space="preserve">
-    <value>Пам'ятка</value>
+    <value>Memo</value>
   </data>
   <data name="Journal_Dialog_Title" xml:space="preserve">
-    <value>Створення запису в журналі</value>
+    <value>Create journal entry</value>
   </data>
   <data name="Journal_Dialog_Save" xml:space="preserve">
-    <value>зберегти</value>
+    <value>Save</value>
   </data>
   <data name="Journal_Dialog_Cancel" xml:space="preserve">
-    <value>Скасувати</value>
+    <value>Cancel</value>
   </data>
   <data name="Journal_Dialog_Note" xml:space="preserve">
-    <value>Додайте принаймні два рядки: один дебетовий, один кредитний. </value>
+    <value>Add at least two lines: one debit, one credit. The balance chip must turn green before the entry can be posted.</value>
   </data>
   <data name="Journal_Dialog_Helper" xml:space="preserve">
-    <value>Порада: дебет збільшує активи та витрати; </value>
+    <value>Tip: debit increases assets and expenses; credit increases liabilities, equity and revenue. Use the description field to explain the business reason.</value>
   </data>
   <data name="Journal_Snackbar_Create" xml:space="preserve">
-    <value>Запис у журналі створено.</value>
+    <value>Journal entry created.</value>
   </data>
   <data name="Journal_Snackbar_Delete" xml:space="preserve">
-    <value>Запис у журналі видалено.</value>
+    <value>Journal entry deleted.</value>
   </data>
   <data name="Invoices_Title" xml:space="preserve">
-    <value>Рахунки-фактури</value>
+    <value>Invoices</value>
   </data>
   <data name="Invoices_AddButton" xml:space="preserve">
-    <value>Нова накладна</value>
+    <value>New invoice</value>
   </data>
   <data name="Invoices_Tooltip_Add" xml:space="preserve">
-    <value>Створіть новий рахунок-фактуру</value>
+    <value>Create a new invoice</value>
   </data>
   <data name="Invoices_Note" xml:space="preserve">
-    <value>Використовуйте рахунки-фактури для покриття як продажів, так і потоків закупівель. </value>
+    <value>Use invoices to cover both sales and purchase flows. The module calculates VAT, tracks due dates, and updates workflow states (Draft → Sent → Paid) before posting to the ledger.</value>
   </data>
   <data name="Invoices_Filter_Type" xml:space="preserve">
-    <value>Тип</value>
+    <value>Type</value>
   </data>
   <data name="Invoices_Filter_AllTypes" xml:space="preserve">
-    <value>Всі види</value>
+    <value>All types</value>
   </data>
   <data name="Invoices_Filter_Search" xml:space="preserve">
-    <value>Пошук (номер або контрагент)</value>
+    <value>Search (number or counterparty)</value>
   </data>
   <data name="Invoices_Filter_From" xml:space="preserve">
-    <value>Від дати</value>
+    <value>From date</value>
   </data>
   <data name="Invoices_Filter_To" xml:space="preserve">
-    <value>На сьогоднішній день</value>
+    <value>To date</value>
   </data>
   <data name="Invoices_Table_DueDate" xml:space="preserve">
-    <value>Термін виконання</value>
+    <value>Due date</value>
   </data>
   <data name="Invoices_Workflow_Draft" xml:space="preserve">
-    <value>Чернетка</value>
+    <value>Draft</value>
   </data>
   <data name="Invoices_Workflow_Sent" xml:space="preserve">
-    <value>Надіслано</value>
+    <value>Sent</value>
   </data>
   <data name="Invoices_Workflow_Paid" xml:space="preserve">
-    <value>Платний</value>
+    <value>Paid</value>
   </data>
   <data name="Invoices_Workflow_Overdue" xml:space="preserve">
-    <value>Прострочена</value>
+    <value>Overdue</value>
   </data>
   <data name="Invoices_Action_Send" xml:space="preserve">
-    <value>Позначити як надіслане</value>
+    <value>Mark as sent</value>
   </data>
   <data name="Invoices_Action_RecordPayment" xml:space="preserve">
-    <value>Рекордна оплата</value>
+    <value>Record payment</value>
   </data>
   <data name="Invoices_Action_Post" xml:space="preserve">
-    <value>Опублікувати</value>
+    <value>Post</value>
   </data>
   <data name="Invoices_Action_Delete" xml:space="preserve">
-    <value>Видалити рахунок-фактуру</value>
+    <value>Delete invoice</value>
   </data>
   <data name="Invoices_Action_DownloadPdf" xml:space="preserve">
-    <value>Завантажити PDF</value>
+    <value>Download PDF</value>
   </data>
   <data name="Invoices_NoRecords" xml:space="preserve">
-    <value>Немає рахунків-фактур для вибраних фільтрів.</value>
+    <value>No invoices for the selected filters.</value>
   </data>
   <data name="Invoices_Table_Number" xml:space="preserve">
-    <value>Номер</value>
+    <value>Number</value>
   </data>
   <data name="Invoices_Table_Type" xml:space="preserve">
-    <value>Тип</value>
+    <value>Type</value>
   </data>
   <data name="Invoices_Table_Counterparty" xml:space="preserve">
-    <value>контрагент</value>
+    <value>Counterparty</value>
   </data>
   <data name="Invoices_Table_IssueDate" xml:space="preserve">
-    <value>Дата випуску</value>
+    <value>Issue date</value>
   </data>
   <data name="Invoices_Table_Total" xml:space="preserve">
-    <value>Всього</value>
+    <value>Total</value>
   </data>
   <data name="Invoices_Table_Status" xml:space="preserve">
-    <value>Статус</value>
+    <value>Status</value>
   </data>
   <data name="Invoices_Status_Draft" xml:space="preserve">
-    <value>Чернетка</value>
+    <value>Draft</value>
   </data>
   <data name="Invoices_Status_Posted" xml:space="preserve">
-    <value>Опубліковано</value>
+    <value>Posted</value>
   </data>
   <data name="Invoice_Field_Type" xml:space="preserve">
-    <value>Тип рахунку-фактури</value>
+    <value>Invoice type</value>
   </data>
   <data name="Invoice_Field_Number" xml:space="preserve">
-    <value>Номер накладної</value>
+    <value>Invoice number</value>
   </data>
   <data name="Invoice_Field_Number_Required" xml:space="preserve">
-    <value>Необхідно вказати номер рахунку (3-32 символи).</value>
+    <value>Invoice number is required (3-32 characters).</value>
   </data>
   <data name="Invoice_Field_Counterparty" xml:space="preserve">
-    <value>контрагент</value>
+    <value>Counterparty</value>
   </data>
   <data name="Invoice_Field_Counterparty_Required" xml:space="preserve">
-    <value>Необхідно вказати назву контрагента (мінімум 3 символи).</value>
+    <value>Counterparty name is required (min 3 characters).</value>
   </data>
   <data name="Invoice_Field_IssueDate" xml:space="preserve">
-    <value>Дата випуску</value>
+    <value>Issue date</value>
   </data>
   <data name="Invoice_Field_DueDate" xml:space="preserve">
-    <value>Термін виконання</value>
+    <value>Due date</value>
   </data>
   <data name="Invoice_Lines_Title" xml:space="preserve">
-    <value>Рядки накладної</value>
+    <value>Invoice lines</value>
   </data>
   <data name="Invoice_Lines_Add" xml:space="preserve">
-    <value>Додайте лінію</value>
+    <value>Add line</value>
   </data>
   <data name="Invoice_Lines_Description" xml:space="preserve">
-    <value>опис</value>
+    <value>Description</value>
   </data>
   <data name="Invoice_Lines_Account" xml:space="preserve">
-    <value>Рахунок доходів</value>
+    <value>Revenue account</value>
   </data>
   <data name="Invoice_Lines_Quantity" xml:space="preserve">
-    <value>кількість</value>
+    <value>Qty</value>
   </data>
   <data name="Invoice_Lines_UnitPrice" xml:space="preserve">
-    <value>Ціна за одиницю</value>
+    <value>Unit price</value>
   </data>
   <data name="Invoice_Lines_Vat" xml:space="preserve">
-    <value>% ПДВ</value>
+    <value>VAT %</value>
   </data>
   <data name="Invoice_Lines_Total" xml:space="preserve">
-    <value>Всього</value>
+    <value>Total</value>
   </data>
   <data name="Invoice_Field_PaymentTerms" xml:space="preserve">
-    <value>Умови оплати</value>
+    <value>Payment terms</value>
   </data>
   <data name="Invoice_Field_PaymentTerms_Hint" xml:space="preserve">
-    <value>Дата погашення перераховується автоматично при зміні терміну.</value>
+    <value>Due date is recalculated automatically when you change the term.</value>
   </data>
   <data name="Invoice_Field_PaymentTerms_Option" xml:space="preserve">
-    <value>{0} дн</value>
+    <value>{0} days</value>
   </data>
   <data name="Invoice_Dialog_Title" xml:space="preserve">
-    <value>Створити рахунок-фактуру</value>
+    <value>Create invoice</value>
   </data>
   <data name="Invoice_Dialog_Save" xml:space="preserve">
-    <value>зберегти</value>
+    <value>Save</value>
   </data>
   <data name="Invoice_Dialog_Cancel" xml:space="preserve">
-    <value>Скасувати</value>
+    <value>Cancel</value>
   </data>
   <data name="Invoice_Dialog_Note" xml:space="preserve">
-    <value>Додайте принаймні один рядок із рахунком доходів або витрат; </value>
+    <value>Add at least one line with a revenue or expense account; VAT is calculated per line and the totals drive posting.</value>
   </data>
   <data name="Invoice_Wizard_Basics" xml:space="preserve">
-    <value>1. Деталі</value>
+    <value>1. Details</value>
   </data>
   <data name="Invoice_Wizard_Dates" xml:space="preserve">
-    <value>2. Дати</value>
+    <value>2. Dates</value>
   </data>
   <data name="Invoice_Wizard_Lines" xml:space="preserve">
-    <value>3. Лінії</value>
+    <value>3. Lines</value>
   </data>
   <data name="Invoice_Preset_Sales" xml:space="preserve">
-    <value>Шаблон продажу</value>
+    <value>Sales template</value>
   </data>
   <data name="Invoice_Preset_Sales_Tooltip" xml:space="preserve">
-    <value>Попередньо заповніть загальні дані рахунку SaaS/послуги</value>
+    <value>Prefill common SaaS/services invoice data</value>
   </data>
   <data name="Invoice_Preset_Purchase" xml:space="preserve">
-    <value>Шаблон покупки</value>
+    <value>Purchase template</value>
   </data>
   <data name="Invoice_Preset_Purchase_Tooltip" xml:space="preserve">
-    <value>Попередньо заповніть приклад рахунку постачальника</value>
+    <value>Prefill a vendor bill example</value>
   </data>
   <data name="Invoice_Preset_Sales_Memo" xml:space="preserve">
-    <value>Щомісячна плата за обслуговування</value>
+    <value>Monthly service fee</value>
   </data>
   <data name="Invoice_Preset_Sales_Line" xml:space="preserve">
-    <value>Абонемент місць</value>
+    <value>Subscription seats</value>
   </data>
   <data name="Invoice_Preset_Purchase_Memo" xml:space="preserve">
-    <value>Купівля обладнання</value>
+    <value>Hardware purchase</value>
   </data>
   <data name="Invoice_Preset_Purchase_Line" xml:space="preserve">
-    <value>Комплект для ноутбука</value>
+    <value>Laptop bundle</value>
   </data>
   <data name="Invoice_Summary_LineCount" xml:space="preserve">
-    <value>рядків: {0}</value>
+    <value>{0} line(s)</value>
   </data>
   <data name="Invoice_Summary_Total" xml:space="preserve">
-    <value>Орієнтовна валова сума: {0} євро</value>
+    <value>Estimated gross {0} EUR</value>
   </data>
   <data name="Invoice_Preview_Button" xml:space="preserve">
-    <value>Попередній перегляд</value>
+    <value>Preview</value>
   </data>
   <data name="Invoice_Preview_Title" xml:space="preserve">
-    <value>Швидкий попередній перегляд</value>
+    <value>Quick preview</value>
   </data>
   <data name="Invoice_Preview_Message" xml:space="preserve">
-    <value>Використовуйте цей знімок, щоб ще раз перевірити дати та підсумки перед публікацією.</value>
+    <value>Use this snapshot to double-check dates and totals before posting.</value>
   </data>
   <data name="Invoice_Preview_Issue" xml:space="preserve">
-    <value>Дата випуску: {0}</value>
+    <value>Issue date: {0}</value>
   </data>
   <data name="Invoice_Preview_Due" xml:space="preserve">
-    <value>Дата виконання: {0}</value>
+    <value>Due date: {0}</value>
   </data>
   <data name="Invoice_Preview_Total" xml:space="preserve">
-    <value>Загальна сума: {0} євро</value>
+    <value>Gross total: {0} EUR</value>
   </data>
   <data name="Invoice_Preview_Error" xml:space="preserve">
-    <value>Заповніть реквізити рахунку-фактури та рядки перед попереднім переглядом.</value>
+    <value>Fill out invoice details and lines before previewing.</value>
   </data>
   <data name="Invoice_PaymentDialog_Title" xml:space="preserve">
-    <value>Зареєструвати оплату за рахунком-фактурою {0}</value>
+    <value>Record payment for invoice {0}</value>
   </data>
   <data name="Invoice_PaymentDialog_Date" xml:space="preserve">
-    <value>Дата оплати</value>
+    <value>Payment date</value>
   </data>
   <data name="Invoice_PaymentDialog_Save" xml:space="preserve">
-    <value>зберегти</value>
+    <value>Save</value>
   </data>
   <data name="Invoice_PaymentDialog_Cancel" xml:space="preserve">
-    <value>Скасувати</value>
+    <value>Cancel</value>
   </data>
   <data name="Invoice_PaymentDialog_Note" xml:space="preserve">
-    <value>Виберіть фактичну дату розрахунку, щоб готівка, визнання доходу та звітність з ПДВ відповідали дійсності.</value>
+    <value>Pick the actual settlement date so cash, revenue recognition and VAT reporting stay aligned with reality.</value>
   </data>
   <data name="Invoices_Snackbar_Create" xml:space="preserve">
-    <value>Створено рахунок-фактуру.</value>
+    <value>Invoice created.</value>
   </data>
   <data name="Invoices_Snackbar_Posted" xml:space="preserve">
-    <value>Рахунок розміщено.</value>
+    <value>Invoice posted.</value>
   </data>
   <data name="Invoices_Snackbar_Sent" xml:space="preserve">
-    <value>Рахунок-фактура позначено як надісланий.</value>
+    <value>Invoice marked as sent.</value>
   </data>
   <data name="Invoices_Snackbar_Paid" xml:space="preserve">
-    <value>Платіж зареєстровано.</value>
+    <value>Payment recorded.</value>
   </data>
   <data name="Invoices_Snackbar_Delete" xml:space="preserve">
-    <value>Рахунок видалено.</value>
+    <value>Invoice deleted.</value>
   </data>
   <data name="Invoice_Type_Sales" xml:space="preserve">
-    <value>Продажі</value>
+    <value>Sales</value>
   </data>
   <data name="Invoice_Type_Purchase" xml:space="preserve">
-    <value>Купівля</value>
+    <value>Purchase</value>
   </data>
   <data name="Banking_Title" xml:space="preserve">
-    <value>Банківська справа</value>
+    <value>Banking</value>
   </data>
   <data name="Banking_Note" xml:space="preserve">
-    <value>Банкінг приймає файли CSV або змодельований канал API, зіставляє платежі з рахунками-фактурами та може автоматично створювати записи в журналі. </value>
+    <value>Banking ingests CSV files or the simulated API feed, matches payments to invoices, and can auto-create journal entries. Review unmatched items to keep AR/AP in sync with the ledger.</value>
   </data>
   <data name="Banking_Onboarding_Title" xml:space="preserve">
-    <value>Як почати</value>
+    <value>How to get started</value>
   </data>
   <data name="Banking_Onboarding_Step1" xml:space="preserve">
-    <value>Імпортуйте останній файл CSV або синхронізуйте канал ізольованого програмного середовища.</value>
+    <value>Import a recent CSV or sync the sandbox bank feed.</value>
   </data>
   <data name="Banking_Onboarding_Step2" xml:space="preserve">
-    <value>Використовуйте наведені вище фільтри, щоб звузити коло невідповідних транзакцій.</value>
+    <value>Use the filters above to narrow down unmatched transactions.</value>
   </data>
   <data name="Banking_Onboarding_Step3" xml:space="preserve">
-    <value>Порівняйте платежі з рахунками-фактурами або запустіть автоматичне зіставлення, коли будете готові.</value>
+    <value>Match payments to invoices or trigger auto-matching when ready.</value>
   </data>
   <data name="Banking_ImportCsv" xml:space="preserve">
-    <value>Імпорт CSV</value>
+    <value>Import CSV</value>
   </data>
   <data name="Banking_Tooltip_FileUpload" xml:space="preserve">
-    <value>Виберіть файл CSV з диска</value>
+    <value>Select a CSV file from disk</value>
   </data>
   <data name="Banking_Tooltip_Import" xml:space="preserve">
-    <value>Завантажте вибраний файл</value>
+    <value>Upload the selected file</value>
   </data>
   <data name="Banking_Sync" xml:space="preserve">
-    <value>Синхронізувати канал</value>
+    <value>Sync feed</value>
   </data>
   <data name="Banking_Tooltip_Sync" xml:space="preserve">
-    <value>Отримати змодельовані транзакції з API</value>
+    <value>Fetch simulated transactions from the API</value>
   </data>
   <data name="Banking_Table_Date" xml:space="preserve">
-    <value>Дата</value>
+    <value>Date</value>
   </data>
   <data name="Banking_Table_Counterparty" xml:space="preserve">
-    <value>контрагент</value>
+    <value>Counterparty</value>
   </data>
   <data name="Banking_Table_Reference" xml:space="preserve">
-    <value>довідка</value>
+    <value>Reference</value>
   </data>
   <data name="Banking_Table_Amount" xml:space="preserve">
-    <value>Сума</value>
+    <value>Amount</value>
   </data>
   <data name="Banking_Table_Status" xml:space="preserve">
-    <value>Статус</value>
+    <value>Status</value>
   </data>
   <data name="Banking_Filter_From" xml:space="preserve">
-    <value>Від дати</value>
+    <value>From date</value>
   </data>
   <data name="Banking_Filter_To" xml:space="preserve">
-    <value>На сьогоднішній день</value>
+    <value>To date</value>
   </data>
   <data name="Banking_Filter_Status" xml:space="preserve">
-    <value>Статус</value>
+    <value>Status</value>
   </data>
   <data name="Banking_Filter_Status_All" xml:space="preserve">
-    <value>все</value>
+    <value>All</value>
   </data>
   <data name="Banking_Filter_Status_Matched" xml:space="preserve">
-    <value>Збіг</value>
+    <value>Matched</value>
   </data>
   <data name="Banking_Filter_Status_Unmatched" xml:space="preserve">
-    <value>Незрівнянний</value>
+    <value>Unmatched</value>
   </data>
   <data name="Banking_Filter_Search" xml:space="preserve">
-    <value>Пошук довідки/контрагента</value>
+    <value>Search reference/counterparty</value>
   </data>
   <data name="Banking_Filter_AmountMin" xml:space="preserve">
-    <value>Мінімальна сума</value>
+    <value>Min amount</value>
   </data>
   <data name="Banking_Filter_AmountMax" xml:space="preserve">
-    <value>Максимальна сума</value>
+    <value>Max amount</value>
   </data>
   <data name="Banking_Filter_Apply" xml:space="preserve">
-    <value>Застосувати</value>
+    <value>Apply</value>
   </data>
   <data name="Banking_Tooltip_Filter" xml:space="preserve">
-    <value>Оновити транзакції за допомогою поточних фільтрів</value>
+    <value>Refresh transactions using current filters</value>
   </data>
   <data name="Banking_Status_Matched" xml:space="preserve">
-    <value>Збіг</value>
+    <value>Matched</value>
   </data>
   <data name="Banking_Status_Unmatched" xml:space="preserve">
-    <value>Очікування</value>
+    <value>Waiting</value>
   </data>
   <data name="Banking_Action_Match" xml:space="preserve">
-    <value>Матч</value>
+    <value>Match</value>
   </data>
   <data name="Banking_Error_Load" xml:space="preserve">
-    <value>Не вдалося завантажити банківські операції: {0}</value>
+    <value>Unable to load bank transactions: {0}</value>
   </data>
   <data name="Banking_Error_Sync" xml:space="preserve">
-    <value>Неможливо синхронізувати канал банку: {0}</value>
+    <value>Unable to synchronize the bank feed: {0}</value>
   </data>
   <data name="Banking_Error_Match" xml:space="preserve">
-    <value>Неможливо зіставити трансакцію: {0}</value>
+    <value>Unable to match the transaction: {0}</value>
   </data>
   <data name="Banking_Error_Import" xml:space="preserve">
-    <value>Не вдалося імпортувати файл CSV: {0}</value>
+    <value>Unable to import the CSV file: {0}</value>
   </data>
   <data name="Banking_Error_AutoMatch" xml:space="preserve">
-    <value>Не вдається автоматично зіставити транзакції: {0}</value>
+    <value>Unable to auto-match transactions: {0}</value>
   </data>
   <data name="Banking_Match_SelectInvoice" xml:space="preserve">
-    <value>Виберіть рахунок-фактуру</value>
+    <value>Select invoice</value>
   </data>
   <data name="Banking_Match_Helper" xml:space="preserve">
-    <value>Порада: тут відображаються лише відкриті рахунки-фактури. </value>
+    <value>Tip: only open invoices appear here. Clear the filters if the list is empty.</value>
   </data>
   <data name="Banking_Match_Note" xml:space="preserve">
-    <value>Тут відображаються лише відкриті рахунки-фактури. </value>
+    <value>Only open invoices appear here. If nothing matches, cancel, adjust filters or register the invoice before linking.</value>
   </data>
   <data name="Banking_Match_Cancel" xml:space="preserve">
-    <value>Скасувати</value>
+    <value>Cancel</value>
   </data>
   <data name="Banking_Match_Save" xml:space="preserve">
-    <value>Посилання</value>
+    <value>Link</value>
   </data>
   <data name="Banking_Import_Title" xml:space="preserve">
-    <value>Завантажте CSV виписку з банківського рахунку</value>
+    <value>Upload CSV bank statement</value>
   </data>
   <data name="Banking_Import_Cancel" xml:space="preserve">
-    <value>Скасувати</value>
+    <value>Cancel</value>
   </data>
   <data name="Banking_Import_Save" xml:space="preserve">
-    <value>Імпорт</value>
+    <value>Import</value>
   </data>
   <data name="Banking_Snackbar_Synced" xml:space="preserve">
-    <value>Банківська подача синхронізована.</value>
+    <value>Bank feed synchronized.</value>
   </data>
   <data name="Banking_Snackbar_Loaded" xml:space="preserve">
-    <value>Транзакції завантажено.</value>
+    <value>Transactions loaded.</value>
   </data>
   <data name="Banking_Snackbar_Matched" xml:space="preserve">
-    <value>Трансакція збігається з рахунком-фактурою.</value>
+    <value>Transaction matched to invoice.</value>
   </data>
   <data name="Banking_Snackbar_Imported" xml:space="preserve">
-    <value>Імпортовані транзакції.</value>
+    <value>Transactions imported.</value>
   </data>
   <data name="Banking_Action_AutoMatch" xml:space="preserve">
-    <value>Автоматичний збіг</value>
+    <value>Auto-match</value>
   </data>
   <data name="Banking_Tooltip_AutoMatch" xml:space="preserve">
-    <value>Автоматично зіставляйте платежі та проводьте записи в журналі</value>
+    <value>Match payments automatically and post journal entries</value>
   </data>
   <data name="Banking_Status_Posted" xml:space="preserve">
-    <value>Журнал</value>
+    <value>Journaled</value>
   </data>
   <data name="Banking_Summary_Message" xml:space="preserve">
-    <value>Останні {0}: імпортовано {1}, зіставлено {2}, записи журналу {3}.</value>
+    <value>Last {0}: imported {1}, matched {2}, journal entries {3}.</value>
   </data>
   <data name="Banking_Empty_Hint" xml:space="preserve">
-    <value>Жодна трансакція не відповідає поточним фільтрам. </value>
+    <value>No transactions match the current filters. Upload a CSV or sync the sandbox feed to populate the list.</value>
   </data>
   <data name="Banking_Empty_DownloadSample" xml:space="preserve">
-    <value>Завантажте зразок CSV</value>
+    <value>Download sample CSV</value>
   </data>
   <data name="Banking_Summary_Source_Import" xml:space="preserve">
-    <value>Імпорт</value>
+    <value>Import</value>
   </data>
   <data name="Banking_Summary_Source_Sync" xml:space="preserve">
-    <value>Синхронізація стрічки</value>
+    <value>Feed sync</value>
   </data>
   <data name="Banking_Summary_Source_Auto" xml:space="preserve">
-    <value>Ручний автоматичний підбір</value>
+    <value>Manual auto-match</value>
   </data>
   <data name="Banking_AutoMatch_Success" xml:space="preserve">
-    <value>Автоматично зіставлено трансакції ({0}).</value>
+    <value>Auto-matched {0} transaction(s).</value>
   </data>
   <data name="Banking_AutoMatch_None" xml:space="preserve">
-    <value>Не вдалося зіставити жодну трансакцію.</value>
+    <value>No transactions could be matched.</value>
   </data>
   <data name="VAT_Tab_Declaration" xml:space="preserve">
-    <value>Квартальна декларація</value>
+    <value>Quarterly declaration</value>
   </data>
   <data name="VAT_Tab_Validation" xml:space="preserve">
-    <value>Підтвердження ПДВ</value>
+    <value>VAT validation</value>
   </data>
   <data name="VAT_Field_Year" xml:space="preserve">
-    <value>рік</value>
+    <value>Year</value>
   </data>
   <data name="VAT_Field_Period" xml:space="preserve">
-    <value>квартал</value>
+    <value>Quarter</value>
   </data>
   <data name="VAT_Period_Q1" xml:space="preserve">
-    <value>1 квартал (січень-березень)</value>
+    <value>Q1 (Jan-Mar)</value>
   </data>
   <data name="VAT_Period_Q2" xml:space="preserve">
-    <value>2 квартал (квітень-червень)</value>
+    <value>Q2 (Apr-Jun)</value>
   </data>
   <data name="VAT_Period_Q3" xml:space="preserve">
-    <value>3 квартал (липень-вересень)</value>
+    <value>Q3 (Jul-Sep)</value>
   </data>
   <data name="VAT_Period_Q4" xml:space="preserve">
-    <value>4 квартал (жовтень-грудень)</value>
+    <value>Q4 (Oct-Dec)</value>
   </data>
   <data name="VAT_Action_Calculate" xml:space="preserve">
-    <value>Обчислити</value>
+    <value>Calculate</value>
   </data>
   <data name="VAT_Tooltip_Calculate" xml:space="preserve">
-    <value>Перерахуйте значення декларації для вибраного кварталу</value>
+    <value>Recompute declaration values for the selected quarter</value>
   </data>
   <data name="VAT_Action_Submit" xml:space="preserve">
-    <value>Надіслати</value>
+    <value>Submit</value>
   </data>
   <data name="VAT_Tooltip_Submit" xml:space="preserve">
-    <value>Надішліть декларацію в орган ізольованого середовища</value>
+    <value>Send the declaration to the sandbox authority</value>
   </data>
   <data name="VAT_Label_Payable" xml:space="preserve">
-    <value>ПДВ до сплати</value>
+    <value>VAT payable</value>
   </data>
   <data name="VAT_Label_Receivable" xml:space="preserve">
-    <value>ПДВ до заборгованості</value>
+    <value>VAT receivable</value>
   </data>
   <data name="VAT_Label_Net" xml:space="preserve">
-    <value>Чистий ПДВ</value>
+    <value>Net VAT</value>
   </data>
   <data name="VAT_Label_Status" xml:space="preserve">
-    <value>Статус</value>
+    <value>Status</value>
   </data>
   <data name="VAT_Status_Draft" xml:space="preserve">
-    <value>Чернетка</value>
+    <value>Draft</value>
   </data>
   <data name="VAT_Status_Submitted" xml:space="preserve">
-    <value>Надіслано</value>
+    <value>Submitted</value>
   </data>
   <data name="VAT_Status_Accepted" xml:space="preserve">
-    <value>прийнято</value>
+    <value>Accepted</value>
   </data>
   <data name="VAT_Status_Rejected" xml:space="preserve">
-    <value>Відхилено</value>
+    <value>Rejected</value>
   </data>
   <data name="VAT_Empty_State" xml:space="preserve">
-    <value>Виберіть період і натисніть «Обчислити», щоб завантажити дані декларації.</value>
+    <value>Select a period and press Calculate to load declaration figures.</value>
   </data>
   <data name="VAT_History_Title" xml:space="preserve">
-    <value>Історія подання</value>
+    <value>Submission history</value>
   </data>
   <data name="VAT_History_Table_Period" xml:space="preserve">
-    <value>Крапка</value>
+    <value>Period</value>
   </data>
   <data name="VAT_History_Table_Submitted" xml:space="preserve">
-    <value>Подано о</value>
+    <value>Submitted at</value>
   </data>
   <data name="VAT_NotSubmitted" xml:space="preserve">
-    <value>Не подано</value>
+    <value>Not submitted</value>
   </data>
   <data name="VAT_Validation_Title" xml:space="preserve">
-    <value>Перевірте номер платника ПДВ у пісочниці податкового органу</value>
+    <value>Validate VAT number with the tax authority sandbox</value>
   </data>
   <data name="VAT_Validation_Note" xml:space="preserve">
-    <value>Чек емулює реєстр ЄС. </value>
+    <value>The check emulates the EU registry. Remove spaces or formatting characters if you get an invalid response.</value>
   </data>
   <data name="VAT_Validation_Label" xml:space="preserve">
-    <value>номер ПДВ</value>
+    <value>VAT number</value>
   </data>
   <data name="VAT_Validation_Button" xml:space="preserve">
-    <value>Перевірити</value>
+    <value>Validate</value>
   </data>
   <data name="VAT_Validation_Tooltip" xml:space="preserve">
-    <value>Перевірте номер ПДВ за допомогою пісочниці</value>
+    <value>Check the VAT number with the sandbox</value>
   </data>
   <data name="VAT_Validation_Result_Valid" xml:space="preserve">
-    <value>Номер ПДВ дійсний.</value>
+    <value>VAT number is valid.</value>
   </data>
   <data name="VAT_Validation_Result_Invalid" xml:space="preserve">
-    <value>Номер ПДВ недійсний.</value>
+    <value>VAT number is invalid.</value>
   </data>
   <data name="VAT_Validation_Snackbar_Valid" xml:space="preserve">
-    <value>Номер платника ПДВ прийнято органом.</value>
+    <value>VAT number accepted by authority.</value>
   </data>
   <data name="VAT_Validation_Snackbar_Invalid" xml:space="preserve">
-    <value>Номер ПДВ відхилено органом.</value>
+    <value>VAT number rejected by authority.</value>
   </data>
   <data name="VAT_Snackbar_Submitted" xml:space="preserve">
-    <value>Подано декларацію: {0}.</value>
+    <value>Declaration submitted: {0}.</value>
   </data>
 </root>
-

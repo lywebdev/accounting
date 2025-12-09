@@ -36,7 +36,6 @@
         <MudDatePicker Date="_toDate" DateChanged="value => OnDateChanged(value, false)" Label="@Localizer["Invoices_Filter_To"]" />
         <MudTextField Value="_searchTerm"
                       ValueChanged="EventCallback.Factory.Create<string?>(this, OnSearchChanged)"
-                      ValueExpression="@(() => _searchTerm)"
                       Label="@Localizer["Invoices_Filter_Search"]"
                       Immediate="true"
                       DebounceInterval="300" />

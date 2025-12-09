@@ -1,4 +1,5 @@
-﻿using Accounting.Core.Enums;
+using System.Diagnostics.CodeAnalysis;
+using Accounting.Core.Enums;
 using Accounting.Core.ValueObjects;
 
 namespace Accounting.Core.Entities;
@@ -94,9 +95,12 @@ public class Invoice
     public bool CanMarkAsSent => WorkflowStatus == InvoiceWorkflowStatus.Draft;
     public bool CanRegisterPayment => WorkflowStatus is InvoiceWorkflowStatus.Sent or InvoiceWorkflowStatus.Overdue;
 
+#pragma warning disable IDE0051 // EF Core requires parameterless constructor
     private Invoice()
     {
         Number = string.Empty;
         Counterparty = string.Empty;
     }
+#pragma warning restore IDE0051
 }
+

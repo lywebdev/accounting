@@ -8,7 +8,7 @@ namespace Accounting.Infrastructure.Repositories;
 public class TaxDeclarationRepository(AccountingDbContext dbContext) : RepositoryBase<TaxDeclaration>(dbContext), ITaxDeclarationRepository
 {
     public Task<TaxDeclaration?> GetByPeriodAsync(int year, int period, CancellationToken cancellationToken = default)
-        => FirstOrDefaultAsync(t => t.Year == year && t.Period == period, cancellationToken);
+        => Query(asNoTracking: false).FirstOrDefaultAsync(t => t.Year == year && t.Period == period, cancellationToken);
 
     public async Task<IReadOnlyList<TaxDeclaration>> GetByYearAsync(int year, CancellationToken cancellationToken = default)
     {

@@ -12,9 +12,6 @@ public class ChartOfAccountsService(IAccountRepository repository, IValidator<Ac
     public Task<IReadOnlyList<Account>> GetAsync(AccountCategory? category, CancellationToken cancellationToken = default)
         => repository.GetAsync(category, cancellationToken);
 
-    public Task<Account?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => repository.GetByIdAsync(id, cancellationToken);
-
     public async Task<Account> CreateAsync(string number, string name, AccountCategory category, string? description, CancellationToken cancellationToken = default)
     {
         var account = new Account(number, name, category, description);
