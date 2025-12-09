@@ -94,6 +94,9 @@
   <data name="Language_Russian" xml:space="preserve">
     <value>Русский</value>
   </data>
+  <data name="Language_Ukrainian" xml:space="preserve">
+    <value>Украинский</value>
+  </data>
   <data name="Page_ChartOfAccounts_Title" xml:space="preserve">
     <value>План счетов</value>
   </data>

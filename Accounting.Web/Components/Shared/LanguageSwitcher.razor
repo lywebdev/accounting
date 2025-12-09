@@ -16,6 +16,7 @@
         <MudMenuItem OnClick="OnEnglishSelected">@EnglishLabel</MudMenuItem>
         <MudMenuItem OnClick="OnDutchSelected">@DutchLabel</MudMenuItem>
         <MudMenuItem OnClick="OnRussianSelected">@RussianLabel</MudMenuItem>
+        <MudMenuItem OnClick="OnUkrainianSelected">@UkrainianLabel</MudMenuItem>
     </MudMenu>
 </div>
 
@@ -24,10 +25,12 @@
     private string EnglishLabel => Localizer["Language_English"];
     private string DutchLabel => Localizer["Language_Dutch"];
     private string RussianLabel => Localizer["Language_Russian"];
+    private string UkrainianLabel => Localizer["Language_Ukrainian"];
     private string CurrentLanguageLabel => _selectedCulture switch
     {
         "nl" => DutchLabel,
         "ru" => RussianLabel,
+        "uk" => UkrainianLabel,
         _ => EnglishLabel
     };
 
@@ -50,4 +53,5 @@
     private Task OnEnglishSelected() => OnCultureChanged("en");
     private Task OnDutchSelected() => OnCultureChanged("nl");
     private Task OnRussianSelected() => OnCultureChanged("ru");
+    private Task OnUkrainianSelected() => OnCultureChanged("uk");
 }
