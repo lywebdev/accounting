@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+using System.Globalization;
+using Accounting.Core.Constants;
 using Accounting.Core.Entities;
 using Accounting.Core.Interfaces.Integrations;
 using Accounting.Core.ValueObjects;
@@ -25,14 +26,14 @@ public class CsvBankStatementImporter : IBankStatementImporter
 
             var counterparty = csv.TryGetField("Counterparty", out string? partner) ? partner ?? string.Empty : string.Empty;
             var reference = csv.TryGetField("Reference", out string? refValue) ? refValue ?? string.Empty : string.Empty;
-            var currency = csv.TryGetField("Currency", out string? currencyValue) ? currencyValue : "EUR";
+            var currency = csv.TryGetField("Currency", out string? currencyValue) ? currencyValue : CurrencyCodes.Euro;
             var amountText = csv.TryGetField("Amount", out string? amountValue) ? amountValue : "0";
             if (!decimal.TryParse(amountText, NumberStyles.Number, CultureInfo.InvariantCulture, out var amount))
             {
                 amount = 0m;
             }
 
-            var money = new Money(amount, string.IsNullOrWhiteSpace(currency) ? "EUR" : currency);
+            var money = new Money(amount, string.IsNullOrWhiteSpace(currency) ? CurrencyCodes.Euro : currency);
             transactions.Add(new BankTransaction(bookingDate, counterparty, reference, money));
         }
 

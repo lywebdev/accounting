@@ -1,4 +1,5 @@
-﻿using Accounting.Core.ValueObjects;
+using Accounting.Core.Constants;
+using Accounting.Core.ValueObjects;
 
 namespace Accounting.Core.Entities;
 
@@ -35,6 +36,6 @@ public class InvoiceLine
     private InvoiceLine()
     {
         Description = string.Empty;
-        UnitPrice = Money.Zero("EUR");
+        UnitPrice = Money.Zero(CurrencyCodes.Euro);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Accounting.Core.Entities;
+using Accounting.Core.Entities;
 using Accounting.Core.Enums;
 using Accounting.Core.Interfaces.Repositories;
 using Accounting.Core.Interfaces.Services;
@@ -6,10 +6,14 @@ using FluentValidation;
 
 namespace Accounting.Core.Services;
 
-public class ChartOfAccountsService(IAccountRepository repository, IValidator<Account> validator) : IChartOfAccountsService
+public class ChartOfAccountsService(IAccountRepository repository, IValidator<Account> validator)
+    : IChartOfAccountsQueryService, IChartOfAccountsCommandService
 {
-    public async Task<IReadOnlyList<Account>> GetAsync(AccountCategory? category, CancellationToken cancellationToken = default)
-        => await repository.GetAsync(category, cancellationToken);
+    public Task<IReadOnlyList<Account>> GetAsync(AccountCategory? category, CancellationToken cancellationToken = default)
+        => repository.GetAsync(category, cancellationToken);
+
+    public Task<Account?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        => repository.GetByIdAsync(id, cancellationToken);
 
     public async Task<Account> CreateAsync(string number, string name, AccountCategory category, string? description, CancellationToken cancellationToken = default)
     {

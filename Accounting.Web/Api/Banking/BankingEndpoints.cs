@@ -8,9 +8,9 @@ public static class BankingEndpoints
     {
         var group = app.MapGroup("/api/banking").WithTags("Banking");
 
-        group.MapGet("/transactions", async (DateOnly? from, DateOnly? to, bool? matched, IBankingService service, CancellationToken ct) =>
+        group.MapGet("/transactions", async (DateOnly? from, DateOnly? to, bool? matched, string? search, decimal? amountMin, decimal? amountMax, IBankingService service, CancellationToken ct) =>
         {
-            var transactions = await service.GetAsync(from, to, matched, ct);
+            var transactions = await service.GetAsync(from, to, matched, search, amountMin, amountMax, ct);
             return Results.Ok(transactions.Select(t => t.ToDto()));
         });
 

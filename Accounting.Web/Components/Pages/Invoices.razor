@@ -1,10 +1,13 @@
 @page "/invoices"
+@using Accounting.Core.Constants
 @using Accounting.Core.Entities
 @using Accounting.Core.Enums
 @using Accounting.Core.ValueObjects
+@using Accounting.Web.Common
 @using MudBlazor
-@inject IInvoiceService InvoiceService
-@inject IChartOfAccountsService ChartService
+@inject IInvoiceQueryService InvoiceQueryService
+@inject IInvoiceCommandService InvoiceCommandService
+@inject IChartOfAccountsQueryService ChartQueryService
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject IStringLocalizer<SharedResources> Localizer
@@ -31,6 +34,12 @@
         </MudSelect>
         <MudDatePicker Date="_fromDate" DateChanged="value => OnDateChanged(value, true)" Label="@Localizer["Invoices_Filter_From"]" />
         <MudDatePicker Date="_toDate" DateChanged="value => OnDateChanged(value, false)" Label="@Localizer["Invoices_Filter_To"]" />
+        <MudTextField Value="_searchTerm"
+                      ValueChanged="EventCallback.Factory.Create<string?>(this, OnSearchChanged)"
+                      ValueExpression="@(() => _searchTerm)"
+                      Label="@Localizer["Invoices_Filter_Search"]"
+                      Immediate="true"
+                      DebounceInterval="300" />
     </MudStack>
 </MudPaper>
 
@@ -96,7 +105,7 @@ else
                         <MudIconButton Icon="@Icons.Material.Filled.PictureAsPdf"
                                        Color="Color.Secondary"
                                        Variant="Variant.Outlined"
-                                       Href="@($"/api/invoices/{invoice.Id}/pdf")"
+                                       Href="@ApiRoutes.Invoices.Pdf(invoice.Id)"
                                        Target="_blank" />
                     </MudTooltip>
                     @if (!invoice.IsPosted)
@@ -149,11 +158,12 @@ else
     private InvoiceType? _filterType;
     private DateTime? _fromDate = DateTime.Today.AddMonths(-1);
     private DateTime? _toDate = DateTime.Today;
+    private string? _searchTerm;
 
     protected override async Task OnInitializedAsync()
     {
         var token = _disposeCts.Token;
-        var accountList = await ChartService.GetAsync(AccountCategory.Revenue, token);
+        var accountList = await ChartQueryService.GetAsync(AccountCategory.Revenue, token);
         _accounts = accountList.Select(a => new InvoiceDialog.AccountOption(a.Id, a.Number, a.Name)).ToList();
         await LoadInvoicesAsync();
     }
@@ -165,7 +175,7 @@ else
         try
         {
             _invoices.Clear();
-            var invoices = await InvoiceService.GetAsync(_filterType, ConvertToDateOnly(_fromDate), ConvertToDateOnly(_toDate), token);
+            var invoices = await InvoiceQueryService.GetAsync(_filterType, ConvertToDateOnly(_fromDate), ConvertToDateOnly(_toDate), _searchTerm, token);
             _invoices.AddRange(invoices.Select(InvoiceViewModel.FromEntity));
         }
         catch (OperationCanceledException)
@@ -199,6 +209,12 @@ else
         await LoadInvoicesAsync();
     }
 
+    private async Task OnSearchChanged(string? value)
+    {
+        _searchTerm = value;
+        await LoadInvoicesAsync();
+    }
+
     private async Task OpenCreateDialogAsync()
     {
         var parameters = new DialogParameters
@@ -221,8 +237,8 @@ else
     {
         try
         {
-            var lines = model.Lines.Select(l => new InvoiceLine(l.Description, l.Quantity, new Money(l.UnitPrice, "EUR"), l.VatRate, l.RevenueAccountId!.Value));
-            await InvoiceService.CreateAsync(model.Type, model.Number, model.Counterparty, model.IssueDate, model.DueDate, lines, _disposeCts.Token);
+            var lines = model.Lines.Select(l => new InvoiceLine(l.Description, l.Quantity, new Money(l.UnitPrice, CurrencyCodes.Euro), l.VatRate, l.RevenueAccountId!.Value));
+            await InvoiceCommandService.CreateAsync(model.Type, model.Number, model.Counterparty, model.IssueDate, model.DueDate, lines, _disposeCts.Token);
             Snackbar.Add(Localizer["Invoices_Snackbar_Create"].Value, Severity.Success);
             await LoadInvoicesAsync();
         }
@@ -237,7 +253,7 @@ else
     {
         try
         {
-            await InvoiceService.PostAsync(id, _disposeCts.Token);
+            await InvoiceCommandService.PostAsync(id, _disposeCts.Token);
             Snackbar.Add(Localizer["Invoices_Snackbar_Posted"].Value, Severity.Success);
             await LoadInvoicesAsync();
         }
@@ -258,7 +274,7 @@ else
         try
         {
             var today = DateOnly.FromDateTime(DateTime.Today);
-            await InvoiceService.MarkSentAsync(invoice.Id, today, _disposeCts.Token);
+            await InvoiceCommandService.MarkSentAsync(invoice.Id, today, _disposeCts.Token);
             Snackbar.Add(Localizer["Invoices_Snackbar_Sent"].Value, Severity.Success);
             await LoadInvoicesAsync();
         }
@@ -296,7 +312,7 @@ else
     {
         try
         {
-            await InvoiceService.RecordPaymentAsync(invoiceId, paymentDate, _disposeCts.Token);
+            await InvoiceCommandService.RecordPaymentAsync(invoiceId, paymentDate, _disposeCts.Token);
             Snackbar.Add(Localizer["Invoices_Snackbar_Paid"].Value, Severity.Success);
             await LoadInvoicesAsync();
         }
@@ -311,7 +327,7 @@ else
     {
         try
         {
-            await InvoiceService.DeleteAsync(id, _disposeCts.Token);
+            await InvoiceCommandService.DeleteAsync(id, _disposeCts.Token);
             Snackbar.Add(Localizer["Invoices_Snackbar_Delete"].Value, Severity.Info);
             await LoadInvoicesAsync();
         }
@@ -335,7 +351,7 @@ else
     {
         public static InvoiceViewModel FromEntity(Invoice invoice)
         {
-            var currency = "EUR";
+            const string currency = CurrencyCodes.Euro;
             var lines = invoice.Lines.Select(l => new InvoiceLineViewModel(l.Description, l.Quantity, l.UnitPrice.Amount, l.VatRate, l.Total.Amount)).ToList();
             return new InvoiceViewModel(
                 invoice.Id,

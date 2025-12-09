@@ -1,3 +1,4 @@
+using Accounting.Core.Constants;
 using Accounting.Core.Entities;
 using Accounting.Core.Enums;
 using Accounting.Core.ValueObjects;
@@ -77,7 +78,7 @@ public class DatabaseSeeder(AccountingDbContext dbContext, ILogger<DatabaseSeede
         static Invoice CreateInvoice(string number, string counterparty, DateOnly issueDate, DateOnly dueDate, Guid revenueAccountId, int qty, decimal price, decimal vatRate, bool posted, InvoiceWorkflowStatus workflow)
         {
             var invoice = new Invoice(InvoiceType.Sales, number, counterparty, issueDate, dueDate);
-            invoice.AddLine(new InvoiceLine("Professional services", qty, new Money(price, "EUR"), vatRate, revenueAccountId));
+            invoice.AddLine(new InvoiceLine("Professional services", qty, new Money(price, CurrencyCodes.Euro), vatRate, revenueAccountId));
             if (posted)
             {
                 invoice.MarkPosted();
@@ -144,9 +145,9 @@ public class DatabaseSeeder(AccountingDbContext dbContext, ILogger<DatabaseSeede
 
         var transactions = new List<BankTransaction>
         {
-            new(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-2)), "Contoso BV", "Payment INV-1001", new Money(1600m, "EUR")),
-            new(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-18)), "Northwind AG", "Partial payment INV-1002", new Money(1000m, "EUR")),
-            new(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1)), "Local supplier", "Office supplies", new Money(-320m, "EUR"))
+            new(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-2)), "Contoso BV", "Payment INV-1001", new Money(1600m, CurrencyCodes.Euro)),
+            new(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-18)), "Northwind AG", "Partial payment INV-1002", new Money(1000m, CurrencyCodes.Euro)),
+            new(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-1)), "Local supplier", "Office supplies", new Money(-320m, CurrencyCodes.Euro))
         };
 
         var contosoInvoice = invoices.FirstOrDefault(i => i.Number == "INV-1001");
@@ -166,3 +167,4 @@ public class DatabaseSeeder(AccountingDbContext dbContext, ILogger<DatabaseSeede
         logger.LogInformation("Seeded {Count} bank transactions.", transactions.Count);
     }
 }
+

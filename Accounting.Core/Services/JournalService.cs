@@ -1,14 +1,18 @@
-﻿using Accounting.Core.Entities;
+using Accounting.Core.Entities;
 using Accounting.Core.Interfaces.Repositories;
 using Accounting.Core.Interfaces.Services;
 using FluentValidation;
 
 namespace Accounting.Core.Services;
 
-public class JournalService(IJournalEntryRepository repository, IValidator<JournalEntry> validator) : IJournalService
+public class JournalService(IJournalEntryRepository repository, IValidator<JournalEntry> validator)
+    : IJournalQueryService, IJournalCommandService
 {
     public Task<IReadOnlyList<JournalEntry>> GetAsync(DateOnly? from, DateOnly? to, CancellationToken cancellationToken = default)
         => repository.GetAsync(from, to, cancellationToken);
+
+    public Task<JournalEntry?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        => repository.GetByIdAsync(id, cancellationToken);
 
     public async Task<JournalEntry> CreateAsync(string reference, DateOnly entryDate, string? memo, IEnumerable<JournalEntryLine> lines, CancellationToken cancellationToken = default)
     {

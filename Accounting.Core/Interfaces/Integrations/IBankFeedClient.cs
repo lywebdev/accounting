@@ -4,5 +4,5 @@ namespace Accounting.Core.Interfaces.Integrations;
 
 public interface IBankFeedClient
 {
-    Task<IReadOnlyList<BankTransaction>> FetchLatestAsync(CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<BankTransaction>> FetchLatestAsync();
 }

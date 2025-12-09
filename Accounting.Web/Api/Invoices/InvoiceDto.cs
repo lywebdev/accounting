@@ -1,3 +1,4 @@
+using Accounting.Core.Constants;
 using Accounting.Core.Entities;
 using Accounting.Core.Enums;
 
@@ -30,7 +31,7 @@ internal static class InvoiceMappings
 {
     public static InvoiceDto ToDto(this Invoice invoice)
     {
-        const string currency = "EUR";
+        const string currency = CurrencyCodes.Euro;
         return new InvoiceDto(
             invoice.Id,
             invoice.Type,

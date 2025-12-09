@@ -1,7 +1,12 @@
 @page "/reporting"
 @using System.Text
-@inject IReportingService ReportingService
-@inject IChartOfAccountsService ChartService
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.WebUtilities
+@using Accounting.Core.Constants
+@using Accounting.Core.Enums
+@using Accounting.Web.Common
+@inject HttpClient Http
+@inject IChartOfAccountsQueryService ChartQueryService
 @inject ISnackbar Snackbar
 @inject IStringLocalizer<SharedResources> Localizer
 @inject IJSRuntime JsRuntime
@@ -215,7 +220,7 @@
     private readonly string[] _currencies = ["EUR", "USD", "GBP"];
     private DateTime? _filterFrom = DateTime.Today.AddMonths(-1);
     private DateTime? _filterTo = DateTime.Today;
-    private string _currency = "EUR";
+    private string _currency = CurrencyCodes.Euro;
     private AccountCategory? _trialBalanceCategory;
     private Guid? _ledgerAccountId;
     private IReadOnlyList<AccountOption> _accountOptions = Array.Empty<AccountOption>();
@@ -237,7 +242,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var accounts = await ChartService.GetAsync(null, _disposeCts.Token);
+        var accounts = await ChartQueryService.GetAsync(null, _disposeCts.Token);
         _accountOptions = accounts.Select(a => new AccountOption(a.Id, a.Number, a.Name)).ToList();
     }
 
@@ -252,8 +257,8 @@
         var token = BeginOperation(ref _pnlCts);
         try
         {
-            var filter = new ReportFilter(from, to, Currency: _currency);
-            _profitAndLossResult = await ReportingService.GetProfitAndLossAsync(filter, token);
+            var url = BuildReportUrl(ApiRoutes.Reporting.ProfitAndLoss, from, to);
+            _profitAndLossResult = await Http.GetFromJsonAsync<ReportResult<FinancialStatementRow>>(url, token);
         }
         catch (OperationCanceledException)
         {
@@ -280,8 +285,8 @@
         var token = BeginOperation(ref _balanceCts);
         try
         {
-            var filter = new ReportFilter(from, to, Currency: _currency);
-            _balanceSheetResult = await ReportingService.GetBalanceSheetAsync(filter, token);
+            var url = BuildReportUrl(ApiRoutes.Reporting.BalanceSheet, from, to);
+            _balanceSheetResult = await Http.GetFromJsonAsync<ReportResult<FinancialStatementRow>>(url, token);
         }
         catch (OperationCanceledException)
         {
@@ -308,8 +313,8 @@
         var token = BeginOperation(ref _trialCts);
         try
         {
-            var filter = new ReportFilter(from, to, _trialBalanceCategory, Currency: _currency);
-            _trialBalanceResult = await ReportingService.GetTrialBalanceAsync(filter, token);
+            var url = BuildReportUrl(ApiRoutes.Reporting.TrialBalance, from, to, _trialBalanceCategory);
+            _trialBalanceResult = await Http.GetFromJsonAsync<ReportResult<TrialBalanceRow>>(url, token);
         }
         catch (OperationCanceledException)
         {
@@ -336,8 +341,8 @@
         var token = BeginOperation(ref _ledgerCts);
         try
         {
-            var filter = new ReportFilter(from, to, AccountId: _ledgerAccountId, Currency: _currency);
-            _generalLedgerResult = await ReportingService.GetGeneralLedgerAsync(filter, token);
+            var url = BuildReportUrl(ApiRoutes.Reporting.GeneralLedger, from, to, accountId: _ledgerAccountId);
+            _generalLedgerResult = await Http.GetFromJsonAsync<ReportResult<LedgerEntryRow>>(url, token);
         }
         catch (OperationCanceledException)
         {
@@ -351,6 +356,28 @@
         {
             _isLoadingGeneralLedger = false;
         }
+    }
+
+    private string BuildReportUrl(string path, DateOnly from, DateOnly to, AccountCategory? category = null, Guid? accountId = null)
+    {
+        var query = new Dictionary<string, string?>
+        {
+            ["from"] = from.ToString("yyyy-MM-dd"),
+            ["to"] = to.ToString("yyyy-MM-dd"),
+            ["currency"] = _currency
+        };
+
+        if (category.HasValue)
+        {
+            query["category"] = category.Value.ToString();
+        }
+
+        if (accountId.HasValue)
+        {
+            query["accountId"] = accountId.Value.ToString();
+        }
+
+        return QueryHelpers.AddQueryString(path, query);
     }
 
     private async Task ExportProfitAndLossAsync()
@@ -486,3 +513,4 @@
         _disposeCts.Dispose();
     }
 }
+

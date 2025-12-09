@@ -1,9 +1,12 @@
 @page "/banking"
 @using Microsoft.AspNetCore.Components.Forms
+@using System.Globalization
+@using Accounting.Core.Constants
 @using Accounting.Web.Api.Banking
+@using Accounting.Web.Common
 @using Microsoft.AspNetCore.WebUtilities
 @using System.Net.Http.Headers
-@inject IInvoiceService InvoiceService
+@inject IInvoiceQueryService InvoiceQueryService
 @inject ISnackbar Snackbar
 @inject HttpClient Http
 @inject IStringLocalizer<SharedResources> Localizer
@@ -77,11 +80,7 @@
     </MudAlert>
 }
 
-@{
-    var filteredTransactions = FilteredTransactions.ToList();
-}
-
-<MudTable T="BankTransactionRow" Items="filteredTransactions" Dense="true" Hover="true" Loading="@_isLoading" OnRowClick="HandleRowClick" RowClassFunc='@((_, __) => "clickable-row")'>
+<MudTable T="BankTransactionRow" Items="_transactions" Dense="true" Hover="true" Loading="@_isLoading" OnRowClick="HandleRowClick" RowClassFunc='@((_, __) => "clickable-row")'>
     <LoadingContent>
         <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
     </LoadingContent>
@@ -96,7 +95,7 @@
         <MudTd DataLabel="@Localizer["Banking_Table_Date"]">@context.BookingDate.ToString("yyyy-MM-dd")</MudTd>
         <MudTd DataLabel="@Localizer["Banking_Table_Counterparty"]">@context.Counterparty</MudTd>
         <MudTd DataLabel="@Localizer["Banking_Table_Reference"]">@context.Reference</MudTd>
-        <MudTd DataLabel="@Localizer["Banking_Table_Amount"]">@($"{context.Amount:0.00} EUR")</MudTd>
+        <MudTd DataLabel="@Localizer["Banking_Table_Amount"]">@($"{context.Amount:0.00} {CurrencyCodes.Euro}")</MudTd>
         <MudTd DataLabel="@Localizer["Banking_Table_Status"]">
             @{
                 var statusLabel = context.MatchedInvoiceId.HasValue
@@ -112,7 +111,7 @@
         </MudTd>
     </RowTemplate>
 </MudTable>
-@if (!_isLoading && filteredTransactions.Count == 0)
+@if (!_isLoading && _transactions.Count == 0)
 {
     <MudAlert Severity="Severity.Info" Dense="true" Class="mt-3">
         <MudText>@Localizer["Banking_Empty_Hint"]</MudText>
@@ -127,7 +126,7 @@
 @if (_selectedTransaction is not null)
 {
     <MudPaper Class="pa-4 mt-4">
-        <MudText Typo="Typo.subtitle1">@Localizer["Banking_Action_Match"] - @_selectedTransaction.Counterparty (@($"{_selectedTransaction.Amount:0.00} EUR"))</MudText>
+        <MudText Typo="Typo.subtitle1">@Localizer["Banking_Action_Match"] - @_selectedTransaction.Counterparty (@($"{_selectedTransaction.Amount:0.00} {CurrencyCodes.Euro}"))</MudText>
         <MudAlert Severity="Severity.Info" Dense="true" Variant="Variant.Text" Class="mb-3">
             @Localizer["Banking_Match_Note"]
         </MudAlert>
@@ -161,7 +160,6 @@
     private decimal? _amountMax;
     private bool _hasAnnouncedInitialLoad;
     private OperationSummary? _lastOperationSummary;
-    private IEnumerable<BankTransactionRow> FilteredTransactions => _transactions.Where(MatchesClientFilters);
 
     protected override async Task OnInitializedAsync()
     {
@@ -192,9 +190,24 @@
                 query["matched"] = _filterMatched.Value ? "true" : "false";
             }
 
+            if (!string.IsNullOrWhiteSpace(_searchTerm))
+            {
+                query["search"] = _searchTerm.Trim();
+            }
+
+            if (_amountMin.HasValue)
+            {
+                query["amountMin"] = _amountMin.Value.ToString(CultureInfo.InvariantCulture);
+            }
+
+            if (_amountMax.HasValue)
+            {
+                query["amountMax"] = _amountMax.Value.ToString(CultureInfo.InvariantCulture);
+            }
+
             var endpoint = query.Count > 0
-                ? QueryHelpers.AddQueryString("api/banking/transactions", query)
-                : "api/banking/transactions";
+                ? QueryHelpers.AddQueryString(ApiRoutes.Banking.Transactions, query)
+                : ApiRoutes.Banking.Transactions;
             var transactions = await Http.GetFromJsonAsync<List<BankTransactionDto>>(endpoint, token) ?? new List<BankTransactionDto>();
             _transactions.Clear();
             _transactions.AddRange(transactions.Select(t => new BankTransactionRow(t.Id, t.BookingDate, t.Counterparty, t.Reference, t.Amount, t.MatchedInvoiceId, t.JournalEntryId)));
@@ -222,7 +235,7 @@
     {
         try
         {
-            var response = await Http.PostAsync("api/banking/transactions/sync", null, _disposeCts.Token);
+            var response = await Http.PostAsync(ApiRoutes.Banking.Sync, null, _disposeCts.Token);
             response.EnsureSuccessStatusCode();
             Snackbar.Add(Localizer["Banking_Snackbar_Synced"].Value, Severity.Success);
             var synced = await response.Content.ReadFromJsonAsync<List<BankTransactionDto>>(_disposeCts.Token) ?? new List<BankTransactionDto>();
@@ -246,11 +259,11 @@
 
     private async Task<IEnumerable<InvoiceLookup>> SearchInvoicesAsync(string value, CancellationToken cancellationToken)
     {
-        var invoices = await InvoiceService.GetAsync(null, null, null, cancellationToken);
-        return invoices
-            .Where(i => i.CanRegisterPayment)
-            .Where(i => string.IsNullOrWhiteSpace(value) || i.Number.Contains(value, StringComparison.OrdinalIgnoreCase))
-            .Select(i => new InvoiceLookup(i.Id, i.Number, i.Counterparty, i.TotalGross("EUR").Amount));
+        var invoices = await InvoiceQueryService.GetAsync(null, null, null, null, cancellationToken);
+            return invoices
+                .Where(i => i.CanRegisterPayment)
+                .Where(i => string.IsNullOrWhiteSpace(value) || i.Number.Contains(value, StringComparison.OrdinalIgnoreCase))
+                .Select(i => new InvoiceLookup(i.Id, i.Number, i.Counterparty, i.TotalGross(CurrencyCodes.Euro).Amount));
     }
 
     private async Task MatchSelectedInvoiceAsync()
@@ -262,7 +275,7 @@
 
         try
         {
-            var response = await Http.PostAsync($"api/banking/transactions/{_selectedTransaction.Id}/link/{_selectedInvoice.Id}", content: null, _disposeCts.Token);
+            var response = await Http.PostAsync($"{ApiRoutes.Banking.Transactions}/{_selectedTransaction.Id}/link/{_selectedInvoice.Id}", content: null, _disposeCts.Token);
             response.EnsureSuccessStatusCode();
             Snackbar.Add(Localizer["Banking_Snackbar_Matched"].Value, Severity.Success);
             _selectedTransaction = null;
@@ -290,7 +303,7 @@
             var streamContent = new StreamContent(stream);
             streamContent.Headers.ContentType = new MediaTypeHeaderValue(_importFile.ContentType ?? "text/csv");
             content.Add(streamContent, "file", _importFile.Name);
-            var response = await Http.PostAsync("api/banking/transactions/import", content, _disposeCts.Token);
+            var response = await Http.PostAsync(ApiRoutes.Banking.Import, content, _disposeCts.Token);
             response.EnsureSuccessStatusCode();
             Snackbar.Add(Localizer["Banking_Snackbar_Imported"].Value, Severity.Success);
             _importFile = null;
@@ -331,7 +344,7 @@
 
     private async Task<AutoMatchResultDto?> RequestAutoMatchAsync()
     {
-        var response = await Http.PostAsync("api/banking/transactions/auto-match", null, _disposeCts.Token);
+            var response = await Http.PostAsync(ApiRoutes.Banking.AutoMatch, null, _disposeCts.Token);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<AutoMatchResultDto>(_disposeCts.Token);
     }
@@ -343,32 +356,6 @@
             imported,
             result?.Matched ?? 0,
             result?.JournalEntriesCreated ?? 0);
-    }
-
-    private bool MatchesClientFilters(BankTransactionRow transaction)
-    {
-        if (!string.IsNullOrWhiteSpace(_searchTerm))
-        {
-            var term = _searchTerm.Trim();
-            if (!(transaction.Counterparty.Contains(term, StringComparison.OrdinalIgnoreCase) ||
-                  transaction.Reference.Contains(term, StringComparison.OrdinalIgnoreCase)))
-            {
-                return false;
-            }
-        }
-
-        var absoluteAmount = Math.Abs(transaction.Amount);
-        if (_amountMin.HasValue && absoluteAmount < _amountMin.Value)
-        {
-            return false;
-        }
-
-        if (_amountMax.HasValue && absoluteAmount > _amountMax.Value)
-        {
-            return false;
-        }
-
-        return true;
     }
 
     private sealed record BankTransactionRow(Guid Id, DateOnly BookingDate, string Counterparty, string Reference, decimal Amount, Guid? MatchedInvoiceId, Guid? JournalEntryId);

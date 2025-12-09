@@ -1,4 +1,4 @@
-﻿using Accounting.Core.Entities;
+using Accounting.Core.Entities;
 using Accounting.Core.Enums;
 using Accounting.Core.Interfaces.Repositories;
 using Accounting.Infrastructure.Persistence;
@@ -6,19 +6,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Accounting.Infrastructure.Repositories;
 
-public class InvoiceRepository(AccountingDbContext dbContext) : IInvoiceRepository
+public class InvoiceRepository(AccountingDbContext dbContext) : RepositoryBase<Invoice>(dbContext), IInvoiceRepository
 {
-    public async Task<Invoice?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => await dbContext.Invoices
-            .AsNoTracking()
+    public Task<Invoice?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        => Query()
             .Include(i => i.Lines)
             .FirstOrDefaultAsync(i => i.Id == id, cancellationToken);
 
-    public async Task<IReadOnlyList<Invoice>> GetAsync(InvoiceType? type, DateOnly? from, DateOnly? to, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<Invoice>> GetAsync(InvoiceType? type, DateOnly? from, DateOnly? to, string? searchTerm, CancellationToken cancellationToken = default)
     {
-        var query = dbContext.Invoices
-            .AsNoTracking()
-            .AsQueryable();
+        IQueryable<Invoice> query = Query().Include(i => i.Lines);
+
         if (type.HasValue)
         {
             query = query.Where(i => i.Type == type);
@@ -34,32 +32,24 @@ public class InvoiceRepository(AccountingDbContext dbContext) : IInvoiceReposito
             query = query.Where(i => i.IssueDate <= to);
         }
 
-        return await query.OrderByDescending(i => i.IssueDate)
-            .Include(i => i.Lines)
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task AddAsync(Invoice invoice, CancellationToken cancellationToken = default)
-    {
-        await dbContext.Invoices.AddAsync(invoice, cancellationToken);
-        await dbContext.SaveChangesAsync(cancellationToken);
-    }
-
-    public async Task UpdateAsync(Invoice invoice, CancellationToken cancellationToken = default)
-    {
-        var tracked = dbContext.Invoices.Local.FirstOrDefault(i => i.Id == invoice.Id);
-        if (tracked is not null)
+        if (!string.IsNullOrWhiteSpace(searchTerm))
         {
-            dbContext.Entry(tracked).State = EntityState.Detached;
+            var term = searchTerm.Trim();
+            query = query.Where(i =>
+                EF.Functions.Like(i.Number, $"%{term}%") ||
+                EF.Functions.Like(i.Counterparty, $"%{term}%"));
         }
 
-        dbContext.Attach(invoice);
-        dbContext.Entry(invoice).State = EntityState.Modified;
-        await dbContext.SaveChangesAsync(cancellationToken);
+        query = query.OrderByDescending(i => i.IssueDate);
+        return await ToListAsync(query, cancellationToken);
     }
 
-    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
-    {
-        await dbContext.Invoices.Where(i => i.Id == id).ExecuteDeleteAsync(cancellationToken);
-    }
+    public Task AddAsync(Invoice invoice, CancellationToken cancellationToken = default)
+        => AddEntityAsync(invoice, cancellationToken);
+
+    public Task UpdateAsync(Invoice invoice, CancellationToken cancellationToken = default)
+        => UpdateEntityAsync(invoice, cancellationToken);
+
+    public Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+        => DeleteWhereAsync(i => i.Id == id, cancellationToken);
 }

@@ -1,3 +1,4 @@
+using Accounting.Core.Constants;
 using Accounting.Core.Entities;
 using Accounting.Core.Interfaces.Services;
 using QuestPDF.Fluent;
@@ -13,9 +14,10 @@ public class InvoiceDocumentService : IInvoiceDocumentService
         QuestPDF.Settings.License = LicenseType.Community;
     }
 
-    public Task<byte[]> GeneratePdfAsync(Invoice invoice, CancellationToken cancellationToken = default)
+    public Task<byte[]> GeneratePdfAsync(Invoice invoice)
     {
         var stream = new MemoryStream();
+        var currency = CurrencyCodes.Euro;
         Document.Create(container =>
         {
             container.Page(page =>
@@ -66,11 +68,11 @@ public class InvoiceDocumentService : IInvoiceDocumentService
                             table.Cell().PaddingVertical(4).Text(line.Quantity.ToString("0.##"));
                             table.Cell().PaddingVertical(4).Text(line.UnitPrice.Amount.ToString("0.00"));
                             table.Cell().PaddingVertical(4).Text($"{line.VatRate:0.##}%");
-                            table.Cell().PaddingVertical(4).AlignRight().Text($"{total:0.00} EUR");
+                            table.Cell().PaddingVertical(4).AlignRight().Text($"{total:0.00} {currency}");
                         }
                     });
 
-                    column.Item().AlignRight().Text($"Total gross: {invoice.TotalGross("EUR").Amount:0.00} EUR").FontSize(14).SemiBold();
+                    column.Item().AlignRight().Text($"Total gross: {invoice.TotalGross(currency).Amount:0.00} {currency}").FontSize(14).SemiBold();
                     column.Item().Text(invoice.IsPosted ? "This invoice has been posted to the ledger." : "Status: Draft");
                 });
 

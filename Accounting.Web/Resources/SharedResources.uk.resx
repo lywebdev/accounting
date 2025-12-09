@@ -571,6 +571,9 @@
   <data name="Invoices_Filter_AllTypes" xml:space="preserve">
     <value>Всі види</value>
   </data>
+  <data name="Invoices_Filter_Search" xml:space="preserve">
+    <value>Пошук (номер або контрагент)</value>
+  </data>
   <data name="Invoices_Filter_From" xml:space="preserve">
     <value>Від дати</value>
   </data>
@@ -1076,3 +1079,4 @@
     <value>Подано декларацію: {0}.</value>
   </data>
 </root>
+

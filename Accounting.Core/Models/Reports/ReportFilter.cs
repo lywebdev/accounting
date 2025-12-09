@@ -1,4 +1,5 @@
-﻿using Accounting.Core.Enums;
+using Accounting.Core.Constants;
+using Accounting.Core.Enums;
 
 namespace Accounting.Core.Models.Reports;
 
@@ -8,4 +9,4 @@ public record ReportFilter(
     AccountCategory? Category = null,
     Guid? AccountId = null,
     string? Company = null,
-    string Currency = "EUR");
+    string Currency = CurrencyCodes.Euro);

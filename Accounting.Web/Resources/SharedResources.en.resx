@@ -571,6 +571,9 @@
   <data name="Invoices_Filter_AllTypes" xml:space="preserve">
     <value>All types</value>
   </data>
+  <data name="Invoices_Filter_Search" xml:space="preserve">
+    <value>Search (number or counterparty)</value>
+  </data>
   <data name="Invoices_Filter_From" xml:space="preserve">
     <value>From date</value>
   </data>

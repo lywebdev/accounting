@@ -1,7 +1,8 @@
 @page "/chart-of-accounts"
 @using Accounting.Core.Entities
 @using MudBlazor
-@inject IChartOfAccountsService ChartService
+@inject IChartOfAccountsQueryService ChartQueryService
+@inject IChartOfAccountsCommandService ChartCommandService
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
 @inject IStringLocalizer<SharedResources> Localizer
@@ -103,7 +104,7 @@ else
         try
         {
             _accounts.Clear();
-            var accounts = await ChartService.GetAsync(_filterCategory, token);
+            var accounts = await ChartQueryService.GetAsync(_filterCategory, token);
             _accounts.AddRange(accounts.Select(AccountViewModel.FromEntity));
         }
         catch (OperationCanceledException)
@@ -173,7 +174,7 @@ else
     {
         try
         {
-            await ChartService.CreateAsync(model.Number, model.Name, model.Category, model.Description, _disposeCts.Token);
+            await ChartCommandService.CreateAsync(model.Number, model.Name, model.Category, model.Description, _disposeCts.Token);
             Snackbar.Add(Localizer["Coa_Snackbar_CreateSuccess"].Value, Severity.Success);
             await LoadAccountsAsync();
         }
@@ -188,7 +189,7 @@ else
     {
         try
         {
-            await ChartService.UpdateAsync(accountId, model.Name, model.Category, model.Description, _disposeCts.Token);
+            await ChartCommandService.UpdateAsync(accountId, model.Name, model.Category, model.Description, _disposeCts.Token);
             Snackbar.Add(Localizer["Coa_Snackbar_UpdateSuccess"].Value, Severity.Success);
             await LoadAccountsAsync();
         }
@@ -203,7 +204,7 @@ else
     {
         try
         {
-            await ChartService.DeactivateAsync(account.Id, _disposeCts.Token);
+            await ChartCommandService.DeactivateAsync(account.Id, _disposeCts.Token);
             Snackbar.Add(Localizer["Coa_Snackbar_Deactivate"].Value, Severity.Info);
             await LoadAccountsAsync();
         }
@@ -218,7 +219,7 @@ else
     {
         try
         {
-            await ChartService.ActivateAsync(account.Id, _disposeCts.Token);
+            await ChartCommandService.ActivateAsync(account.Id, _disposeCts.Token);
             Snackbar.Add(Localizer["Coa_Snackbar_Activate"].Value, Severity.Success);
             await LoadAccountsAsync();
         }

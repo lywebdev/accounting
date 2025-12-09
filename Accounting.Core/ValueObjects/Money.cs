@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+using System.Globalization;
+using Accounting.Core.Constants;
 
 namespace Accounting.Core.ValueObjects;
 
@@ -7,7 +8,7 @@ public record Money
     public Money(decimal amount, string currency)
     {
         Amount = decimal.Round(amount, 2, MidpointRounding.AwayFromZero);
-        Currency = (currency ?? "EUR").ToUpperInvariant();
+        Currency = (currency ?? CurrencyCodes.Euro).ToUpperInvariant();
     }
 
     public decimal Amount { get; }

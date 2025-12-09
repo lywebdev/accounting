@@ -1,4 +1,5 @@
-﻿using Accounting.Core.ValueObjects;
+using Accounting.Core.Constants;
+using Accounting.Core.ValueObjects;
 
 namespace Accounting.Core.Entities;
 
@@ -27,6 +28,6 @@ public class BankTransaction
     {
         Counterparty = string.Empty;
         Reference = string.Empty;
-        Amount = Money.Zero("EUR");
+        Amount = Money.Zero(CurrencyCodes.Euro);
     }
 }

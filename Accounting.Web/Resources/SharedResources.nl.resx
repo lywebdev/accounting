@@ -571,6 +571,9 @@
   <data name="Invoices_Filter_AllTypes" xml:space="preserve">
     <value>Alle types</value>
   </data>
+  <data name="Invoices_Filter_Search" xml:space="preserve">
+    <value>Zoek (nummer of relatie)</value>
+  </data>
   <data name="Invoices_Filter_From" xml:space="preserve">
     <value>Vanaf datum</value>
   </data>

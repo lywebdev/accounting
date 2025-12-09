@@ -6,11 +6,11 @@ using FluentValidation;
 
 namespace Accounting.Core.Services;
 
-public class InvoiceService(IInvoiceRepository repository, IValidator<Invoice> validator) : IInvoiceService
+public class InvoiceService(IInvoiceRepository repository, IValidator<Invoice> validator) : IInvoiceQueryService, IInvoiceCommandService
 {
-    public async Task<IReadOnlyList<Invoice>> GetAsync(InvoiceType? type, DateOnly? from, DateOnly? to, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<Invoice>> GetAsync(InvoiceType? type, DateOnly? from, DateOnly? to, string? searchTerm, CancellationToken cancellationToken = default)
     {
-        var invoices = await repository.GetAsync(type, from, to, cancellationToken);
+        var invoices = await repository.GetAsync(type, from, to, searchTerm, cancellationToken);
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
         foreach (var invoice in invoices)
         {

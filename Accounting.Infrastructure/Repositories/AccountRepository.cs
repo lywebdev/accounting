@@ -1,46 +1,36 @@
-﻿using Accounting.Core.Entities;
+using Accounting.Core.Entities;
 using Accounting.Core.Enums;
 using Accounting.Core.Interfaces.Repositories;
 using Accounting.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 
 namespace Accounting.Infrastructure.Repositories;
 
-public class AccountRepository(AccountingDbContext dbContext) : IAccountRepository
+public class AccountRepository(AccountingDbContext dbContext) : RepositoryBase<Account>(dbContext), IAccountRepository
 {
-    public async Task<Account?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        => await dbContext.Accounts.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
+    public Task<Account?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        => FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
 
-    public async Task<Account?> GetByNumberAsync(string number, CancellationToken cancellationToken = default)
-        => await dbContext.Accounts.AsNoTracking().FirstOrDefaultAsync(a => a.Number == number, cancellationToken);
+    public Task<Account?> GetByNumberAsync(string number, CancellationToken cancellationToken = default)
+        => FirstOrDefaultAsync(a => a.Number == number, cancellationToken);
 
     public async Task<IReadOnlyList<Account>> GetAsync(AccountCategory? category, CancellationToken cancellationToken = default)
     {
-        var query = dbContext.Accounts.AsQueryable();
+        IQueryable<Account> query = Query();
         if (category.HasValue)
         {
             query = query.Where(a => a.Category == category);
         }
 
-        return await query.AsNoTracking().OrderBy(a => a.Number).ToListAsync(cancellationToken);
+        query = query.OrderBy(a => a.Number);
+        return await ToListAsync(query, cancellationToken);
     }
 
-    public async Task AddAsync(Account account, CancellationToken cancellationToken = default)
-    {
-        await dbContext.Accounts.AddAsync(account, cancellationToken);
-        await dbContext.SaveChangesAsync(cancellationToken);
-    }
+    public Task AddAsync(Account account, CancellationToken cancellationToken = default)
+        => AddEntityAsync(account, cancellationToken);
 
-    public async Task UpdateAsync(Account account, CancellationToken cancellationToken = default)
-    {
-        dbContext.ChangeTracker.Clear();
-        dbContext.Attach(account);
-        dbContext.Entry(account).State = EntityState.Modified;
-        await dbContext.SaveChangesAsync(cancellationToken);
-    }
+    public Task UpdateAsync(Account account, CancellationToken cancellationToken = default)
+        => UpdateEntityAsync(account, cancellationToken);
 
-    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
-    {
-        await dbContext.Accounts.Where(a => a.Id == id).ExecuteDeleteAsync(cancellationToken);
-    }
+    public Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+        => DeleteWhereAsync(a => a.Id == id, cancellationToken);
 }

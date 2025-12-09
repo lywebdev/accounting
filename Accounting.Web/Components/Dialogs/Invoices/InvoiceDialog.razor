@@ -1,5 +1,6 @@
 @using System.ComponentModel.DataAnnotations
 @using System.Text
+@using Accounting.Core.Constants
 @using Accounting.Core.Enums
 @using MudBlazor
 @inject IStringLocalizer<SharedResources> Localizer
@@ -254,7 +255,7 @@
             sb.Append("</tr>");
         }
         sb.Append("</tbody>");
-        sb.AppendFormat("<tfoot><tr><td colspan=\"4\">{0}</td><td>{1:0.00} EUR</td></tr></tfoot>", Localizer["Invoice_Preview_Total"].Value, CalculateDraftTotal());
+        sb.AppendFormat("<tfoot><tr><td colspan=\"4\">{0}</td><td>{1:0.00} {2}</td></tr></tfoot>", Localizer["Invoice_Preview_Total"].Value, CalculateDraftTotal(), CurrencyCodes.Euro);
         sb.Append("</table>");
         return sb.ToString();
     }

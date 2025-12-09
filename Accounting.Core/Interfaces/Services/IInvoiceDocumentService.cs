@@ -4,5 +4,5 @@ namespace Accounting.Core.Interfaces.Services;
 
 public interface IInvoiceDocumentService
 {
-    Task<byte[]> GeneratePdfAsync(Invoice invoice, CancellationToken cancellationToken = default);
+    Task<byte[]> GeneratePdfAsync(Invoice invoice);
 }

@@ -1,4 +1,5 @@
-﻿using Accounting.Core.Entities;
+using Accounting.Core.Constants;
+using Accounting.Core.Entities;
 using Accounting.Core.Enums;
 using Accounting.Core.Interfaces.Integrations;
 using Accounting.Core.Interfaces.Repositories;
@@ -15,10 +16,10 @@ public class TaxService(
     {
         var declaration = await declarationRepository.GetByPeriodAsync(year, period, cancellationToken) ?? new TaxDeclaration(year, period);
         var (from, to) = GetQuarterRange(year, period);
-        var invoices = await invoiceRepository.GetAsync(null, from, to, cancellationToken);
+        var invoices = await invoiceRepository.GetAsync(null, from, to, searchTerm: null, cancellationToken);
 
-        var salesVat = invoices.Where(i => i.Type == InvoiceType.Sales).Sum(i => i.TotalVat("EUR").Amount);
-        var purchaseVat = invoices.Where(i => i.Type == InvoiceType.Purchase).Sum(i => i.TotalVat("EUR").Amount);
+        var salesVat = invoices.Where(i => i.Type == InvoiceType.Sales).Sum(i => i.TotalVat(CurrencyCodes.Euro).Amount);
+        var purchaseVat = invoices.Where(i => i.Type == InvoiceType.Purchase).Sum(i => i.TotalVat(CurrencyCodes.Euro).Amount);
         declaration.SetFigures(salesVat, purchaseVat);
         await declarationRepository.SaveAsync(declaration, cancellationToken);
         return declaration;
@@ -27,7 +28,7 @@ public class TaxService(
     public async Task<TaxDeclaration> SubmitAsync(int year, int period, CancellationToken cancellationToken = default)
     {
         var declaration = await CalculateAsync(year, period, cancellationToken);
-        var submissionId = await taxAuthorityClient.SubmitDeclarationAsync(year, period, cancellationToken);
+        var submissionId = await taxAuthorityClient.SubmitDeclarationAsync(year, period);
         var status = submissionId.Contains("REJECTED", StringComparison.OrdinalIgnoreCase)
             ? TaxDeclarationStatus.Rejected
             : TaxDeclarationStatus.Accepted;
@@ -40,7 +41,7 @@ public class TaxService(
         => await declarationRepository.GetByYearAsync(year, cancellationToken);
 
     public Task<bool> ValidateVatNumberAsync(string vatNumber, CancellationToken cancellationToken = default)
-        => taxAuthorityClient.ValidateVatAsync(vatNumber, cancellationToken);
+        => taxAuthorityClient.ValidateVatAsync(vatNumber);
 
     private static (DateOnly from, DateOnly to) GetQuarterRange(int year, int period)
     {
@@ -50,3 +51,4 @@ public class TaxService(
         return (from, to);
     }
 }
+

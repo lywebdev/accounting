@@ -2,6 +2,7 @@
 @using System.Linq
 @using Accounting.Core.Enums
 @using Accounting.Web.Api.Tax
+@using Accounting.Web.Common
 @inject HttpClient Http
 @inject ISnackbar Snackbar
 @inject IStringLocalizer<SharedResources> Localizer
@@ -164,7 +165,7 @@
         _isLoading = true;
         try
         {
-            var declaration = await Http.GetFromJsonAsync<TaxDeclarationDto>($"api/tax/declaration?year={_selectedYear}&period={_selectedPeriod}", _disposeCts.Token);
+            var declaration = await Http.GetFromJsonAsync<TaxDeclarationDto>($"{ApiRoutes.Tax.Declaration}?year={_selectedYear}&period={_selectedPeriod}", _disposeCts.Token);
             if (declaration is not null)
             {
                 _currentDeclaration = VatDeclarationViewModel.FromDto(declaration);
@@ -192,7 +193,7 @@
         _isLoading = true;
         try
         {
-            var response = await Http.PostAsJsonAsync("api/tax/declaration/submit", new SubmitTaxDeclarationRequest(_selectedYear, _selectedPeriod), _disposeCts.Token);
+            var response = await Http.PostAsJsonAsync(ApiRoutes.Tax.SubmitDeclaration, new SubmitTaxDeclarationRequest(_selectedYear, _selectedPeriod), _disposeCts.Token);
             response.EnsureSuccessStatusCode();
             var declaration = await response.Content.ReadFromJsonAsync<TaxDeclarationDto>(_disposeCts.Token);
             if (declaration is not null)
@@ -216,7 +217,7 @@
 
     private async Task LoadHistoryAsync()
     {
-        var history = await Http.GetFromJsonAsync<List<TaxDeclarationDto>>($"api/tax/declarations/{_selectedYear}", _disposeCts.Token) ?? new List<TaxDeclarationDto>();
+        var history = await Http.GetFromJsonAsync<List<TaxDeclarationDto>>(ApiRoutes.Tax.DeclarationsByYear(_selectedYear), _disposeCts.Token) ?? new List<TaxDeclarationDto>();
         _history.Clear();
         for (var period = 1; period <= 4; period++)
         {
@@ -235,7 +236,7 @@
         _isValidationRunning = true;
         try
         {
-            var response = await Http.PostAsJsonAsync("api/tax/validate", new VatValidationRequest(_vatNumber), _disposeCts.Token);
+            var response = await Http.PostAsJsonAsync(ApiRoutes.Tax.ValidateVat, new VatValidationRequest(_vatNumber), _disposeCts.Token);
             response.EnsureSuccessStatusCode();
             var validation = await response.Content.ReadFromJsonAsync<VatValidationResponse>(_disposeCts.Token);
             _vatValidationResult = validation?.IsValid;

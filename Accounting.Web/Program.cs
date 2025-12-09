@@ -8,6 +8,7 @@ using Accounting.Web.Api.Accounts;
 using Accounting.Web.Api.Banking;
 using Accounting.Web.Api.Invoices;
 using Accounting.Web.Api.JournalEntries;
+using Accounting.Web.Api.Reporting;
 using Accounting.Web.Api.Tax;
 using Accounting.Web.Components;
 using Microsoft.AspNetCore.Components;
@@ -91,6 +92,7 @@ public static class Program
         app.MapJournalEntryEndpoints();
         app.MapInvoiceEndpoints();
         app.MapBankingEndpoints();
+        app.MapReportingEndpoints();
         app.MapTaxEndpoints();
 
         await app.RunAsync();

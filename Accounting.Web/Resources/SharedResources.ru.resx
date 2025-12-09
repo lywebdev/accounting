@@ -571,6 +571,9 @@
   <data name="Invoices_Filter_AllTypes" xml:space="preserve">
     <value>Все типы</value>
   </data>
+  <data name="Invoices_Filter_Search" xml:space="preserve">
+    <value>Поиск (номер или контрагент)</value>
+  </data>
   <data name="Invoices_Filter_From" xml:space="preserve">
     <value>С даты</value>
   </data>

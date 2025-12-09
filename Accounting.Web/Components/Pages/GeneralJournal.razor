@@ -2,8 +2,9 @@
 @using Accounting.Core.Entities
 @using Accounting.Core.Enums
 @using MudBlazor
-@inject IJournalService JournalService
-@inject IChartOfAccountsService ChartService
+@inject IJournalQueryService JournalQueryService
+@inject IJournalCommandService JournalCommandService
+@inject IChartOfAccountsQueryService ChartQueryService
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject IStringLocalizer<SharedResources> Localizer
@@ -131,7 +132,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         var token = _disposeCts.Token;
-        var accountEntities = await ChartService.GetAsync(null, token);
+        var accountEntities = await ChartQueryService.GetAsync(null, token);
         _accounts = accountEntities
             .Select(a => new JournalEntryDialog.AccountOption(a.Id, a.Number, a.Name))
             .ToList();
@@ -151,7 +152,7 @@ else
         {
             _entries.Clear();
             _rawEntries.Clear();
-            var entries = await JournalService.GetAsync(ConvertToDateOnly(_fromDate), ConvertToDateOnly(_toDate), token);
+            var entries = await JournalQueryService.GetAsync(ConvertToDateOnly(_fromDate), ConvertToDateOnly(_toDate), token);
             foreach (var entry in entries)
             {
                 _rawEntries.Add(entry);
@@ -238,7 +239,7 @@ else
         try
         {
             var lines = model.Lines.Select(l => new JournalEntryLine(l.AccountId!.Value, l.Debit, l.Credit, l.Description));
-            await JournalService.CreateAsync(model.Reference, model.EntryDate, model.Memo, lines, _disposeCts.Token);
+            await JournalCommandService.CreateAsync(model.Reference, model.EntryDate, model.Memo, lines, _disposeCts.Token);
             Snackbar.Add(Localizer["Journal_Snackbar_Create"].Value, Severity.Success);
             await LoadEntriesAsync();
         }
@@ -288,7 +289,7 @@ else
     {
         try
         {
-            await JournalService.DeleteAsync(entryId, _disposeCts.Token);
+            await JournalCommandService.DeleteAsync(entryId, _disposeCts.Token);
             Snackbar.Add(Localizer["Journal_Snackbar_Delete"].Value, Severity.Info);
             await LoadEntriesAsync();
         }

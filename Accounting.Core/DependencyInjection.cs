@@ -15,9 +15,13 @@ public static class DependencyInjection
         services.AddScoped<IValidator<JournalEntry>, JournalEntryValidator>();
         services.AddScoped<IValidator<Invoice>, InvoiceValidator>();
 
-        services.AddScoped<IChartOfAccountsService, ChartOfAccountsService>();
-        services.AddScoped<IJournalService, JournalService>();
-        services.AddScoped<IInvoiceService, InvoiceService>();
+        services.AddScoped<IChartOfAccountsQueryService, ChartOfAccountsService>();
+        services.AddScoped<IChartOfAccountsCommandService, ChartOfAccountsService>();
+        services.AddScoped<IJournalQueryService, JournalService>();
+        services.AddScoped<IJournalCommandService, JournalService>();
+        services.AddScoped<IInvoiceQueryService, InvoiceService>();
+        services.AddScoped<IInvoiceCommandService, InvoiceService>();
+        services.AddScoped<IBankAutoMatchService, BankAutoMatchService>();
         services.AddScoped<IBankingService, BankingService>();
         services.AddScoped<ITaxService, TaxService>();
         services.AddScoped<IReportingService, ReportingService>();
